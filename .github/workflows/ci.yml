@@ -59,12 +59,9 @@ jobs:
 
       # 3. Deploy to Render
       - name: Deploy to Render
-        # run: render deploy --service-id ${{ secrets.RENDER_SERVICE_ID }} --branch master
-        # env:
-        #   RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        run: |
-          curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
         env:
-          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}  # Set your Render service ID as a secret
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}        # Set your Render API key as a secret
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }} # Set your Render service ID as a secret
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }} # Set your Render API key as a secret
+        run: |
+          curl "$deploy_url"
