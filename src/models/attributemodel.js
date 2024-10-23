@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 //Define the Attribute schema
-const attributeSchema = new Schema({
+export const attributeSchema = new Schema({
   key: { type: String, required: true },
   value: { type: String, required: true },
 });
