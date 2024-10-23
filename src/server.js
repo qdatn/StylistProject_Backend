@@ -13,6 +13,7 @@ import passport from "passport";
 import session from "express-session";
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 // Import file cấu hình Swagger
 import swaggerSpec from "./configs/swagger.js";
 import swaggerUi from "swagger-ui-express";
@@ -68,6 +69,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/category", categoryRoutes);
 
 // Khởi động server
 app.listen(PORT, () => {

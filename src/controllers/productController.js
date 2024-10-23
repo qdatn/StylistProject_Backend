@@ -64,7 +64,8 @@ class ProductController {
       if (!product) {
         return res.status(404).json({ message: "Product not found" });
       }
-      res.status(204).send();
+      res.status(200).json({ message: "Product deleted" });
+      // res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

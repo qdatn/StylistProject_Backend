@@ -13,8 +13,8 @@ class ProductService {
     return await ProductRepository.create(productData);
   }
 
-  async createManyProducts(products) {
-    return await ProductRepository.createMany(products);
+  async createManyProducts(productDatas) {
+    return await ProductRepository.createMany(productDatas);
   }
 
   async updateProduct(productId, productData) {
