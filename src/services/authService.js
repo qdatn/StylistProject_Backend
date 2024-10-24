@@ -2,16 +2,30 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userRepository from "../repositories/userRepo.js";
+import userInfoRepository from "../repositories/userInfoRepo.js";
 
 class AuthService {
   async register(userData) {
-    const { email, password, role } = userData;
+    const { name, email, password, role } = userData;
 
     const existingUser = await userRepository.findByEmail(email);
     if (existingUser) throw new Error("Email already in use");
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    return userRepository.createUser({ email, password: hashedPassword, role });
+
+    const user = await userRepository.createUser({
+      email,
+      password: hashedPassword,
+      role,
+    });
+
+    // Tạo UserInfo cho User mới với user_id là _id của User
+    const userinfo = await userInfoRepository.create({
+      user_id: user._id,
+      name: name || "No Name Provided", // Tên có thể lấy từ userData hoặc mặc định
+    });
+    // return userRepository.createUser({ email, password: hashedPassword, role });
+    return { user, userinfo };
   }
 
   async login(email, password) {
