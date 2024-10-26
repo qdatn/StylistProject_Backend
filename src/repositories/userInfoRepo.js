@@ -7,7 +7,7 @@ class UserInfoRepository {
   }
 
   async findById(id) {
-    return await UserInfo.findOne({ user_id: id }).populate("_id");
+    return await UserInfo.findOne({ user_id: id }).populate("user_id");
   }
 
   async create(userInfoData) {
@@ -17,7 +17,7 @@ class UserInfoRepository {
   async update(id, userInfoData) {
     return await UserInfo.findOneAndUpdate({ user_id: id }, userInfoData, {
       new: true,
-    }).populate("_id");
+    }).populate("user_id");
   }
 
   async delete(id) {
