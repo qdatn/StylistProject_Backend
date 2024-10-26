@@ -9,4 +9,9 @@ router.post("/register", authController.register);
 // POST /login - Login and generate JWT token
 router.post("/login", authController.login);
 
+//UPDATE
+router.put("/:id", authController.updateUser);
+//DELETE
+router.delete("/:id", authController.deleteUser);
+
 export default router;

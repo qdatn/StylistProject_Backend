@@ -46,6 +46,18 @@ class AuthService {
       { expiresIn: "3h" }
     );
   }
+
+  async updateUser(id, updateData) {
+    // Kiểm tra nếu `updateData` có chứa `password` thì hash nó trước khi lưu
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(updateData.password, 10);
+    }
+    return await userRepository.updateUser(id, updateData);
+  }
+
+  async deleteUser(id) {
+    return await userRepository.deleteUser(id);
+  }
 }
 
 export default new AuthService();
