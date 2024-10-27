@@ -2,7 +2,6 @@ import mongoose, { Schema } from "mongoose";
 
 // Define the Category schema
 export const categorySchema = new Schema({
-  category_id: { type: Schema.Types.ObjectId, auto: true },
   category_name: { type: String, required: true },
   description: { type: String },
 });

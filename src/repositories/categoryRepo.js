@@ -5,8 +5,10 @@ class CategoryRepository {
     return await Category.find();
   }
 
-  async findById(id) {
-    return await Category.findOne({ category_id: id });
+  async findByName(name) {
+    return await Category.findOne({
+      category_name: { $regex: name, $options: "i" },
+    });
   }
 
   async create(CategoryData) {
@@ -17,14 +19,20 @@ class CategoryRepository {
     return await Category.insertMany(Categorys);
   }
 
-  async update(id, CategoryData) {
-    return await Category.findOneAndUpdate({ category_id: id }, CategoryData, {
-      new: true,
-    });
+  async update(name, CategoryData) {
+    return await Category.findOneAndUpdate(
+      { category_name: { $regex: name, $options: "i" } },
+      CategoryData,
+      {
+        new: true,
+      }
+    );
   }
 
-  async delete(id) {
-    return await Category.deleteOne({ category_id: id });
+  async delete(name) {
+    return await Category.deleteOne({
+      category_name: { $regex: name, $options: "i" },
+    });
   }
 }
 

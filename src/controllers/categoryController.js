@@ -11,9 +11,9 @@ class CategoryController {
     }
   }
 
-  async getCategoryById(req, res) {
+  async getCategoryByName(req, res) {
     try {
-      const category = await CategoryService.getCategoryById(req.params.id);
+      const category = await CategoryService.getCategoryByName(req.params.name);
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
@@ -50,7 +50,7 @@ class CategoryController {
   async updateCategory(req, res) {
     try {
       const updatedCategory = await CategoryService.updateCategory(
-        req.params.id,
+        req.params.name,
         req.body
       );
       if (!updatedCategory) {
@@ -65,7 +65,7 @@ class CategoryController {
   async deleteCategory(req, res) {
     try {
       const deletedCategory = await CategoryService.deleteCategory(
-        req.params.id
+        req.params.name
       );
       if (!deletedCategory) {
         return res.status(404).json({ message: "Category not found" });

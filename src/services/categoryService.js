@@ -6,8 +6,8 @@ class CategoryService {
     return await CategoryRepository.findAll();
   }
 
-  async getCategoryById(id) {
-    return await CategoryRepository.findById(id);
+  async getCategoryByName(name) {
+    return await CategoryRepository.findByName(name);
   }
 
   async createCategory(categoryData) {
@@ -18,12 +18,12 @@ class CategoryService {
     return await CategoryRepository.createMany(categoryDatas);
   }
 
-  async updateCategory(id, categoryData) {
-    return await CategoryRepository.update(id, categoryData);
+  async updateCategory(name, categoryData) {
+    return await CategoryRepository.update(name, categoryData);
   }
 
-  async deleteCategory(id) {
-    return await CategoryRepository.delete(id);
+  async deleteCategory(name) {
+    return await CategoryRepository.delete(name);
   }
 }
 
