@@ -1,0 +1,22 @@
+[
+  {
+    "category_name": "Clothing",
+    "description": "Apparel and garments for men, women, and children"
+  },
+  {
+    "category_name": "Footwear",
+    "description": "Shoes, boots, sandals, and other types of footwear"
+  },
+  {
+    "category_name": "Electronics",
+    "description": "Gadgets, devices, and accessories"
+  },
+  {
+    "category_name": "Home Appliances",
+    "description": "Appliances for everyday use in household"
+  },
+  {
+    "category_name": "Sports",
+    "description": "Sports gear and fitness equipment"
+  }
+]

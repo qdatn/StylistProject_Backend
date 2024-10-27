@@ -1,0 +1,44 @@
+[
+  {
+    "product_name": "Men's Casual T-Shirt",
+    "price": 19.99,
+    "description": "A comfortable cotton T-shirt for casual wear.",
+    "brand": "Nike",
+    "stock_quantity": 150,
+    "min_quantity": 1,
+    "sold_quantity": 30,
+    "categories": "671dfdc635bdeb397abe5458",
+    "stock_update_date": "2024-10-01",
+    "status": true,
+    "image": "mens-casual-tshirt.jpg",
+    "attributes": "671dfded35bdeb397abe5462"
+  },
+  {
+    "product_name": "Women's Running Shoes",
+    "price": 89.99,
+    "description": "Lightweight and breathable running shoes for women.",
+    "brand": "Adidas",
+    "stock_quantity": 100,
+    "min_quantity": 1,
+    "sold_quantity": 15,
+    "categories": "671dfdc635bdeb397abe5459",
+    "stock_update_date": "2024-09-20",
+    "status": true,
+    "image": "womens-running-shoes.jpg",
+    "attributes": "671dfded35bdeb397abe5466"
+  },
+  {
+    "product_name": "Yoga Mat",
+    "price": 29.99,
+    "description": "Eco-friendly non-slip yoga mat for all types of yoga.",
+    "brand": "Gaiam",
+    "stock_quantity": 200,
+    "min_quantity": 1,
+    "sold_quantity": 40,
+    "categories": "671dfdc635bdeb397abe545c",
+    "stock_update_date": "2024-09-30",
+    "status": true,
+    "image": "yoga-mat.jpg",
+    "attributes": "671dfded35bdeb397abe5468"
+  }
+]

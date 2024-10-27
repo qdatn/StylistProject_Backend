@@ -1,0 +1,12 @@
+[
+  { "key": "color", "value": "red" },
+  { "key": "color", "value": "blue" },
+  { "key": "color", "value": "black" },
+  { "key": "color", "value": "white" },
+  { "key": "size", "value": "small" },
+  { "key": "size", "value": "medium" },
+  { "key": "size", "value": "large" },
+  { "key": "material", "value": "cotton" },
+  { "key": "material", "value": "polyester" },
+  { "key": "material", "value": "leather" }
+]

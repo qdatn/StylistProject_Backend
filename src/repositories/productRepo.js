@@ -2,11 +2,13 @@ import Product from "../models/productModel.js";
 
 class ProductRepository {
   async findAll() {
-    return await Product.find();
+    return await Product.find().populate("categories").populate("attributes");
   }
 
   async findById(id) {
-    return await Product.findOne({ product_id: id });
+    return await Product.findOne({ _id: id })
+      .populate("categories")
+      .populate("attributes");
   }
 
   async create(productData) {
@@ -18,13 +20,13 @@ class ProductRepository {
   }
 
   async update(id, productData) {
-    return await Product.findOneAndUpdate({ product_id: id }, productData, {
+    return await Product.findOneAndUpdate({ _id: id }, productData, {
       new: true,
     });
   }
 
   async delete(id) {
-    return await Product.deleteOne({ product_id: id });
+    return await Product.deleteOne({ _id: id });
   }
 }
 
