@@ -16,6 +16,7 @@ import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import userInfoRoutes from "./routes/userInfoRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import attributeRoutes from "./routes/attributeRoutes.js";
 
 // Import file cấu hình Swagger
 import swaggerSpec from "./configs/swagger.js";
@@ -75,6 +76,7 @@ app.use("/api/product", productRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/userinfo", userInfoRoutes);
 app.use("/api/comment", commentRoutes);
+app.use("/api/attribute", attributeRoutes);
 
 // Khởi động server
 app.listen(PORT, () => {
