@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userRepository from "../repositories/userRepo.js";
 import userInfoRepository from "../repositories/userInfoRepo.js";
-
+import { cartRepository } from "../repositories/cartRepo.js";
 class AuthService {
   async register(userData) {
     const { name, email, password, role } = userData;
@@ -24,8 +24,13 @@ class AuthService {
       user_id: user._id,
       name: name || "No Name Provided", // Tên có thể lấy từ userData hoặc mặc định
     });
+
+    // Tạo UserInfo cho User mới với user_id là _id của User
+    const cart = await cartRepository.createCart({
+      user: user._id,
+    });
     // return userRepository.createUser({ email, password: hashedPassword, role });
-    return { user, userinfo };
+    return { user, userinfo, cart };
   }
 
   async login(email, password) {

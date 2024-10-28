@@ -7,20 +7,21 @@ import "dotenv/config"; // Để load biến môi trường từ file .env
 
 // dotenv.config();
 
-import connectDB from "./configs/database.js"; // DB
-import userRoutes from "./routes/userRoutes.js";
-import passport from "passport";
-import session from "express-session";
-import authRoutes from "./routes/authRoutes.js";
-import productRoutes from "./routes/productRoutes.js";
-import categoryRoutes from "./routes/categoryRoutes.js";
-import userInfoRoutes from "./routes/userInfoRoutes.js";
-import commentRoutes from "./routes/commentRoutes.js";
-import attributeRoutes from "./routes/attributeRoutes.js";
+// import connectDB from "@configs/database.js"; // DB
+// import userRoutes from "./routes/userRoutes.js";
+// import passport from "passport";
+// import session from "express-session";
+// import authRoutes from "./routes/authRoutes.js";
+// import productRoutes from "./routes/productRoutes.js";
+// import categoryRoutes from "./routes/categoryRoutes.js";
+// import userInfoRoutes from "./routes/userInfoRoutes.js";
+// import commentRoutes from "./routes/commentRoutes.js";
+// import attributeRoutes from "./routes/attributeRoutes.js";
+// import cartRoutes from "./routes/cartRoutes.js";
 
 // Import file cấu hình Swagger
-import swaggerSpec from "./configs/swagger.js";
-import swaggerUi from "swagger-ui-express";
+// import swaggerSpec from "./configs/swagger.js";
+// import swaggerUi from "swagger-ui-express";
 
 const router = express.Router();
 
@@ -30,10 +31,10 @@ const app = express();
 app.use(express.json());
 
 // Connect to MongoDB
-connectDB();
+// connectDB();
 
 // Tích hợp Swagger
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Middleware
 app.use(
@@ -67,17 +68,17 @@ app.get("/", (req, res) => {
 });
 
 // Auth route
-app.use("/api/auth", authRoutes);
+// app.use("/api/auth", authRoutes);
 
 // Routes
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/product", productRoutes);
-app.use("/api/category", categoryRoutes);
-app.use("/api/userinfo", userInfoRoutes);
-app.use("/api/comment", commentRoutes);
-app.use("/api/attribute", attributeRoutes);
-
+// app.use("/api/users", userRoutes);
+// app.use("/api/auth", authRoutes);
+// app.use("/api/product", productRoutes);
+// app.use("/api/category", categoryRoutes);
+// app.use("/api/userinfo", userInfoRoutes);
+// app.use("/api/comment", commentRoutes);
+// app.use("/api/attribute", attributeRoutes);
+// app.use("/api/cart", cartRoutes);
 // Khởi động server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

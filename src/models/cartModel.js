@@ -3,8 +3,8 @@ import mongoose, { Schema } from "mongoose";
 // Define the Cart schema
 const cartSchema = new Schema(
   {
-    user_id: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-    product_id: { type: Schema.Types.ObjectId, required: true, ref: "Product" },
+    user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+    products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   },
   { timestamps: true }
 );
