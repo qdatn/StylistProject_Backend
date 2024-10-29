@@ -1,0 +1,27 @@
+// repositories/userRepository.js
+import User from "./user.model";
+import AuthDto from "./dtos/auth.dto";
+import IAuth from "./auth.interface";
+
+class UserRepository {
+  async findByEmail(email: string) {
+    return User.findOne({ email });
+  }
+
+  async createUser(userData: IAuth) {
+    const user = new User(userData);
+    return user.save();
+  }
+
+  async updateUser(id: string, updateData: IAuth) {
+    return await User.findByIdAndUpdate({ _id: id }, updateData, {
+      new: true,
+    });
+  }
+
+  async deleteUser(id: string) {
+    return await User.deleteOne({ _id: id });
+  }
+}
+
+export default new UserRepository();

@@ -4,14 +4,15 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import "dotenv/config"; // Để load biến môi trường từ file .env
-
+import App from "./app";
 // dotenv.config();
 
-// import connectDB from "@configs/database.js"; // DB
+import { AuthRoute, UserInfoRoute } from "@/routes";
+
+import connectDB from "@core/configs/database"; // DB
 // import userRoutes from "./routes/userRoutes.js";
 // import passport from "passport";
 // import session from "express-session";
-// import authRoutes from "./routes/authRoutes.js";
 // import productRoutes from "./routes/productRoutes.js";
 // import categoryRoutes from "./routes/categoryRoutes.js";
 // import userInfoRoutes from "./routes/userInfoRoutes.js";
@@ -23,12 +24,12 @@ import "dotenv/config"; // Để load biến môi trường từ file .env
 // import swaggerSpec from "./configs/swagger.js";
 // import swaggerUi from "swagger-ui-express";
 
-const router = express.Router();
+// const router = express.Router();
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
-const app = express();
-app.use(express.json());
+// const app = express();
+// app.use(express.json());
 
 // Connect to MongoDB
 // connectDB();
@@ -37,35 +38,35 @@ app.use(express.json());
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Middleware
-app.use(
-  cors({
-    // origin: [
-    //   "http://localhost:3000",
-    //   "https://stylist-project-frontend-3fb7r4the-qdatns-projects.vercel.app",
-    // ], // Địa chỉ frontend
-    origin: function (origin, callback) {
-      if (
-        !origin || // allow requests with no origin, like mobile apps or curl requests
-        origin === "http://localhost:3000" ||
-        /vercel\.app$/.test(origin) // allow any origin ending with 'vercel.app'
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    optionsSuccessStatus: 200, // for legacy browser support
-    methods: ["GET", "POST", "PUT", "DELETE"], // Các phương thức cho phép
-    credentials: true, // Nếu cần gửi cookie hoặc header đặc biệt
-  })
-); // Bật CORS cho toàn bộ các route
-app.use(morgan("dev")); // Ghi log request
-app.use(express.json()); // Parse JSON request body
+// app.use(
+//   cors({
+//     // origin: [
+//     //   "http://localhost:3000",
+//     //   "https://stylist-project-frontend-3fb7r4the-qdatns-projects.vercel.app",
+//     // ], // Địa chỉ frontend
+//     origin: function (origin, callback) {
+//       if (
+//         !origin || // allow requests with no origin, like mobile apps or curl requests
+//         origin === "http://localhost:3000" ||
+//         /vercel\.app$/.test(origin) // allow any origin ending with 'vercel.app'
+//       ) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     optionsSuccessStatus: 200, // for legacy browser support
+//     methods: ["GET", "POST", "PUT", "DELETE"], // Các phương thức cho phép
+//     credentials: true, // Nếu cần gửi cookie hoặc header đặc biệt
+//   })
+// ); // Bật CORS cho toàn bộ các route
+// app.use(morgan("dev")); // Ghi log request
+// app.use(express.json()); // Parse JSON request body
 
-// Route đơn giản
-app.get("/", (req, res) => {
-  res.send("Hello, World! Express.js is working!");
-});
+// // Route đơn giản
+// app.get("/", (req, res) => {
+//   res.send("Hello, World! Express.js is working!");
+// });
 
 // Auth route
 // app.use("/api/auth", authRoutes);
@@ -79,7 +80,18 @@ app.get("/", (req, res) => {
 // app.use("/api/comment", commentRoutes);
 // app.use("/api/attribute", attributeRoutes);
 // app.use("/api/cart", cartRoutes);
-// Khởi động server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+
+const routes = [AuthRoute, UserInfoRoute];
+
+const app = new App(routes);
+app.listen();
+// routes.forEach((route) => {
+//   app.use(route.path, route.router); // Gán path và router
+// });
+
+// export default app;
+
+// // Khởi động server
+// app.listen(PORT, () => {
+//   console.log(`Server is running on http://localhost:${PORT}`);
+// });

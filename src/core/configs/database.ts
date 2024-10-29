@@ -3,9 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config(); // Load environment variables
 
-const connectDB = async () => {
+const ConnectDB = async () => {
+  const MONGO_PATH: string = process.env.MONGO_URI || "";
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect(MONGO_PATH);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error("MongoDB connection error:", error);
@@ -13,4 +15,4 @@ const connectDB = async () => {
   }
 };
 
-export default connectDB;
+export default ConnectDB;
