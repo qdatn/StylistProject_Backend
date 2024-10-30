@@ -9,7 +9,7 @@ import {
   IsNotEmpty,
 } from "class-validator";
 import { Type } from "class-transformer"; // dùng cho việc chuyển đổi kiểu
-import AuthDto from "@/modules/auth/dtos/auth.dto";
+import AuthDto from "@modules/auth/dtos/auth.dto";
 enum Gender {
   Male = "Male",
   Female = "Female",

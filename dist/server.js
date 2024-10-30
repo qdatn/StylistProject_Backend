@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config"); // Để load biến môi trường từ file .env
 const app_1 = __importDefault(require("./app"));
 // dotenv.config();
-const routes_1 = require("@/routes");
+const _routes_1 = require("@routes");
 // import userRoutes from "./routes/userRoutes.js";
 // import passport from "passport";
 // import session from "express-session";
@@ -67,7 +67,7 @@ const routes_1 = require("@/routes");
 // app.use("/api/comment", commentRoutes);
 // app.use("/api/attribute", attributeRoutes);
 // app.use("/api/cart", cartRoutes);
-const routes = [routes_1.AuthRoute, routes_1.UserInfoRoute];
+const routes = [_routes_1.AuthRoute, _routes_1.UserInfoRoute, _routes_1.ProductRoute];
 const app = new app_1.default(routes);
 app.listen();
 // routes.forEach((route) => {

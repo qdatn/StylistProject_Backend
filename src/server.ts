@@ -7,7 +7,7 @@ import "dotenv/config"; // Để load biến môi trường từ file .env
 import App from "./app";
 // dotenv.config();
 
-import { AuthRoute, UserInfoRoute } from "@/routes";
+import { AuthRoute, UserInfoRoute, ProductRoute } from "@routes";
 
 import connectDB from "@core/configs/database"; // DB
 // import userRoutes from "./routes/userRoutes.js";
@@ -81,7 +81,7 @@ import connectDB from "@core/configs/database"; // DB
 // app.use("/api/attribute", attributeRoutes);
 // app.use("/api/cart", cartRoutes);
 
-const routes = [AuthRoute, UserInfoRoute];
+const routes = [AuthRoute, UserInfoRoute, ProductRoute];
 
 const app = new App(routes);
 app.listen();
