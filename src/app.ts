@@ -6,6 +6,7 @@ import ConnectDB from "@core/configs/database";
 import cors from "cors";
 import morgan from "morgan";
 import "dotenv/config"; // Để load biến môi trường từ file .env
+import cookieParser from "cookie-parser";
 
 export default class App {
   public app: Application;
@@ -46,6 +47,7 @@ export default class App {
     this.app.use(morgan("dev")); // Ghi log request
     this.app.use(express.json()); // Parse JSON request body
     this.app.use(bodyParser.json());
+    this.app.use(cookieParser());
     this.app.use(bodyParser.urlencoded({ extended: true }));
   }
 

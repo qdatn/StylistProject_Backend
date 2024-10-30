@@ -1,6 +1,9 @@
 import { Router } from "express";
 import AuthController from "@modules/auth/auth.controller";
 import RouteInterface from "@core/interfaces/route.interface";
+import authMiddleware from "@/core/middlewares/authMiddleware";
+import { Request, Response } from "express";
+import IAuth from "./auth.interface";
 
 class AuthRoute implements RouteInterface {
   public path = "/api/v1/auth";
@@ -14,8 +17,27 @@ class AuthRoute implements RouteInterface {
   private initializeRoutes() {
     this.router.post(`${this.path}/register`, AuthController.register);
     this.router.post(`${this.path}/login`, AuthController.login);
-    this.router.put(`${this.path}/update/:id`, AuthController.updateUser);
-    this.router.delete(`${this.path}/delete/:id`, AuthController.deleteUser);
+    this.router.post(`${this.path}/logout`, AuthController.logout);
+    this.router.put(
+      `${this.path}/update/:id`,
+      authMiddleware,
+      AuthController.updateUser
+    );
+    this.router.delete(
+      `${this.path}/delete/:id`,
+      authMiddleware,
+      AuthController.deleteUser
+    );
+    this.router.get(
+      "/api/v1/protected",
+      authMiddleware,
+      (req: Request, res: Response) => {
+        res.json({
+          message: "This is a protected route",
+          user: (req as Request & { user?: IAuth }).user,
+        });
+      }
+    );
   }
 }
 

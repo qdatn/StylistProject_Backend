@@ -1,6 +1,6 @@
 // services/userInfoService.js
 import UserInfoRepository from "@modules/userInfo/userInfo.repository";
-import UserInfoDto from "@/modules/userInfo/dtos/userinfo.dto";
+import UserInfoDto from "@/modules/userInfo/dtos/userInfo.dto";
 
 class UserInfoService {
   async getAllUserInfos() {

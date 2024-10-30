@@ -1,6 +1,6 @@
 // repositories/userInfoRepository.js
 import UserInfo from "@modules/userInfo/userInfo.model";
-import UserInfoDto from "@/modules/userInfo/dtos/userinfo.dto";
+import UserInfoDto from "@/modules/userInfo/dtos/userInfo.dto";
 
 class UserInfoRepository {
   async findAll() {

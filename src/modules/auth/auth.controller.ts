@@ -23,10 +23,22 @@ class AuthController {
     try {
       const { email, password } = req.body;
       const { user, token } = await AuthService.login(email, password);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 60 * 60 * 24 * 1000,
+        // signed: true,
+      });
       res.json({ user, token });
     } catch (err: any) {
       res.status(400).json({ message: err.message });
     }
+  }
+
+  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+    // Xóa cookie chứa token
+    res.clearCookie("token");
+    res.status(200).json({ message: "Logged out successfully" });
   }
 
   async updateUser(

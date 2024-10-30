@@ -4,12 +4,10 @@ import jwt from "jsonwebtoken";
 import UserRepository from "./auth.repository";
 import UserInfoRepository from "@modules/userInfo/userInfo.repository";
 import AuthDto from "./dtos/auth.dto";
-import IAuth from "./auth.interface";
 import RegisterDto from "./dtos/register.dto";
 
 import generateJwt from "@core/data/utils/generateJwt";
-import LoginDto from "./dtos/login.dto";
-import IUserInfo from "@modules/userInfo/userInfo.interface";
+import { Request, Response, NextFunction } from "express";
 
 class AuthService {
   async register(userData: RegisterDto) {
