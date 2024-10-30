@@ -28,16 +28,6 @@ class AuthRoute implements RouteInterface {
       authMiddleware,
       AuthController.deleteUser
     );
-    this.router.get(
-      "/api/v1/protected",
-      authMiddleware,
-      (req: Request, res: Response) => {
-        res.json({
-          message: "This is a protected route",
-          user: (req as Request & { user?: IAuth }).user,
-        });
-      }
-    );
   }
 }
 
