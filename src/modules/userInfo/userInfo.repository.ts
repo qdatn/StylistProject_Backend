@@ -4,7 +4,7 @@ import UserInfoDto from "@/modules/userInfo/dtos/userInfo.dto";
 
 class UserInfoRepository {
   async findAll() {
-    return await UserInfo.find();
+    return await UserInfo.find().populate("user");
   }
 
   async findById(id: string) {
@@ -12,7 +12,7 @@ class UserInfoRepository {
   }
 
   async create(userInfoData: UserInfoDto) {
-    return (await UserInfo.create(userInfoData)).populate("user");
+    return await UserInfo.create(userInfoData);
   }
 
   async update(id: string, userInfoData: UserInfoDto) {
