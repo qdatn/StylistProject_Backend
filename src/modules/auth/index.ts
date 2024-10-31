@@ -4,6 +4,8 @@ import UserService from "@modules/auth/auth.service";
 import AuthController from "@modules/auth/auth.controller";
 import AuthRoute from "@modules/auth/auth.route";
 import IAuth from "@modules/auth/auth.interface";
+import AuthDto from "./dtos/auth.dto";
+
 export {
   UserModel,
   UserRepository,
@@ -11,4 +13,5 @@ export {
   AuthController,
   AuthRoute,
   IAuth,
+  AuthDto,
 };

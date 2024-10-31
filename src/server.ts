@@ -9,6 +9,7 @@ import {
   AttributeRoute,
   CartRoute,
   CommentRoute,
+  DiscountRoute,
 } from "@routes";
 
 const routes = [
@@ -19,6 +20,7 @@ const routes = [
   AttributeRoute,
   CartRoute,
   CommentRoute,
+  DiscountRoute,
 ];
 
 const app = new App(routes);

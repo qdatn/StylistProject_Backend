@@ -5,6 +5,7 @@ import { CategoryRoute } from "@modules/category";
 import { AttributeRoute } from "@modules/attribute";
 import { CartRoute } from "@modules/cart";
 import { CommentRoute } from "@modules/comment";
+import { DiscountRoute } from "@modules/discount";
 
 export {
   AuthRoute,
@@ -14,4 +15,5 @@ export {
   AttributeRoute,
   CartRoute,
   CommentRoute,
+  DiscountRoute,
 };
