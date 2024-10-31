@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsDate,
   IsMongoId,
+  IsArray,
 } from "class-validator";
 import { Type } from "class-transformer";
 
@@ -52,8 +53,8 @@ export default class ProductDto {
   @IsOptional()
   image?: string;
 
-  @IsMongoId()
-  attributes?: Object;
+  @IsArray()
+  attributes?: Object[];
 
   @IsDate()
   createAt?: Date;
@@ -73,7 +74,7 @@ export default class ProductDto {
     stock_update_date?: Date,
     status?: boolean,
     image?: string,
-    attributes?: Object,
+    attributes?: Object[],
     createAt?: Date,
     updateAt?: Date
   ) {

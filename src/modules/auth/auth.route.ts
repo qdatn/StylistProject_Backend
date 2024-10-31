@@ -1,7 +1,7 @@
 import { Router } from "express";
 import AuthController from "@modules/auth/auth.controller";
 import RouteInterface from "@core/interfaces/route.interface";
-import authMiddleware from "@core/middlewares/authMiddleware";
+import authMiddleware from "@core/middlewares/auth.middleware";
 import { Request, Response } from "express";
 import IAuth from "./auth.interface";
 

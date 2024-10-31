@@ -14,9 +14,9 @@ class ProductRoute implements RouteInterface {
   private initializeRoutes() {
     this.router.get(`${this.path}/`, ProductController.getAllProducts);
     this.router.get(`${this.path}/:id`, ProductController.getProductById);
-    this.router.post(`${this.path}/insert`, ProductController.createProduct);
+    this.router.post(`${this.path}/insertOne`, ProductController.createProduct);
     this.router.post(
-      `${this.path}/insert_many`,
+      `${this.path}/insertMany`,
       ProductController.createManyProducts
     );
     this.router.put(`${this.path}/update/:id`, ProductController.updateProduct);

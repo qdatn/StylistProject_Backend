@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import Attribute from "@modules/attribute/attribute.model";
 
 // Define the Product schema
 const productSchema = new Schema(
@@ -10,19 +11,22 @@ const productSchema = new Schema(
     stock_quantity: { type: Number, required: true, default: 0 },
     min_quantity: { type: Number, required: true, default: 0 },
     sold_quantity: { type: Number, default: 0 },
-    categories: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      // ref: "Category",
-    },
+    categories: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "Category",
+      },
+    ],
     stock_update_date: { type: Date, default: new Date() },
     status: { type: Boolean, default: true },
     image: { type: String, defaut: "" },
-    attributes: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      // ref: "Attribute",
-    },
+    attributes: [
+      {
+        key: { type: String },
+        value: [{ type: String }],
+      },
+    ],
   },
   { timestamps: true }
 );

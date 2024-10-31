@@ -7,6 +7,15 @@ First, install all dependencies lib need to use in this project
 npm install
 ```
 
+Second run to build project:
+
+```bash
+
+# build the
+npm run build
+
+```
+
 Second run the development server:
 
 ```bash

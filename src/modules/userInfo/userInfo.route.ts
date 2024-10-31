@@ -12,11 +12,17 @@ class UserInfoRoute implements IRoute {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/`, UserInfoController.getAllUserInfo); // Lấy tất cả UserInfo
+    this.router.get(`${this.path}/all`, UserInfoController.getAllUserInfo); // Lấy tất cả UserInfo
     this.router.get(`${this.path}/:id`, UserInfoController.getUserInfoById); // Lấy UserInfo theo user_id
     this.router.post(`${this.path}/`, UserInfoController.createUserInfo); // Tạo UserInfo mới
-    this.router.put(`${this.path}/:id`, UserInfoController.updateUserInfo); // Cập nhật UserInfo theo ID
-    this.router.delete(`${this.path}/:id`, UserInfoController.deleteUserInfo); // Xóa UserInfo theo ID
+    this.router.put(
+      `${this.path}/update/:id`,
+      UserInfoController.updateUserInfo
+    ); // Cập nhật UserInfo theo ID
+    this.router.delete(
+      `${this.path}/delete/:id`,
+      UserInfoController.deleteUserInfo
+    ); // Xóa UserInfo theo ID
     // this.router.put(`${this.path}/:id`, AuthController.updateUser);
     // this.router.delete(`${this.path}/:id`, AuthController.deleteUser);
   }
