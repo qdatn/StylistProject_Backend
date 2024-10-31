@@ -7,11 +7,11 @@ class DiscountRepository {
   }
 
   async findById(id: string) {
-    return await Discount.findById(id);
+    return await Discount.findById(id).populate("apply_items");
   }
 
   async findAll() {
-    return await Discount.find();
+    return await Discount.find().populate("apply_items");
   }
 
   async update(id: string, discountData: DiscountDto) {
