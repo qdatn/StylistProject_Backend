@@ -18,8 +18,16 @@ class CartService {
     return await CartRepository.updateCart(id, updateData);
   }
 
+  async addProduct(id: string, product: string) {
+    return await CartRepository.addProduct(id, product);
+  }
+
   async deleteCart(id: string) {
     return await CartRepository.deleteCart(id);
+  }
+
+  async deleteProduct(id: string, product: string) {
+    return await CartRepository.deleteProduct(id, product);
   }
 }
 

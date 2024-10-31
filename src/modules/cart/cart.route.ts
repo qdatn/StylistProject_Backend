@@ -13,10 +13,21 @@ class CartRoute implements RouteInterface {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/all`, CartController.getAllCart);
-    this.router.get(`${this.path}/:id`, CartController.getCartByUserId);
+    this.router.get(`${this.path}/:userid`, CartController.getCartByUserId);
     this.router.post(`${this.path}/`, CartController.createCart);
-    this.router.put(`${this.path}/update/:id`, CartController.updateCart);
-    this.router.delete(`${this.path}/delete/:id`, CartController.deleteCart);
+    this.router.put(`${this.path}/update/:userid`, CartController.updateCart);
+    this.router.put(
+      `${this.path}/addProduct/:userid`,
+      CartController.addProduct
+    );
+    this.router.delete(
+      `${this.path}/delete/:userid`,
+      CartController.deleteCart
+    );
+    this.router.put(
+      `${this.path}/deleteProduct/:userid`,
+      CartController.deleteProduct
+    );
   }
 }
 

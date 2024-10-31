@@ -22,8 +22,28 @@ class CartRepository {
     });
   }
 
+  async addProduct(id: string, product: string) {
+    return await Cart.findOneAndUpdate(
+      { user: id },
+      { $push: { products: product } },
+      {
+        new: true,
+      }
+    );
+  }
+
   async deleteCart(id: string) {
     return await Cart.deleteOne({ user: id });
+  }
+
+  async deleteProduct(id: string, product: string) {
+    return await Cart.findOneAndUpdate(
+      { user: id },
+      { $pull: { products: product } },
+      {
+        new: true,
+      }
+    );
   }
 }
 

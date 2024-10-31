@@ -5,9 +5,9 @@ import UserRepository from "./auth.repository";
 import UserInfoRepository from "@modules/userInfo/userInfo.repository";
 import AuthDto from "./dtos/auth.dto";
 import RegisterDto from "./dtos/register.dto";
+import { CartRepository } from "@modules/cart";
 
 import generateJwt from "@core/data/utils/generateJwt";
-import { Request, Response, NextFunction } from "express";
 
 class AuthService {
   async register(userData: RegisterDto) {
@@ -31,12 +31,13 @@ class AuthService {
     });
 
     // Tạo UserInfo cho User mới với user_id là _id của User
-    //     const cart = await cartRepository.createCart({
-    //       user: user._id,
-    //     });
-    //     // return userRepository.createUser({ email, password: hashedPassword, role });
-    // return { user, userinfo, cart };
-    return { user, userinfo };
+    const cart = await CartRepository.createCart({
+      user: user._id,
+      products: [],
+    });
+    // return userRepository.createUser({ email, password: hashedPassword, role });
+    return { user, userinfo, cart };
+    // return { user, userinfo };
   }
 
   async login(email: string, password: string) {
