@@ -10,7 +10,7 @@ import {
   IsDate,
 } from "class-validator";
 
-export class OrderDTO {
+export default class OrderDTO {
   @IsMongoId()
   @IsNotEmpty()
   user_id: Object;

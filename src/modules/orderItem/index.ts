@@ -1,17 +1,17 @@
-import OrderItemModel from "./orderItem.model";
-import orderItemRepository from "./orderItem.repository";
-import orderItemService from "./orderItem.service";
-import orderItemController from "./orderItem.controller";
-import orderItemRoute from "./orderItem.controller";
+import OrderItem from "./orderItem.model";
+import OrderItemRepository from "./orderItem.repository";
+import OrderItemService from "./orderItem.service";
+import OrderItemController from "./orderItem.controller";
+import OrderItemRoute from "./orderItem.route";
 import OrderItemDTO from "./dtos/orderItem.dto";
-// import OrderItemInterface from "./orderItem.interface";
+import IOrderItem from "./orderItem.interface";
 
 export {
-  OrderItemModel,
-  orderItemRepository,
-  orderItemService,
-  orderItemController,
-  orderItemRoute,
-  //   OrderItemInterface,
+  OrderItem,
+  OrderItemRepository,
+  OrderItemService,
+  OrderItemController,
+  OrderItemRoute,
+  IOrderItem,
   OrderItemDTO,
 };

@@ -7,6 +7,7 @@ import {
   IsMongoId,
   IsArray,
 } from "class-validator";
+import "reflect-metadata";
 import { Type } from "class-transformer";
 
 export default class ProductDto {

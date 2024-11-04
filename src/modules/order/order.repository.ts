@@ -1,5 +1,5 @@
 // repositories/orderRepository.js
-import { OrderDTO } from "./dtos/order.dto";
+import OrderDTO from "./dtos/order.dto";
 import Order from "./order.model";
 
 class OrderRepository {

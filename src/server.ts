@@ -10,6 +10,8 @@ import {
   CartRoute,
   CommentRoute,
   DiscountRoute,
+  OrderRoute,
+  OrderItemRoute,
 } from "@routes";
 
 const routes = [
@@ -21,6 +23,8 @@ const routes = [
   CartRoute,
   CommentRoute,
   DiscountRoute,
+  OrderRoute,
+  OrderItemRoute,
 ];
 
 const app = new App(routes);

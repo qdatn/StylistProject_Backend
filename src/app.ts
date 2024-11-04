@@ -7,6 +7,7 @@ import cors from "cors";
 import morgan from "morgan";
 import "dotenv/config"; // Để load biến môi trường từ file .env
 import cookieParser from "cookie-parser";
+import { errorMiddleWare } from "@core/middlewares";
 
 export default class App {
   public app: Application;
@@ -49,6 +50,7 @@ export default class App {
     this.app.use(bodyParser.json());
     this.app.use(cookieParser());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(errorMiddleWare);
   }
 
   private initializeRoutes(routes: IRoute[]) {

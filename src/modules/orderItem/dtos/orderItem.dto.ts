@@ -10,6 +10,10 @@ import {
 export default class OrderItemDTO {
   @IsMongoId()
   @IsNotEmpty()
+  order: Object;
+
+  @IsMongoId()
+  @IsNotEmpty()
   product: Object;
 
   @IsInt()
@@ -18,9 +22,10 @@ export default class OrderItemDTO {
 
   @IsOptional()
   @IsString()
-  note: string;
+  note?: string;
 
-  constructor(product: string, quantity: number, note: string) {
+  constructor(order: Object, product: Object, quantity: number, note?: string) {
+    this.order = order;
     this.product = product;
     this.quantity = quantity;
     this.note = note;

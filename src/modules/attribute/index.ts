@@ -1,4 +1,4 @@
-import AttributeModel from "./attribute.model";
+import Attribute from "./attribute.model";
 import AttributeRepository from "./attribute.repository";
 import AttributeService from "./attribute.service";
 import AttributeController from "./attribute.controller";
@@ -7,7 +7,7 @@ import AttributeRoute from "./attribute.route";
 import AttributeDto from "./dtos/attribute.dto";
 
 export {
-  AttributeModel,
+  Attribute,
   AttributeRepository,
   AttributeService,
   AttributeController,

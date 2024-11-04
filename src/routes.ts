@@ -6,6 +6,8 @@ import { AttributeRoute } from "@modules/attribute";
 import { CartRoute } from "@modules/cart";
 import { CommentRoute } from "@modules/comment";
 import { DiscountRoute } from "@modules/discount";
+import { OrderRoute } from "@modules/order";
+import { OrderItemRoute } from "@modules/orderItem";
 
 export {
   AuthRoute,
@@ -16,4 +18,6 @@ export {
   CartRoute,
   CommentRoute,
   DiscountRoute,
+  OrderRoute,
+  OrderItemRoute,
 };

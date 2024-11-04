@@ -12,7 +12,11 @@ class OrderItemRoute implements RouteInterface {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/`, OrderItemController.createOrderItem);
+    this.router.post(
+      `${this.path}/`,
+      // reduceProductQtyMiddleware,
+      OrderItemController.createOrderItem
+    );
     this.router.get(`${this.path}/`, OrderItemController.getAllOrderItems);
     this.router.get(`${this.path}/:id`, OrderItemController.getOrderItemById);
     this.router.put(`${this.path}/:id`, OrderItemController.updateOrderItem);

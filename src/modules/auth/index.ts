@@ -1,4 +1,4 @@
-import UserModel from "@modules/auth/user.model";
+import User from "@modules/auth/user.model";
 import UserRepository from "@modules/auth/auth.repository";
 import UserService from "@modules/auth/auth.service";
 import AuthController from "@modules/auth/auth.controller";
@@ -7,7 +7,7 @@ import IAuth from "@modules/auth/auth.interface";
 import AuthDto from "./dtos/auth.dto";
 
 export {
-  UserModel,
+  User,
   UserRepository,
   UserService,
   AuthController,

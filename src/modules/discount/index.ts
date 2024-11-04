@@ -1,4 +1,4 @@
-import DiscountModel from "./discount.model";
+import Discount from "./discount.model";
 import DiscountRepository from "./discount.repository";
 import DiscountService from "./discount.service";
 import DiscountController from "./discount.controller";
@@ -7,7 +7,7 @@ import IDiscount from "./discount.interface";
 import DiscountDto from "./dtos/discount.dto";
 
 export {
-  DiscountModel,
+  Discount,
   DiscountRepository,
   DiscountService,
   DiscountController,

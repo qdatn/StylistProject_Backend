@@ -1,4 +1,4 @@
-import UserInfoModel from "./userInfo.model";
+import UserInfo from "./userInfo.model";
 import UserInfoRepository from "./userInfo.repository";
 import UserInfoService from "./userInfo.service";
 import UserInfoController from "./userInfo.controller";
@@ -7,7 +7,7 @@ import IUserInfo from "./userInfo.interface";
 import UserInfoDto from "./dtos/userInfo.dto";
 
 export {
-  UserInfoModel,
+  UserInfo,
   UserInfoRepository,
   UserInfoService,
   UserInfoController,

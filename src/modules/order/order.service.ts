@@ -1,5 +1,5 @@
 // services/orderService.js
-import { OrderDTO } from "./dtos/order.dto";
+import OrderDTO from "./dtos/order.dto";
 import orderRepository from "./order.repository";
 
 class OrderService {

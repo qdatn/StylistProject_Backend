@@ -8,11 +8,11 @@ class OrderItemRepository {
   }
 
   async getOrderItemById(id: string) {
-    return await OrderItem.findById(id).populate("product_id");
+    return await OrderItem.findById(id).populate("product");
   }
 
   async getAllOrderItems() {
-    return await OrderItem.find().populate("product_id");
+    return await OrderItem.find().populate("product");
   }
 
   async updateOrderItem(id: string, data: OrderItemDTO) {
@@ -20,7 +20,7 @@ class OrderItemRepository {
   }
 
   async deleteOrderItem(id: string) {
-    return await OrderItem.deleteOne({ _id: id });
+    return await OrderItem.findOneAndDelete({ _id: id });
   }
 }
 
