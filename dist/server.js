@@ -15,6 +15,8 @@ const routes = [
     _routes_1.CartRoute,
     _routes_1.CommentRoute,
     _routes_1.DiscountRoute,
+    _routes_1.OrderRoute,
+    _routes_1.OrderItemRoute,
 ];
 const app = new app_1.default(routes);
 app.listen();
