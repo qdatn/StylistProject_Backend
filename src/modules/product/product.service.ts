@@ -17,7 +17,7 @@ class ProductService {
     const image = productData.image;
     if (image) {
       try {
-        const uploadedImage = await uploadImage(image);
+        const uploadedImage = await uploadImage(image, "product");
 
         productData.image = uploadedImage;
       } catch (error: any) {
