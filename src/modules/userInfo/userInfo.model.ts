@@ -5,6 +5,12 @@ const userInfoSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     name: { type: String, required: true },
+    avatar: {
+      type: String,
+      // required: true,
+      default:
+        "https://res.cloudinary.com/dpnzwc8ti/image/upload/v1730707028/deafaultavt_male_mzrhqq.jpg",
+    },
     phone_number: { type: String, default: "No provided" },
     gender: {
       type: String,
