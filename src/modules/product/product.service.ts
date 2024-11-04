@@ -1,5 +1,7 @@
 import ProductRepository from "@modules/product/product.repository";
 import ProductDto from "@modules/product/dtos/product.dto";
+import { uploadImage } from "@core/utils";
+import IProduct from "./product.interface";
 
 class ProductService {
   async getAllProducts() {
@@ -10,7 +12,18 @@ class ProductService {
     return await ProductRepository.findById(productId);
   }
 
-  async createProduct(productData: ProductDto) {
+  async createProduct(productData: ProductDto): Promise<IProduct | any> {
+    // const image = uploadImage(productData.image as string);
+    const image = productData.image;
+    if (image) {
+      try {
+        const uploadedImage = await uploadImage(image);
+
+        productData.image = uploadedImage;
+      } catch (error: any) {
+        console.error("Lỗi khi tải lên hình ảnh:", error);
+      }
+    }
     return await ProductRepository.create(productData);
   }
 
