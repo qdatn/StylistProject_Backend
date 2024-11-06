@@ -6,8 +6,11 @@ import UserInfoRepository from "@modules/userInfo/userInfo.repository";
 import AuthDto from "./dtos/auth.dto";
 import RegisterDto from "./dtos/register.dto";
 import { CartRepository } from "@modules/cart";
+import { generateOTP } from "@core/utils";
 
-import generateJwt from "@core/data/utils/generateJwt";
+import generateJwt from "@core/utils/generateJwt";
+import { OTP } from "@modules/auth";
+import nodemailer from "nodemailer";
 
 class AuthService {
   async register(userData: RegisterDto) {
@@ -61,6 +64,48 @@ class AuthService {
 
   async deleteUser(id: string) {
     return await UserRepository.deleteUser(id);
+  }
+
+  async sendVerificationEmail(email: string) {
+    const otp = generateOTP();
+    const verificationUrl = `
+    Hello,
+
+    Thank you for registering an account at [ Stylist ]. To complete your registration, please click the link below to verify your email address.
+
+    Verification link: ${process.env.BASE_URL}/auth/verify?otp=${otp}
+
+    Note: This link will expire in 5 minutes.
+
+    If you did not request this registration, please ignore this email.
+
+    Best regards,
+    The [ Stylist ] Support Team
+    `;
+
+    // Lưu OTP và thời gian hết hạn vào cơ sở dữ liệu
+    await OTP.create({
+      email,
+      otp,
+      expiresAt: Date.now() + 5 * 60 * 1000, // 5 phút
+    });
+
+    // Gửi email chứa đường dẫn xác minh
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER, // SendGrid SMTP uses 'apikey' as the username
+        pass: process.env.SMTP_PASS, // Replace with your SendGrid API key
+      },
+    });
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: email,
+      subject: "Email Verification for [ Stylist ] registrations",
+      text: `${verificationUrl}`,
+    });
   }
 }
 

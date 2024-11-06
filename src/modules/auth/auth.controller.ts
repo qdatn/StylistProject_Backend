@@ -2,6 +2,7 @@
 import AuthService from "@modules/auth/auth.service";
 import { NextFunction, Request, Response } from "express";
 import RegisterDto from "./dtos/register.dto";
+import OTP from "./otp.model";
 // import AuthDto from "./dtos/auth.dto";
 
 class AuthController {
@@ -70,6 +71,64 @@ class AuthController {
       res.json({ message: "User deleted successfully" });
     } catch (err: any) {
       res.status(500).json({ message: err.message });
+    }
+  }
+
+  async sendVerification(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { email } = req.params;
+
+      if (!email) {
+        res.status(400).json({ message: "Email are required." });
+      } else {
+        const result = await AuthService.sendVerificationEmail(email);
+        res
+          .status(200)
+          .json({ message: "Verification email sent successfully" });
+      }
+    } catch (err: any) {
+      if (!res.headersSent) {
+        res.status(500).json({ message: err });
+      }
+    }
+  }
+
+  async verifyOTP(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { email, otp } = req.body;
+      // Kiểm tra OTP và userId trong cơ sở dữ liệu
+      const otpRecord = await OTP.findOne({
+        otp: otp,
+        isUsed: false,
+      });
+
+      if (!otpRecord) {
+        res
+          .status(400)
+          .json({ message: "Invalid or expired OTP or OTP is used!" });
+      } else {
+        // Kiểm tra thời gian hết hạn của OTP
+        if (otpRecord && otpRecord.expiresAt.getTime() < Date.now()) {
+          await OTP.deleteOne({ email: email, otp: otp });
+          res.status(400).json({ message: "OTP expired" });
+        } else {
+          // Đánh dấu OTP là đã sử dụng và xác minh thành công
+          await OTP.updateOne({ email: email, otp: otp }, { isUsed: true });
+          res.status(200).json({ message: "OTP verified successfully" });
+        }
+      }
+    } catch (err: any) {
+      if (!res.headersSent) {
+        res.status(500).json({ message: err });
+      }
     }
   }
 }
