@@ -3,6 +3,7 @@ import errorMiddleWare from "./error.middleware";
 import authorizeMiddleware from "./author.middleware";
 import reduceProductStock from "./reduceProductQty.middleware";
 import increaseProductStock from "./increaseProductQty.middleware";
+import pagination from "./pagination.middleware";
 
 export {
   authMiddleware,
@@ -10,4 +11,5 @@ export {
   authorizeMiddleware,
   reduceProductStock,
   increaseProductStock,
+  pagination
 };

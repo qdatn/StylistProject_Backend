@@ -1,3 +1,4 @@
+import { pagination } from "@core/middlewares";
 import CommentService from "./comment.service";
 import { Request, Response, NextFunction } from "express";
 
@@ -22,7 +23,9 @@ class CommentController {
   ): Promise<void> {
     try {
       const comments = await CommentService.getAllComments();
-      res.json(comments);
+      // Pagination for object comment data got from api getAll
+      await pagination(req, res, comments, next);
+      res.json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

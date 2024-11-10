@@ -3,7 +3,7 @@ import CommentController from "./comment.controller";
 import RouteInterface from "@core/interfaces/route.interface";
 
 class CommentRoute implements RouteInterface {
-  public path = "/api/v1/comment";
+  public path = "/api/comment";
   public router = Router();
 
   // Constructor
