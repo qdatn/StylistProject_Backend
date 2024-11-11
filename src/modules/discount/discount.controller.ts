@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import DiscountService from "./discount.service";
+import { pagination } from "@core/middlewares";
 
 class DiscountController {
   async createDiscount(
@@ -38,7 +39,8 @@ class DiscountController {
   ): Promise<void> {
     try {
       const discounts = await DiscountService.getAllDiscounts();
-      res.json(discounts);
+      await pagination(req, res, discounts, next);
+      res.json(res.locals.pagination);
     } catch (error) {
       res.status(500).json({ message: "Error retrieving discounts", error });
     }

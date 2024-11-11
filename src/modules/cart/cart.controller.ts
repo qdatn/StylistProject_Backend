@@ -1,3 +1,4 @@
+import { pagination } from "@core/middlewares";
 import CartService from "./cart.service";
 import { Request, Response, NextFunction } from "express";
 
@@ -21,11 +22,12 @@ class CartController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const cart = await CartService.getAllCart();
-      if (!cart) {
+      const carts = await CartService.getAllCart();
+      if (!carts) {
         res.status(404).json({ message: "Cart not found" });
       }
-      res.json(cart);
+      await pagination(req, res, carts, next);
+      res.json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

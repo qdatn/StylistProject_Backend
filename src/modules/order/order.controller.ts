@@ -1,4 +1,5 @@
 // controllers/orderController.js
+import { pagination } from "@core/middlewares";
 import OrderService from "./order.service";
 import { Request, Response, NextFunction } from "express";
 class OrderController {
@@ -38,7 +39,8 @@ class OrderController {
   ): Promise<void> {
     try {
       const orders = await OrderService.getAllOrders();
-      res.status(200).json(orders);
+      await pagination(req, res, orders, next);
+      res.json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

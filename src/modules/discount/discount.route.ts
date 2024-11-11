@@ -3,7 +3,7 @@ import DiscountController from "./discount.controller";
 import RouteInterface from "@core/interfaces/route.interface";
 
 class DiscountRoute implements RouteInterface {
-  public path = "/api/v1/discount";
+  public path = "/api/discount";
   public router = Router();
 
   // Constructor

@@ -8,6 +8,8 @@ import morgan from "morgan";
 import "dotenv/config"; // Để load biến môi trường từ file .env
 import cookieParser from "cookie-parser";
 import { errorMiddleWare } from "@core/middlewares";
+import swaggerJSDoc, { Options } from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
 
 export default class App {
   public app: Application;
@@ -33,6 +35,7 @@ export default class App {
           if (
             !origin || // allow requests with no origin, like mobile apps or curl requests
             origin === "http://localhost:3000" ||
+            "http://localhost:5000" ||
             /vercel\.app$/.test(origin) // allow any origin ending with 'vercel.app'
           ) {
             callback(null, true);
@@ -51,6 +54,29 @@ export default class App {
     this.app.use(cookieParser());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(errorMiddleWare);
+
+    const options: Options = {
+      definition: {
+        openapi: "3.0.0",
+        info: {
+          title: "Stylist Ecommerce API",
+          version: "1.0.0",
+          description: "API documentation for Stylist Ecommerce",
+        },
+        servers: [
+          {
+            url: "http://localhost:5000",
+            description: "API server",
+          },
+        ],
+      },
+      apis: ["./routes.ts", "./src/**/*.ts"],
+    };
+    this.app.use(
+      "/api-docs",
+      swaggerUI.serve,
+      swaggerUI.setup(swaggerJSDoc(options))
+    );
   }
 
   private initializeRoutes(routes: IRoute[]) {

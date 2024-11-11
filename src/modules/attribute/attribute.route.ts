@@ -3,7 +3,7 @@ import AttributeController from "./attribute.controller";
 import RouteInterface from "@core/interfaces/route.interface";
 
 class AttributeRoute implements RouteInterface {
-  public path = "/api/v1/attribute";
+  public path = "/api/attribute";
   public router = Router();
 
   // Constructor

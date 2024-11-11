@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 import IAuth from "./auth.interface";
 
 class AuthRoute implements RouteInterface {
-  public path = "/api/v1/auth";
+  public path = "/api/auth";
   public router = Router();
 
   // Constructor
@@ -19,12 +19,12 @@ class AuthRoute implements RouteInterface {
     this.router.post(`${this.path}/login`, AuthController.login);
     this.router.post(`${this.path}/logout`, AuthController.logout);
     this.router.put(
-      `${this.path}/update/:id`,
+      `${this.path}/:id`,
       authMiddleware,
       AuthController.updateUser
     );
     this.router.delete(
-      `${this.path}/delete/:id`,
+      `${this.path}/:id`,
       authMiddleware,
       AuthController.deleteUser
     );

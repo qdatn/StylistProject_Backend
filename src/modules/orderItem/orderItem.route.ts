@@ -3,7 +3,7 @@ import OrderItemController from "./orderItem.controller";
 import RouteInterface from "@core/interfaces/route.interface";
 
 class OrderItemRoute implements RouteInterface {
-  public path = "/api/v1/orderitem";
+  public path = "/api/orderitem";
   public router = Router();
 
   // Constructor

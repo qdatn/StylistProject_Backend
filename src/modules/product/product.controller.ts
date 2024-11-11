@@ -1,3 +1,4 @@
+import { pagination } from "@core/middlewares";
 import ProductService from "@modules/product/product.service";
 import { Request, Response, NextFunction } from "express";
 
@@ -9,7 +10,8 @@ class ProductController {
   ): Promise<void> {
     try {
       const products = await ProductService.getAllProducts();
-      res.status(200).json(products);
+      await pagination(req, res, products, next);
+      res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

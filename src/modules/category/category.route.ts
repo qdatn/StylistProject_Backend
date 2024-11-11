@@ -3,7 +3,7 @@ import CategoryController from "@modules/category/category.controller";
 import RouteInterface from "@core/interfaces/route.interface";
 
 class CategoryRoute implements RouteInterface {
-  public path = "/api/v1/category";
+  public path = "/api/category";
   public router = Router();
 
   // Constructor
@@ -15,7 +15,7 @@ class CategoryRoute implements RouteInterface {
     this.router.get(`${this.path}/`, CategoryController.getAllCategories); // Lấy tất cả category
     this.router.get(`${this.path}/:name`, CategoryController.getCategoryByName); // Lấy category theo ID
     this.router.post(
-      `${this.path}/insertOne`,
+      `${this.path}/`,
       CategoryController.createCategory
     ); // Tạo category mới
     this.router.post(

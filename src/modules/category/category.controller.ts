@@ -1,4 +1,5 @@
 // controllers/categoryController.js
+import { pagination } from "@core/middlewares";
 import CategoryService from "@modules/category/category.service";
 import { Request, Response, NextFunction } from "express";
 
@@ -10,7 +11,8 @@ class CategoryController {
   ): Promise<void> {
     try {
       const categories = await CategoryService.getAllCategories();
-      res.status(200).json(categories);
+      await pagination(req, res, categories, next);
+      res.json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

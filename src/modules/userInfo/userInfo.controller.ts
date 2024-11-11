@@ -1,4 +1,5 @@
 // controllers/userInfoController.js
+import { pagination } from "@core/middlewares";
 import userInfoService from "@modules/userInfo/userInfo.service";
 import { NextFunction, Request, Response } from "express";
 
@@ -10,7 +11,8 @@ class UserInfoController {
   ): Promise<void> {
     try {
       const userInfos = await userInfoService.getAllUserInfos();
-      res.status(200).json(userInfos);
+      await pagination(req, res, userInfos, next);
+      res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

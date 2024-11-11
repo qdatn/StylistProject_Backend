@@ -1,6 +1,7 @@
 // controllers/orderItemController.js
 import { Request, Response, NextFunction } from "express";
 import orderItemService from "./orderItem.service";
+import { pagination } from "@core/middlewares";
 
 class OrderItemController {
   async createOrderItem(
@@ -39,7 +40,8 @@ class OrderItemController {
   ): Promise<void> {
     try {
       const orderItems = await orderItemService.getAllOrderItems();
-      res.status(200).json(orderItems);
+      await pagination(req, res, orderItems, next);
+      res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

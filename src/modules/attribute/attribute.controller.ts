@@ -1,3 +1,4 @@
+import { pagination } from "@core/middlewares";
 import AttributeService from "@modules/attribute/attribute.service";
 import { Request, Response, NextFunction } from "express";
 
@@ -40,7 +41,8 @@ class AttributeController {
   ): Promise<void> {
     try {
       const attributes = await AttributeService.getAllAttributes();
-      res.json(attributes);
+      await pagination(req, res, attributes, next);
+      res.json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
