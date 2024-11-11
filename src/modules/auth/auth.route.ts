@@ -29,7 +29,7 @@ class AuthRoute implements RouteInterface {
       AuthController.deleteUser
     );
     this.router.get(
-      `${this.path}/send-verification/:email`,
+      `${this.path}/send-verification`,
       AuthController.sendVerification
     );
     this.router.get(`${this.path}/verify`, AuthController.verifyOTP);

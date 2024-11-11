@@ -75,7 +75,9 @@ class AuthService {
 
     Verification link: ${process.env.BASE_URL}/auth/verify?otp=${otp}
 
-    Note: This link will expire in 5 minutes.
+    OTP code: ${otp}
+
+    Note: This link/OTP will expire in 5 minutes.
 
     If you did not request this registration, please ignore this email.
 
@@ -106,6 +108,31 @@ class AuthService {
       subject: "Email Verification for [ Stylist ] registrations",
       text: `${verificationUrl}`,
     });
+  }
+
+  async verifyOTP(email: string, otp: string) {
+    // Kiểm tra OTP và userId trong cơ sở dữ liệu
+    const otpRecord = await OTP.findOne({
+      otp: otp,
+      isUsed: false,
+    });
+
+    if (!otpRecord) {
+      return {
+        success: false,
+        message: "Invalid OTP or OTP has already been used.",
+      };
+    } else {
+      // Kiểm tra thời gian hết hạn của OTP
+      if (otpRecord && otpRecord.expiresAt.getTime() < Date.now()) {
+        await OTP.deleteOne({ email: email, otp: otp });
+        return { success: false, message: "OTP has expired." };
+      } else {
+        // Đánh dấu OTP là đã sử dụng và xác minh thành công
+        await OTP.updateOne({ email: email, otp: otp }, { isUsed: true });
+        return { success: true, message: "OTP verified successfully." };
+      }
+    }
   }
 }
 

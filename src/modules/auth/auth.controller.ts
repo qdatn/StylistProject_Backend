@@ -13,8 +13,14 @@ class AuthController {
   ): Promise<void> {
     try {
       const user: RegisterDto = req.body;
-      await AuthService.register(user);
-      res.status(201).json(user);
+      // await AuthService.sendVerificationEmail(user.email);
+      const result = await AuthService.verifyOTP(user.email, user.otp);
+      if (result.success) {
+        await AuthService.register(user);
+        res.status(201).json(user);
+      } else {
+        res.status(400).json({ message: result.message });
+      }
     } catch (err: any) {
       res.status(400).json({ message: err.message });
     }
@@ -80,12 +86,14 @@ class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { email } = req.params;
+      const { email } = req.query;
 
       if (!email) {
         res.status(400).json({ message: "Email are required." });
       } else {
-        const result = await AuthService.sendVerificationEmail(email);
+        const result = await AuthService.sendVerificationEmail(
+          email.toString()
+        );
         res
           .status(200)
           .json({ message: "Verification email sent successfully" });

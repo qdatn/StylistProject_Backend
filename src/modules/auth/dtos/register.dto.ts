@@ -15,11 +15,20 @@ export default class RegisterDto {
   public password: string;
   @IsString()
   public role: string;
+  @IsString()
+  public otp: string;
 
-  constructor(name: string, email: string, password: string, role: string) {
+  constructor(
+    name: string,
+    email: string,
+    password: string,
+    role: string,
+    otp: string
+  ) {
     this.name = name;
     this.email = email;
     this.password = password;
     this.role = role;
+    this.otp = otp;
   }
 }

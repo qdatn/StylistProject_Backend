@@ -48,6 +48,7 @@
  *         - email
  *         - password
  *         - role
+ *         - otp
  *       properties:
  *         name:
  *           type: string
@@ -60,11 +61,15 @@
  *         password:
  *           type: string
  *           description: User's password (hashed)
- *           example: "$2b$10$2qciB5eUlQVjv85dI5tcyOukUgQmL.EJzRPyNBmJ/kB9Wyje2rY9K"
+ *           example: "123456"
  *         role:
  *           type: string
- *           description: User's role in the application (e.g., "admin" or "cstomer")
+ *           description: User's role in the application (e.g., "admin" or "customer")
  *           example: "customer"
+ *         otp:
+ *           type: string
+ *           description: otp verification
+ *           example: "123456"
  *       timestamps:
  *         createdAt:
  *           type: string
@@ -97,7 +102,6 @@
  *           description: User's password (hashed)
  *           example: "123456"
  */
-
 
 /*-------------------- Register Account API --------------------*/
 /**
