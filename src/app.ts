@@ -55,6 +55,7 @@ export default class App {
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(errorMiddleWare);
 
+    // SWAGGER CONFIG
     const options: Options = {
       definition: {
         openapi: "3.0.0",

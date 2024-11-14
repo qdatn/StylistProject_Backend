@@ -32,7 +32,7 @@ class AuthRoute implements RouteInterface {
       `${this.path}/send-verification`,
       AuthController.sendVerification
     );
-    this.router.get(`${this.path}/verify`, AuthController.verifyOTP);
+    this.router.post(`${this.path}/verify`, AuthController.verifyOTP);
   }
 }
 
