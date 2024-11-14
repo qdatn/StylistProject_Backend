@@ -9,12 +9,11 @@ class OrderRepository {
 
   async getOrderById(id: string) {
     return await Order.findById({ _id: id })
-      .populate("user_id")
-      .populate("order_items");
+      .populate("user");
   }
 
   async getAllOrders() {
-    return await Order.find().populate("user_id").populate("order_items");
+    return await Order.find().populate("user");
   }
 
   async updateOrder(id: string, data: OrderDTO) {

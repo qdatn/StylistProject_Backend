@@ -26,8 +26,9 @@ class OrderItemController {
       const orderItem = await orderItemService.getOrderItemById(req.params.id);
       if (!orderItem) {
         res.status(404).json({ message: "Order item not found" });
+      } else {
+        res.status(200).json(orderItem);
       }
-      res.status(200).json(orderItem);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -59,8 +60,9 @@ class OrderItemController {
       );
       if (!orderItem) {
         res.status(404).json({ message: "Order item not found" });
+      } else {
+        res.status(200).json(orderItem);
       }
-      res.status(200).json(orderItem);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -75,8 +77,9 @@ class OrderItemController {
       const orderItem = await orderItemService.deleteOrderItem(req.params.id);
       if (!orderItem) {
         res.status(404).json({ message: "Order item not found" });
+      } else {
+        res.status(200).json({ message: "Order item deleted successfully" });
       }
-      res.status(200).json({ message: "Order item deleted successfully" });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

@@ -1,44 +1,92 @@
 [
   {
-    "product_name": "Men's Casual T-Shirt",
-    "price": 19.99,
-    "description": "A comfortable cotton T-shirt for casual wear.",
+    "product_name": "Áo khoác nam Zara",
+    "price": 65,
+    "description": "Áo khoác nam Zara phong cách hiện đại, phù hợp cho mùa thu đông.",
+    "brand": "Zara",
+    "stock_quantity": 200,
+    "min_quantity": 1,
+    "sold_quantity": 50,
+    "categories": ["627c1f5f9e2e9c1f8a35f1c7"],
+    "stock_update_date": "2024-11-01T10:00:00Z",
+    "status": true,
+    "image": "https://example.com/ao-khoac-nam-zara.jpg",
+    "attributes": [
+      { "key": "Size", "value": ["M", "L", "XL"] },
+      { "key": "Color", "value": ["Black", "Grey", "Navy"] },
+      { "key": "Material", "value": ["Cotton", "Polyester"] }
+    ]
+  },
+  {
+    "product_name": "Giày thể thao Nike Air Max 2021",
+    "price": 120,
+    "description": "Giày thể thao Nike Air Max 2021 mang lại sự thoải mái và phong cách.",
     "brand": "Nike",
     "stock_quantity": 150,
     "min_quantity": 1,
-    "sold_quantity": 30,
-    "categories": "671dfdc635bdeb397abe5458",
-    "stock_update_date": "2024-10-01",
+    "sold_quantity": 70,
+    "categories": ["627c1f5f9e2e9c1f8a35f1c8"],
+    "stock_update_date": "2024-11-02T12:00:00Z",
     "status": true,
-    "image": "mens-casual-tshirt.jpg",
-    "attributes": "671dfded35bdeb397abe5462"
+    "image": "https://example.com/giay-the-thao-nike-air-max-2021.jpg",
+    "attributes": [
+      { "key": "Size", "value": ["7", "8", "9", "10"] },
+      { "key": "Color", "value": ["White", "Black", "Red"] },
+      { "key": "Material", "value": ["Leather", "Rubber"] }
+    ]
   },
   {
-    "product_name": "Women's Running Shoes",
-    "price": 89.99,
-    "description": "Lightweight and breathable running shoes for women.",
-    "brand": "Adidas",
-    "stock_quantity": 100,
-    "min_quantity": 1,
-    "sold_quantity": 15,
-    "categories": "671dfdc635bdeb397abe5459",
-    "stock_update_date": "2024-09-20",
-    "status": true,
-    "image": "womens-running-shoes.jpg",
-    "attributes": "671dfded35bdeb397abe5466"
-  },
-  {
-    "product_name": "Yoga Mat",
-    "price": 29.99,
-    "description": "Eco-friendly non-slip yoga mat for all types of yoga.",
-    "brand": "Gaiam",
-    "stock_quantity": 200,
+    "product_name": "Váy nữ H&M Classic A-line",
+    "price": 45,
+    "description": "Váy A-line nữ H&M với thiết kế đơn giản, thanh lịch và thoải mái.",
+    "brand": "H&M",
+    "stock_quantity": 120,
     "min_quantity": 1,
     "sold_quantity": 40,
-    "categories": "671dfdc635bdeb397abe545c",
-    "stock_update_date": "2024-09-30",
+    "categories": ["627c1f5f9e2e9c1f8a35f1c9"],
+    "stock_update_date": "2024-11-03T14:00:00Z",
     "status": true,
-    "image": "yoga-mat.jpg",
-    "attributes": "671dfded35bdeb397abe5468"
+    "image": "https://example.com/vay-nu-hm-classic-a-line.jpg",
+    "attributes": [
+      { "key": "Size", "value": ["S", "M", "L"] },
+      { "key": "Color", "value": ["Blue", "Black", "Red"] },
+      { "key": "Material", "value": ["Cotton", "Spandex"] }
+    ]
+  },
+  {
+    "product_name": "Quần jeans nữ Levi's 511 Slim Fit",
+    "price": 80,
+    "description": "Quần jeans Levi's 511 Slim Fit dành cho nữ với chất liệu bền và vừa vặn.",
+    "brand": "Levi's",
+    "stock_quantity": 100,
+    "min_quantity": 1,
+    "sold_quantity": 20,
+    "categories": ["627c1f5f9e2e9c1f8a35f1ca"],
+    "stock_update_date": "2024-11-04T16:00:00Z",
+    "status": true,
+    "image": "https://example.com/quan-jeans-nu-levis-511.jpg",
+    "attributes": [
+      { "key": "Size", "value": ["28", "30", "32", "34"] },
+      { "key": "Color", "value": ["Blue", "Black", "Grey"] },
+      { "key": "Material", "value": ["Denim"] }
+    ]
+  },
+  {
+    "product_name": "Áo thun nữ Uniqlo U Crew Neck",
+    "price": 25,
+    "description": "Áo thun nữ Uniqlo U Crew Neck với thiết kế đơn giản, dễ phối đồ.",
+    "brand": "Uniqlo",
+    "stock_quantity": 300,
+    "min_quantity": 1,
+    "sold_quantity": 150,
+    "categories": ["627c1f5f9e2e9c1f8a35f1cb"],
+    "stock_update_date": "2024-11-05T18:00:00Z",
+    "status": true,
+    "image": "https://example.com/ao-thun-nu-uniqlo-u-crew-neck.jpg",
+    "attributes": [
+      { "key": "Size", "value": ["S", "M", "L"] },
+      { "key": "Color", "value": ["White", "Black", "Pink"] },
+      { "key": "Material", "value": ["Cotton"] }
+    ]
   }
 ]

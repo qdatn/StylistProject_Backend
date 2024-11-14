@@ -3,6 +3,7 @@ import AuthService from "@modules/auth/auth.service";
 import { NextFunction, Request, Response } from "express";
 import RegisterDto from "./dtos/register.dto";
 import OTP from "./otp.model";
+import IAuth from "./auth.interface";
 // import AuthDto from "./dtos/auth.dto";
 
 class AuthController {
@@ -14,13 +15,13 @@ class AuthController {
     try {
       const user: RegisterDto = req.body;
       // await AuthService.sendVerificationEmail(user.email);
-      const result = await AuthService.verifyOTP(user.email, user.otp);
-      if (result.success) {
-        await AuthService.register(user);
-        res.status(201).json(user);
-      } else {
-        res.status(400).json({ message: result.message });
-      }
+      // const result = await AuthService.verifyOTP(user.email, user.otp);
+      // if (result.success) {
+      await AuthService.register(user);
+      res.status(201).json(user);
+      // } else {
+      //   res.status(400).json({ message: result.message });
+      // }
     } catch (err: any) {
       res.status(400).json({ message: err.message });
     }
@@ -57,8 +58,9 @@ class AuthController {
       const user = await AuthService.updateUser(req.params.id, req.body);
       if (!user) {
         res.status(404).json({ message: "User not found" });
+      } else {
+        res.json(user);
       }
-      res.json(user);
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }
@@ -70,11 +72,18 @@ class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
+      // Check if the logged-in user is deleting their own account
+      if ((req as Request & { user?: IAuth }).user?._id !== req.params.id) {
+        res
+          .status(403)
+          .json({ message: "You can only delete your own account" });
+      }
       const result = await AuthService.deleteUser(req.params.id);
       if (!result) {
         res.status(404).json({ message: "User not found" });
+      } else {
+        res.status(200).json({ message: "User deleted successfully" });
       }
-      res.json({ message: "User deleted successfully" });
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }

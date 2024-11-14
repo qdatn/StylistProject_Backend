@@ -27,8 +27,9 @@ class UserInfoController {
       const userInfo = await userInfoService.getUserInfoById(req.params.id);
       if (!userInfo) {
         res.status(404).json({ message: "UserInfo not found" });
+      } else {
+        res.status(200).json(userInfo);
       }
-      res.status(200).json(userInfo);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -59,8 +60,9 @@ class UserInfoController {
       );
       if (!updatedUserInfo) {
         res.status(404).json({ message: "UserInfo not found" });
+      } else {
+        res.status(200).json(updatedUserInfo);
       }
-      res.status(200).json(updatedUserInfo);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -77,8 +79,9 @@ class UserInfoController {
       );
       if (!deletedUserInfo) {
         res.status(404).json({ message: "UserInfo not found" });
+      } else {
+        res.status(200).json({ message: "UserInfo deleted" });
       }
-      res.status(200).json({ message: "UserInfo deleted" });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

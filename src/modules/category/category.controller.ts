@@ -12,7 +12,7 @@ class CategoryController {
     try {
       const categories = await CategoryService.getAllCategories();
       await pagination(req, res, categories, next);
-      res.json(res.locals.pagination);
+      res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

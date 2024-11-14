@@ -1,0 +1,42 @@
+[
+  {
+    "user": "67362b60190d35a271a8477f",
+    "status": "Pending",
+    "discount": 10,
+    "total_price": 150,
+    "method": "Credit Card",
+    "receive_date": "2024-12-15T10:00:00.000Z"
+  },
+  {
+    "user": "67362b60190d35a271a8477f",
+    "status": "Shipped",
+    "discount": 20,
+    "total_price": 200,
+    "method": "PayPal",
+    "receive_date": "2024-12-20T14:30:00.000Z"
+  },
+  {
+    "user": "67362b60190d35a271a8477f",
+    "status": "Delivered",
+    "discount": 5,
+    "total_price": 120,
+    "method": "Bank Transfer",
+    "receive_date": "2024-12-25T12:00:00.000Z"
+  },
+  {
+    "user": "67362b60190d35a271a8477f",
+    "status": "Pending",
+    "discount": 15,
+    "total_price": 180,
+    "method": "Credit Card",
+    "receive_date": "2025-01-05T11:00:00.000Z"
+  },
+  {
+    "user": "67362b60190d35a271a8477f",
+    "status": "Shipped",
+    "discount": 30,
+    "total_price": 250,
+    "method": "PayPal",
+    "receive_date": "2025-01-10T09:00:00.000Z"
+  }
+]

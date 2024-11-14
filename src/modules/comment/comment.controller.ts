@@ -25,7 +25,7 @@ class CommentController {
       const comments = await CommentService.getAllComments();
       // Pagination for object comment data got from api getAll
       await pagination(req, res, comments, next);
-      res.json(res.locals.pagination);
+      res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -38,7 +38,7 @@ class CommentController {
   ): Promise<void> {
     try {
       const comment = await CommentService.getCommentById(req.params.id);
-      res.json(comment);
+      res.status(200).json(comment);
     } catch (error: any) {
       res.status(404).json({ message: error.message });
     }
@@ -50,8 +50,10 @@ class CommentController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const comment = await CommentService.getCommentByProductId(req.params.id);
-      res.json(comment);
+      const comments = await CommentService.getCommentByProductId(req.params.id);
+      await pagination(req, res, comments, next);
+      res.status(200).json(res.locals.pagination);
+      // res.status(200).json(comments);
     } catch (error: any) {
       res.status(404).json({ message: error.message });
     }
@@ -64,7 +66,7 @@ class CommentController {
   ): Promise<void> {
     try {
       const comment = await CommentService.getCommentByUserId(req.params.id);
-      res.json(comment);
+      res.status(200).json(comment);
     } catch (error: any) {
       res.status(404).json({ message: error.message });
     }
@@ -80,7 +82,7 @@ class CommentController {
         req.params.id,
         req.body
       );
-      res.json(updatedComment);
+      res.status(200).json(updatedComment);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }
@@ -93,7 +95,7 @@ class CommentController {
   ): Promise<void> {
     try {
       await CommentService.deleteComment(req.params.id);
-      res.status(204).send();
+      res.status(200).send({ message: "Comment deleted successfully" });
     } catch (error: any) {
       res.status(404).json({ message: error.message });
     }

@@ -48,7 +48,6 @@
  *         - email
  *         - password
  *         - role
- *         - otp
  *       properties:
  *         name:
  *           type: string
@@ -66,10 +65,6 @@
  *           type: string
  *           description: User's role in the application (e.g., "admin" or "customer")
  *           example: "customer"
- *         otp:
- *           type: string
- *           description: otp verification
- *           example: "123456"
  *       timestamps:
  *         createdAt:
  *           type: string
@@ -282,6 +277,8 @@
  *     tags:
  *       - Authentication
  *     description: Delete a account user from the system using the provided user ID.
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path

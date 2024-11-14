@@ -74,8 +74,9 @@ class ProductController {
       );
       if (!product) {
         res.status(404).json({ message: "Product not found" });
+      } else {
+        res.status(200).json(product);
       }
-      res.status(200).json(product);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }
@@ -90,8 +91,9 @@ class ProductController {
       const product = await ProductService.deleteProduct(req.params.id);
       if (!product) {
         res.status(404).json({ message: "Product not found" });
+      } else {
+        res.status(200).json({ message: "Product deleted" });
       }
-      res.status(200).json({ message: "Product deleted" });
       // res.status(204).send();
     } catch (error: any) {
       res.status(500).json({ message: error.message });

@@ -64,6 +64,18 @@ export default class App {
           version: "1.0.0",
           description: "API documentation for Stylist Ecommerce",
         },
+        components: {
+          securitySchemes: {
+            BearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+            },
+          },
+        },
+        security:{
+          BearerAuth: [],
+        },
         servers: [
           {
             url: "http://localhost:5000",

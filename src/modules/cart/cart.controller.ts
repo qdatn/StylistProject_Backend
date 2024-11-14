@@ -25,9 +25,10 @@ class CartController {
       const carts = await CartService.getAllCart();
       if (!carts) {
         res.status(404).json({ message: "Cart not found" });
+      } else {
+        await pagination(req, res, carts, next);
+        res.status(200).json(res.locals.pagination);
       }
-      await pagination(req, res, carts, next);
-      res.json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -42,8 +43,9 @@ class CartController {
       const cart = await CartService.getCartByUserId(req.params.userid);
       if (!cart) {
         res.status(404).json({ message: "Cart not found" });
+      } else {
+        res.status(200).json(cart);
       }
-      res.json(cart);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -58,8 +60,9 @@ class CartController {
       const cart = await CartService.updateCart(req.params.userid, req.body);
       if (!cart) {
         res.status(404).json({ message: "Cart not found" });
+      } else {
+        res.status(200).json(cart);
       }
-      res.json(cart);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -77,8 +80,9 @@ class CartController {
       );
       if (!cart) {
         res.status(404).json({ message: "Cart not found" });
+      } else {
+        res.status(200).json(cart);
       }
-      res.json(cart);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -93,8 +97,9 @@ class CartController {
       const cart = await CartService.deleteCart(req.params.userid);
       if (!cart) {
         res.status(404).json({ message: "Cart not found" });
+      } else {
+        res.status(200).json({ message: "Cart deleted successfully" });
       }
-      res.json({ message: "Cart deleted successfully" });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -112,8 +117,9 @@ class CartController {
       );
       if (!cart) {
         res.status(404).json({ message: "Cart not found" });
+      } else {
+        res.status(200).json(cart);
       }
-      res.json(cart);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

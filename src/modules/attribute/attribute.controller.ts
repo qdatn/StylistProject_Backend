@@ -27,8 +27,9 @@ class AttributeController {
       );
       if (!attribute) {
         res.status(404).json({ message: "Attribute not found" });
+      } else {
+        res.status(200).json(attribute);
       }
-      res.json(attribute);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -42,7 +43,7 @@ class AttributeController {
     try {
       const attributes = await AttributeService.getAllAttributes();
       await pagination(req, res, attributes, next);
-      res.json(res.locals.pagination);
+      res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -60,8 +61,9 @@ class AttributeController {
       );
       if (!updatedAttribute) {
         res.status(404).json({ message: "Attribute not found" });
+      } else {
+        res.json(updatedAttribute);
       }
-      res.json(updatedAttribute);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -78,8 +80,9 @@ class AttributeController {
       );
       if (!deletedAttribute) {
         res.status(404).json({ message: "Attribute not found" });
+      } else {
+        res.status(200).json({ message: "Attribute deleted successfully" });
       }
-      res.json({ message: "Attribute deleted successfully" });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -93,12 +96,15 @@ class AttributeController {
     try {
       const attribute = await AttributeService.addNewValue(
         req.params.key,
-        req.body.newValues
+        req.body.values
       );
       if (!attribute) {
         res.status(404).json({ message: "Attribute not found" });
+      } else {
+        res
+          .status(200)
+          .json({ attribute, message: "Value added successfully" });
       }
-      res.status(200).json({ message: "Value added successfully" });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

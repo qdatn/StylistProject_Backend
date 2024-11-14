@@ -1,12 +1,42 @@
 [
-  { "key": "color", "value": "red" },
-  { "key": "color", "value": "blue" },
-  { "key": "color", "value": "black" },
-  { "key": "color", "value": "white" },
-  { "key": "size", "value": "small" },
-  { "key": "size", "value": "medium" },
-  { "key": "size", "value": "large" },
-  { "key": "material", "value": "cotton" },
-  { "key": "material", "value": "polyester" },
-  { "key": "material", "value": "leather" }
+  {
+    "key": "color",
+    "value": ["red", "blue", "green"]
+  },
+  {
+    "key": "size",
+    "value": ["small", "medium", "large"]
+  },
+  {
+    "key": "material",
+    "value": ["cotton", "polyester", "wool"]
+  },
+  {
+    "key": "brand",
+    "value": ["Nike", "Adidas", "Puma"]
+  },
+  {
+    "key": "type",
+    "value": ["shirt", "pants", "jacket"]
+  },
+  {
+    "key": "style",
+    "value": ["casual", "formal", "sporty"]
+  },
+  {
+    "key": "category",
+    "value": ["electronics", "furniture", "clothing"]
+  },
+  {
+    "key": "ageGroup",
+    "value": ["adult", "teen", "child"]
+  },
+  {
+    "key": "gender",
+    "value": ["male", "female", "unisex"]
+  },
+  {
+    "key": "season",
+    "value": ["summer", "winter", "spring", "fall"]
+  }
 ]

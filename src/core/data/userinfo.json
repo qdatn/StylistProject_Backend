@@ -1,0 +1,24 @@
+[
+  {
+    "user": "67362b3e190d35a271a84778",
+    "name": "John Doe",
+    "phone_number": "123-456-7890",
+    "gender": "Male",
+    "birthday": "1990-05-15T00:00:00Z",
+    "body_shape": "Athletic",
+    "height": 180,
+    "weight": 75,
+    "style_preferences": ["Casual", "Sporty"]
+  },
+  {
+    "user": "67362b60190d35a271a8477f",
+    "name": "Jane Smith",
+    "phone_number": "987-654-3210",
+    "gender": "Female",
+    "birthday": "1995-08-20T00:00:00Z",
+    "body_shape": "Slim",
+    "height": 165,
+    "weight": 55,
+    "style_preferences": ["Elegant", "Business"]
+  }
+]

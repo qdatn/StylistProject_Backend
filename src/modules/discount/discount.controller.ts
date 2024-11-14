@@ -25,8 +25,9 @@ class DiscountController {
       const discount = await DiscountService.getDiscountById(req.params.id);
       if (!discount) {
         res.status(404).json({ message: "Discount not found" });
+      } else {
+        res.status(200).json(discount);
       }
-      res.json(discount);
     } catch (error) {
       res.status(500).json({ message: "Error retrieving discount", error });
     }
@@ -40,7 +41,7 @@ class DiscountController {
     try {
       const discounts = await DiscountService.getAllDiscounts();
       await pagination(req, res, discounts, next);
-      res.json(res.locals.pagination);
+      res.status(200).json(res.locals.pagination);
     } catch (error) {
       res.status(500).json({ message: "Error retrieving discounts", error });
     }
@@ -58,8 +59,9 @@ class DiscountController {
       );
       if (!discount) {
         res.status(404).json({ message: "Discount not found" });
+      } else {
+        res.status(200).json(discount);
       }
-      res.json(discount);
     } catch (error) {
       res.status(500).json({ message: "Error updating discount", error });
     }
@@ -74,8 +76,9 @@ class DiscountController {
       const result = await DiscountService.deleteDiscount(req.params.id);
       if (!result) {
         res.status(404).json({ message: "Discount not found" });
+      } else {
+        res.status(200).json({ message: "Discount deleted successfully" });
       }
-      res.json({ message: "Discount deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: "Error deleting discount", error });
     }

@@ -23,10 +23,10 @@ class CommentRoute implements RouteInterface {
       `${this.path}/user/:id`,
       CommentController.getCommentByUserId
     );
-    this.router.post(`${this.path}/insert`, CommentController.createComment);
-    this.router.put(`${this.path}/update/:id`, CommentController.updateComment);
+    this.router.post(`${this.path}`, CommentController.createComment);
+    this.router.put(`${this.path}/:id`, CommentController.updateComment);
     this.router.delete(
-      `${this.path}/delete/:id`,
+      `${this.path}/:id`,
       CommentController.deleteComment
     );
   }

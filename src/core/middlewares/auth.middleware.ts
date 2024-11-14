@@ -10,12 +10,16 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     res.status(401).json({ message: "No token provided" });
   }
   try {
-    const decoded = jwt.verify(token, TWT_SECRET) as IAuth;
-    (req as Request & { user?: IAuth }).user = decoded;
-    next();
+    const jwtVerified = jwt.verify(token, TWT_SECRET) as IAuth;
+
+    if (jwtVerified) {
+      (req as Request & { user?: IAuth }).user = jwtVerified;
+      next();
+    } else {
+      throw new Error("Error in token");
+    }
   } catch (err) {
-    res.clearCookie("token");
-    res.status(401).json({ message: "Invalid token" });
+    res.clearCookie("token").status(401).json({ message: "Invalid token" });
   }
 };
 
