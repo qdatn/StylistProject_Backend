@@ -7,12 +7,12 @@ class CartRepository {
   }
 
   async getAllCart() {
-    return await Cart.find().populate("user").populate("products");
+    return await Cart.find().populate("user","email").populate("products");
   }
 
   async getCartByUserId(id: string) {
     return await Cart.findOne({ user: id })
-      .populate("user")
+      .populate("user","email")
       .populate("products");
   }
 
