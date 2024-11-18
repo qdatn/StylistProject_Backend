@@ -12,7 +12,7 @@ class OrderController {
       const order = await OrderService.createOrder(req.body);
       res.status(201).json(order);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -28,7 +28,7 @@ class OrderController {
       }
       res.status(200).json(order);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -42,7 +42,7 @@ class OrderController {
       await pagination(req, res, orders, next);
       res.json(res.locals.pagination);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -58,7 +58,7 @@ class OrderController {
       }
       res.status(200).json(order);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -74,7 +74,7 @@ class OrderController {
       }
       res.status(200).json({ message: "Order deleted successfully" });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 }

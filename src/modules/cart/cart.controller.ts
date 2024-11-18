@@ -12,7 +12,7 @@ class CartController {
       const cart = await CartService.createCart(req.body);
       res.status(201).json(cart);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -30,7 +30,7 @@ class CartController {
         res.status(200).json(res.locals.pagination);
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -47,7 +47,7 @@ class CartController {
         res.status(200).json(cart);
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -64,7 +64,7 @@ class CartController {
         res.status(200).json(cart);
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -84,7 +84,7 @@ class CartController {
         res.status(200).json(cart);
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -101,7 +101,7 @@ class CartController {
         res.status(200).json({ message: "Cart deleted successfully" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
@@ -121,7 +121,7 @@ class CartController {
         res.status(200).json(cart);
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 }

@@ -13,7 +13,7 @@ class ProductController {
       await pagination(req, res, products, next);
       res.status(200).json(res.locals.pagination);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -29,7 +29,7 @@ class ProductController {
       }
       res.status(200).json(product);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -58,7 +58,7 @@ class ProductController {
         .status(201)
         .json({ message: "Products added successfully", data: newProducts });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -96,7 +96,7 @@ class ProductController {
       }
       // res.status(204).send();
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 }

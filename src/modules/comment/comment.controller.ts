@@ -40,7 +40,7 @@ class CommentController {
       const comment = await CommentService.getCommentById(req.params.id);
       res.status(200).json(comment);
     } catch (error: any) {
-      res.status(404).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -50,12 +50,14 @@ class CommentController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const comments = await CommentService.getCommentByProductId(req.params.id);
+      const comments = await CommentService.getCommentByProductId(
+        req.params.id
+      );
       await pagination(req, res, comments, next);
       res.status(200).json(res.locals.pagination);
       // res.status(200).json(comments);
     } catch (error: any) {
-      res.status(404).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -68,7 +70,7 @@ class CommentController {
       const comment = await CommentService.getCommentByUserId(req.params.id);
       res.status(200).json(comment);
     } catch (error: any) {
-      res.status(404).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -97,7 +99,7 @@ class CommentController {
       await CommentService.deleteComment(req.params.id);
       res.status(200).send({ message: "Comment deleted successfully" });
     } catch (error: any) {
-      res.status(404).json({ message: error.message });
+      next(error);
     }
   }
 

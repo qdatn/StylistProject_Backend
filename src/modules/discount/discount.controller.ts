@@ -12,7 +12,7 @@ class DiscountController {
       const discount = await DiscountService.createDiscount(req.body);
       res.status(201).json(discount);
     } catch (error) {
-      res.status(500).json({ message: "Error creating discount", error });
+      next(error);
     }
   }
 
@@ -29,7 +29,7 @@ class DiscountController {
         res.status(200).json(discount);
       }
     } catch (error) {
-      res.status(500).json({ message: "Error retrieving discount", error });
+      next(error);
     }
   }
 
@@ -43,7 +43,7 @@ class DiscountController {
       await pagination(req, res, discounts, next);
       res.status(200).json(res.locals.pagination);
     } catch (error) {
-      res.status(500).json({ message: "Error retrieving discounts", error });
+      next(error);
     }
   }
 
@@ -63,7 +63,7 @@ class DiscountController {
         res.status(200).json(discount);
       }
     } catch (error) {
-      res.status(500).json({ message: "Error updating discount", error });
+      next(error);
     }
   }
 
@@ -80,7 +80,7 @@ class DiscountController {
         res.status(200).json({ message: "Discount deleted successfully" });
       }
     } catch (error) {
-      res.status(500).json({ message: "Error deleting discount", error });
+      next(error);
     }
   }
 }

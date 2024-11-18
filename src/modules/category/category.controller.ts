@@ -14,7 +14,7 @@ class CategoryController {
       await pagination(req, res, categories, next);
       res.status(200).json(res.locals.pagination);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -30,7 +30,7 @@ class CategoryController {
       }
       res.status(200).json(category);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -43,7 +43,7 @@ class CategoryController {
       const category = await CategoryService.createCategory(req.body);
       res.status(201).json(category);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -62,7 +62,7 @@ class CategoryController {
         data: newCategories,
       });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -81,7 +81,7 @@ class CategoryController {
       }
       res.status(200).json(updatedCategory);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -99,7 +99,7 @@ class CategoryController {
       }
       res.status(200).json({ message: "Category deleted" });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 }

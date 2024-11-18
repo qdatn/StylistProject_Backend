@@ -36,7 +36,7 @@ const pagination = async (
     };
     next();
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
