@@ -1,21 +1,34 @@
 // orderItemMiddleware.ts
 import { ProductService } from "@modules/product"; // Cập nhật đường dẫn tới mô hình Product
 import { IOrderItem } from "@modules/orderItem";
+import { OrderDTO } from "@modules/order";
+import { NextFunction } from "express";
 
-const increaseProductStock = async function (orderItem: IOrderItem) {
+const increaseProductStock = async function (
+  order: OrderDTO
+  // next: NextFunction
+) {
   try {
-    // Tìm sản phẩm bằng ID từ order item
-    const product = await ProductService.getProductById(orderItem.product);
+    // Duyệt qua từng order item trong order_items
+    if (Array.isArray(order.order_items)) {
+      if (order.status === "On Cancel") {
+        await Promise.all(
+          order.order_items.map(async (order_item: any) => {
+            const product = await ProductService.getProductById(
+              order_item.product
+            );
+            if (!product) {
+              throw new Error("Sản phẩm không tồn tại");
+            }
 
-    if (!product) {
-      throw new Error("Sản phẩm không tồn tại");
+            // Tăng số lượng sản phẩm
+            product.stock_quantity += order_item.quantity;
+            await product.save();
+          })
+        );
+      }
     }
-
-    // Tăng số lượng sản phẩm
-    product.stock_quantity += orderItem.quantity;
-    await product.save();
-
-    // Không cần gọi next() ở đây
+    // next();
   } catch (error: any) {
     // Ném lỗi để xử lý bên ngoài nếu cần thiết
     throw new Error(error.message);

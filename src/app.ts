@@ -67,13 +67,13 @@ export default class App {
         components: {
           securitySchemes: {
             BearerAuth: {
-              type: 'http',
-              scheme: 'bearer',
-              bearerFormat: 'JWT',
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT",
             },
           },
         },
-        security:{
+        security: {
           BearerAuth: [],
         },
         servers: [

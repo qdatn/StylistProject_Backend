@@ -14,16 +14,40 @@ class ProductService {
 
   async createProduct(productData: ProductDto): Promise<IProduct | any> {
     // const image = uploadImage(productData.image as string);
-    const image = productData.image;
-    if (image) {
-      try {
-        const uploadedImage = await uploadImage(image, "product");
+    const images = Array.isArray(productData.images) ? productData.images : [];
 
-        productData.image = uploadedImage;
+    if (images && images.length > 0) {
+      try {
+        // Duyệt mảng và tải lên từng ảnh đồng thời
+        const uploadedImages = await Promise.all(
+          images.map((image) =>
+            uploadImage(
+              image,
+              `product`,
+              `${productData.product_name}_${Date.now()}`
+            )
+          )
+        );
+
+        // Lưu mảng URL ảnh đã tải lên vào `productData.images`
+        productData.images = uploadedImages;
       } catch (error: any) {
         console.error("Lỗi khi tải lên hình ảnh:", error);
       }
     }
+
+    // if (image) {
+    //   try {
+    //     const uploadedImage = await uploadImage(
+    //       image,
+    //       `product/${productData.product_name}`
+    //     );
+
+    //     productData.image = uploadedImage;
+    //   } catch (error: any) {
+    //     console.error("Lỗi khi tải lên hình ảnh:", error);
+    //   }
+    // }
     return await ProductRepository.create(productData);
   }
 

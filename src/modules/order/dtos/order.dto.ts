@@ -1,4 +1,5 @@
 // dtos/orderDTO.js
+import { OrderItemDTO } from "@modules/orderItem";
 import { Type } from "class-transformer";
 import {
   IsNotEmpty,
@@ -18,7 +19,7 @@ export default class OrderDTO {
   @IsArray()
   @IsMongoId({ each: true })
   @IsNotEmpty({ each: true })
-  order_items: Object[];
+  order_items: OrderItemDTO[];
 
   @IsString()
   @IsNotEmpty()
@@ -43,7 +44,7 @@ export default class OrderDTO {
 
   constructor(
     user_id: Object,
-    order_items: Object[],
+    order_items: OrderItemDTO[],
     status: string,
     discount: number,
     total_price: number,
