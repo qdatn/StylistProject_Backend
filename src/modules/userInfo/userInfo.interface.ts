@@ -1,4 +1,5 @@
 export default interface IUserInfo {
+  _id: string;
   user: Object;
   name: string;
   phone_number?: string | null;

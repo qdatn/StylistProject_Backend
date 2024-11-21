@@ -8,24 +8,24 @@ class CommentRepository {
   }
 
   async findAll() {
-    return await Comment.find().populate("product").populate("user","email");
+    return await Comment.find().populate("product").populate("user", "email");
   }
 
   async findByCommentId(commentId: string) {
     return await Comment.find({ _id: commentId })
       .populate("product")
-      .populate("user","email");
+      .populate("user");
   }
 
   async findByProductId(productId: string) {
     return await Comment.find({ product: productId })
-      .populate("product")
-      .populate("user","email");
+      // .populate("product")
+      .populate("user_info");
   }
   async findByUserId(userId: string) {
     return await Comment.find({ user: userId })
       .populate("product")
-      .populate("user","email");
+      .populate("user", "email");
   }
 
   async update(commentId: string, updateData: CommentDto) {

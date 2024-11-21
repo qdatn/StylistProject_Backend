@@ -10,7 +10,9 @@
     "categories": ["627c1f5f9e2e9c1f8a35f1c7"],
     "stock_update_date": "2024-11-01T10:00:00Z",
     "status": true,
-    "image": "https://example.com/ao-khoac-nam-zara.jpg",
+    "images": [
+      "https://res.cloudinary.com/dpnzwc8ti/image/upload/v1732030270/StylishEcommerce/product/%C3%81o%20kho%C3%A1c%20nam%20Zara_1732030277972/hfuqnjzp9tdwgvumwjb0.jpg"
+    ],
     "attributes": [
       { "key": "Size", "value": ["M", "L", "XL"] },
       { "key": "Color", "value": ["Black", "Grey", "Navy"] },
@@ -28,7 +30,9 @@
     "categories": ["627c1f5f9e2e9c1f8a35f1c8"],
     "stock_update_date": "2024-11-02T12:00:00Z",
     "status": true,
-    "image": "https://example.com/giay-the-thao-nike-air-max-2021.jpg",
+    "images": [
+      "https://res.cloudinary.com/dpnzwc8ti/image/upload/v1732030270/StylishEcommerce/product/%C3%81o%20kho%C3%A1c%20nam%20Zara_1732030277972/hfuqnjzp9tdwgvumwjb0.jpg"
+    ],
     "attributes": [
       { "key": "Size", "value": ["7", "8", "9", "10"] },
       { "key": "Color", "value": ["White", "Black", "Red"] },
@@ -46,7 +50,9 @@
     "categories": ["627c1f5f9e2e9c1f8a35f1c9"],
     "stock_update_date": "2024-11-03T14:00:00Z",
     "status": true,
-    "image": "https://example.com/vay-nu-hm-classic-a-line.jpg",
+    "images": [
+      "https://res.cloudinary.com/dpnzwc8ti/image/upload/v1732030270/StylishEcommerce/product/%C3%81o%20kho%C3%A1c%20nam%20Zara_1732030277972/hfuqnjzp9tdwgvumwjb0.jpg"
+    ],
     "attributes": [
       { "key": "Size", "value": ["S", "M", "L"] },
       { "key": "Color", "value": ["Blue", "Black", "Red"] },
@@ -64,7 +70,9 @@
     "categories": ["627c1f5f9e2e9c1f8a35f1ca"],
     "stock_update_date": "2024-11-04T16:00:00Z",
     "status": true,
-    "image": "https://example.com/quan-jeans-nu-levis-511.jpg",
+    "images": [
+      "https://res.cloudinary.com/dpnzwc8ti/image/upload/v1732030270/StylishEcommerce/product/%C3%81o%20kho%C3%A1c%20nam%20Zara_1732030277972/hfuqnjzp9tdwgvumwjb0.jpg"
+    ],
     "attributes": [
       { "key": "Size", "value": ["28", "30", "32", "34"] },
       { "key": "Color", "value": ["Blue", "Black", "Grey"] },
@@ -82,7 +90,9 @@
     "categories": ["627c1f5f9e2e9c1f8a35f1cb"],
     "stock_update_date": "2024-11-05T18:00:00Z",
     "status": true,
-    "image": "https://example.com/ao-thun-nu-uniqlo-u-crew-neck.jpg",
+    "images": [
+      "https://res.cloudinary.com/dpnzwc8ti/image/upload/v1732030270/StylishEcommerce/product/%C3%81o%20kho%C3%A1c%20nam%20Zara_1732030277972/hfuqnjzp9tdwgvumwjb0.jpg"
+    ],
     "attributes": [
       { "key": "Size", "value": ["S", "M", "L"] },
       { "key": "Color", "value": ["White", "Black", "Pink"] },

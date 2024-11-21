@@ -14,7 +14,7 @@ class UserInfoController {
       await pagination(req, res, userInfos, next);
       res.status(200).json(res.locals.pagination);
     } catch (error: any) {
-      next(error);
+      res.status(500).json({ message: error.message });
     }
   }
 
@@ -31,7 +31,7 @@ class UserInfoController {
         res.status(200).json(userInfo);
       }
     } catch (error: any) {
-      next(error);
+      res.status(500).json({ message: error.message });
     }
   }
 
@@ -44,7 +44,7 @@ class UserInfoController {
       const userInfo = await userInfoService.createUserInfo(req.body);
       res.status(201).json(userInfo);
     } catch (error: any) {
-      next(error);
+      res.status(500).json({ message: error.message });
     }
   }
 
@@ -64,7 +64,7 @@ class UserInfoController {
         res.status(200).json(updatedUserInfo);
       }
     } catch (error: any) {
-      next(error);
+      res.status(500).json({ message: error.message });
     }
   }
 
@@ -83,7 +83,7 @@ class UserInfoController {
         res.status(200).json({ message: "UserInfo deleted" });
       }
     } catch (error: any) {
-      next(error);
+      res.status(500).json({ message: error.message });
     }
   }
 }

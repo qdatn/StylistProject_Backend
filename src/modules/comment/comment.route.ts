@@ -25,10 +25,7 @@ class CommentRoute implements RouteInterface {
     );
     this.router.post(`${this.path}`, CommentController.createComment);
     this.router.put(`${this.path}/:id`, CommentController.updateComment);
-    this.router.delete(
-      `${this.path}/:id`,
-      CommentController.deleteComment
-    );
+    this.router.delete(`${this.path}/:id`, CommentController.deleteComment);
   }
 }
 
