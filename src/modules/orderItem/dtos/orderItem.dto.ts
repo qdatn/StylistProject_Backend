@@ -20,6 +20,8 @@ export default class OrderItemDTO {
   @Min(1, { message: "Quantity must be at least 1" })
   quantity: number;
 
+  attributes: Object[];
+
   @IsOptional()
   @IsString()
   note?: string;
@@ -28,11 +30,13 @@ export default class OrderItemDTO {
     // order: Object,
     product: string,
     quantity: number,
+    attributes: Object[],
     note?: string
   ) {
     // this.order = order;
     this.product = product;
     this.quantity = quantity;
+    this.attributes = attributes;
     this.note = note;
   }
 }

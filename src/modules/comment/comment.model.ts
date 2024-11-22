@@ -9,10 +9,7 @@ const commentSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "UserInfo",
-      // fields: "user",
-      // localField: "user", // Trường trong model Post
-      // foreignField: "user",
-    }, // Trường trong model User mà Post sẽ tham chiếu },
+    }, 
     rating: { type: Number, required: true, min: 1, max: 5 }, // Rating between 1 and 5
     review: { type: String },
   },

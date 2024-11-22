@@ -45,8 +45,10 @@ class AuthController {
 
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     // Xóa cookie chứa token
-    res.clearCookie("token");
-    res.status(200).json({ message: "Logged out successfully" });
+    res
+      .clearCookie("token")
+      .status(200)
+      .json({ message: "Logged out successfully" });
   }
 
   async updateUser(
