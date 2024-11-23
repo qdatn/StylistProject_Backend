@@ -39,7 +39,7 @@ export default class ProductDto {
   sold_quantity?: number = 0;
 
   @IsMongoId()
-  categories?: Object;
+  categories?: Object[];
 
   @IsDate()
   @Type(() => Date)
@@ -71,7 +71,7 @@ export default class ProductDto {
     description?: string,
     brand?: string,
     sold_quantity?: number,
-    categories?: Object,
+    categories?: Object[],
     stock_update_date?: Date,
     status?: boolean,
     images?: string[],

@@ -2,7 +2,7 @@ import ProductRepository from "@modules/product/product.repository";
 import ProductDto from "@modules/product/dtos/product.dto";
 import { uploadImage } from "@core/utils";
 import IProduct from "./product.interface";
-
+import mongoose from "mongoose";
 class ProductService {
   async getAllProducts() {
     return await ProductRepository.findAll();
@@ -56,6 +56,10 @@ class ProductService {
   }
 
   async updateProduct(productId: string, productData: ProductDto) {
+    productData._id = new mongoose.Types.ObjectId(productData._id as string);
+    productData.categories = productData.categories!.map((categoryId) => {
+      return new mongoose.Types.ObjectId(categoryId as string);
+    });
     return await ProductRepository.update(productId, productData);
   }
 
