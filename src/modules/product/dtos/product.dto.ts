@@ -58,9 +58,9 @@ export default class ProductDto {
   attributes?: Object[];
 
   @IsDate()
-  createAt?: Date;
+  createdAt?: Date;
   @IsDate()
-  updateAt?: Date;
+  updatedAt?: Date;
 
   constructor(
     _id: Object,
@@ -76,8 +76,8 @@ export default class ProductDto {
     status?: boolean,
     images?: string[],
     attributes?: Object[],
-    createAt?: Date,
-    updateAt?: Date
+    createdAt?: Date,
+    updatedAt?: Date
   ) {
     this._id = _id;
     this.product_name = product_name;
@@ -92,7 +92,7 @@ export default class ProductDto {
     this.status = status;
     this.images = images;
     this.attributes = attributes;
-    this.createAt = createAt;
-    this.updateAt = updateAt;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 }

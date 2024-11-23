@@ -1,5 +1,6 @@
 import Product from "@modules/product/product.model";
 import ProductDto from "@modules/product/dtos/product.dto";
+import mongoose from "mongoose";
 
 class ProductRepository {
   async findAll() {
@@ -27,7 +28,8 @@ class ProductRepository {
   }
 
   async delete(id: string) {
-    return await Product.deleteOne({ _id: id });
+    const _id: Object = new mongoose.Types.ObjectId(id);
+    return await Product.deleteOne({ _id: _id });
   }
 }
 
