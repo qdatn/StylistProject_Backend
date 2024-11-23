@@ -7,9 +7,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 
-const uploadImage = async (filePath: string, folder: string) => {
+const uploadImage = async (
+  filePath: string,
+  folder: string,
+  productFolder: string
+) => {
   try {
-    const folderPath = `StylishEcommerce/${folder}`;
+    const folderPath = `StylishEcommerce/${folder}/${productFolder}`;
     const result = await cloudinary.uploader.upload(filePath, {
       folder: folderPath,
     });

@@ -8,7 +8,7 @@ class CommentRepository {
   }
 
   async findAll() {
-    return await Comment.find().populate("product").populate("user");
+    return await Comment.find().populate("product").populate("user", "email");
   }
 
   async findByCommentId(commentId: string) {
@@ -19,13 +19,13 @@ class CommentRepository {
 
   async findByProductId(productId: string) {
     return await Comment.find({ product: productId })
-      .populate("product")
-      .populate("user");
+      // .populate("product")
+      .populate("user_info");
   }
   async findByUserId(userId: string) {
     return await Comment.find({ user: userId })
       .populate("product")
-      .populate("user");
+      .populate("user", "email");
   }
 
   async update(commentId: string, updateData: CommentDto) {

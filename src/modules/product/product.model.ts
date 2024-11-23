@@ -20,7 +20,7 @@ const productSchema = new Schema(
     ],
     stock_update_date: { type: Date, default: new Date() },
     status: { type: Boolean, default: true },
-    image: { type: String, default: "" },
+    images: { type: [String], default: "" },
     attributes: [
       {
         key: { type: String },

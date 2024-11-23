@@ -22,8 +22,8 @@ class AuthController {
       // } else {
       //   res.status(400).json({ message: result.message });
       // }
-    } catch (err: any) {
-      res.status(400).json({ message: err.message });
+    } catch (error: any) {
+      next(error);
     }
   }
 
@@ -38,15 +38,17 @@ class AuthController {
         // signed: true,
       });
       res.json({ user, token });
-    } catch (err: any) {
-      res.status(400).json({ message: err.message });
+    } catch (error: any) {
+      next(error);
     }
   }
 
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     // Xóa cookie chứa token
-    res.clearCookie("token");
-    res.status(200).json({ message: "Logged out successfully" });
+    res
+      .clearCookie("token")
+      .status(200)
+      .json({ message: "Logged out successfully" });
   }
 
   async updateUser(
@@ -61,8 +63,8 @@ class AuthController {
       } else {
         res.json(user);
       }
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
+    } catch (error: any) {
+      next(error);
     }
   }
 
@@ -84,8 +86,8 @@ class AuthController {
       } else {
         res.status(200).json({ message: "User deleted successfully" });
       }
-    } catch (err: any) {
-      res.status(500).json({ message: err.message });
+    } catch (error: any) {
+      next(error);
     }
   }
 
@@ -107,10 +109,8 @@ class AuthController {
           .status(200)
           .json({ message: "Verification email sent successfully" });
       }
-    } catch (err: any) {
-      if (!res.headersSent) {
-        res.status(500).json({ message: err });
-      }
+    } catch (error: any) {
+      next(error);
     }
   }
 
@@ -142,10 +142,8 @@ class AuthController {
           res.status(200).json({ message: "OTP verified successfully" });
         }
       }
-    } catch (err: any) {
-      if (!res.headersSent) {
-        res.status(500).json({ message: err });
-      }
+    } catch (error: any) {
+      next(error);
     }
   }
 }

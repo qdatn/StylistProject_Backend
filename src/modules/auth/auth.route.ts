@@ -17,11 +17,7 @@ class AuthRoute implements RouteInterface {
   private initializeRoutes() {
     this.router.post(`${this.path}/register`, AuthController.register);
     this.router.post(`${this.path}/login`, AuthController.login);
-    this.router.post(
-      `${this.path}/logout`,
-      authMiddleware,
-      AuthController.logout
-    );
+    this.router.post(`${this.path}/logout`, AuthController.logout);
     this.router.put(
       `${this.path}/:id`,
       authMiddleware,

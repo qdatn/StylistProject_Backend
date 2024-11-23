@@ -19,7 +19,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
       throw new Error("Error in token");
     }
   } catch (err) {
-    res.clearCookie("token").status(401).json({ message: "Invalid token" });
+    next(err);
   }
 };
 

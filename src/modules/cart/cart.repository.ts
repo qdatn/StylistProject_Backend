@@ -7,19 +7,24 @@ class CartRepository {
   }
 
   async getAllCart() {
-    return await Cart.find().populate("user").populate("products");
+    return await Cart.find().populate("user", "email").populate("products");
   }
 
   async getCartByUserId(id: string) {
     return await Cart.findOne({ user: id })
-      .populate("user")
+      .populate("user", "email")
       .populate("products");
   }
 
   async updateCart(id: string, updateData: CartDto) {
-    return await Cart.findOneAndUpdate({ user: id }, updateData, {
-      new: true,
-    });
+    const { products } = updateData;
+    return await Cart.findOneAndUpdate(
+      { user: id },
+      { $addToSet: { products: { $each: products } } },
+      {
+        new: true,
+      }
+    );
   }
 
   async addProduct(id: string, product: string) {

@@ -6,8 +6,8 @@ export default class LoginDto {
   public _id: Object;
   @IsNotEmpty()
   public email: string;
-  @IsNotEmpty()
-  public password: string;
+  // @IsNotEmpty()
+  // public password: string;
   @IsString()
   public role: string;
   @IsJWT()
@@ -16,13 +16,13 @@ export default class LoginDto {
   constructor(
     _id: Object,
     email: string,
-    password: string,
+    // password: string,
     role: string,
     token?: string
   ) {
     this._id = _id;
     this.email = email;
-    this.password = password;
+    // this.password = password;
     this.role = role;
     this.token = token;
   }

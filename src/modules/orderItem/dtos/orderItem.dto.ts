@@ -8,26 +8,35 @@ import {
 } from "class-validator";
 
 export default class OrderItemDTO {
-  @IsMongoId()
-  @IsNotEmpty()
-  order: Object;
+  // @IsMongoId()
+  // @IsNotEmpty()
+  // order: Object;
 
   @IsMongoId()
   @IsNotEmpty()
-  product: Object;
+  product: string;
 
   @IsInt()
   @Min(1, { message: "Quantity must be at least 1" })
   quantity: number;
 
+  attributes: Object[];
+
   @IsOptional()
   @IsString()
   note?: string;
 
-  constructor(order: Object, product: Object, quantity: number, note?: string) {
-    this.order = order;
+  constructor(
+    // order: Object,
+    product: string,
+    quantity: number,
+    attributes: Object[],
+    note?: string
+  ) {
+    // this.order = order;
     this.product = product;
     this.quantity = quantity;
+    this.attributes = attributes;
     this.note = note;
   }
 }

@@ -12,7 +12,7 @@ class AttributeController {
       const attribute = await AttributeService.createAttribute(req.body);
       res.status(201).json(attribute);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -31,7 +31,7 @@ class AttributeController {
         res.status(200).json(attribute);
       }
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -45,7 +45,7 @@ class AttributeController {
       await pagination(req, res, attributes, next);
       res.status(200).json(res.locals.pagination);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -65,7 +65,7 @@ class AttributeController {
         res.json(updatedAttribute);
       }
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -84,7 +84,7 @@ class AttributeController {
         res.status(200).json({ message: "Attribute deleted successfully" });
       }
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 
@@ -106,7 +106,7 @@ class AttributeController {
           .json({ attribute, message: "Value added successfully" });
       }
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      next(error);
     }
   }
 }
