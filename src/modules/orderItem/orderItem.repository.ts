@@ -3,12 +3,16 @@ import OrderItemDTO from "./dtos/orderItem.dto";
 import OrderItem from "./orderItem.model";
 
 class OrderItemRepository {
-  async createOrderItem(data: OrderItemDTO) {
+  async createOrderItem(data: OrderItemDTO[]) {
     return await OrderItem.create(data);
   }
 
   async getOrderItemById(id: string) {
     return await OrderItem.findById(id).populate("product");
+  }
+
+  async getOrderItemByOrderId(orderid: string) {
+    return await OrderItem.find({ order: orderid }).populate("product");
   }
 
   async getAllOrderItems() {

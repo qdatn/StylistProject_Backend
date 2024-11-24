@@ -5,10 +5,10 @@ import mongoose, { Schema } from "mongoose";
 const orderSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-    order_items: {
-      type: [orderItemSchema],
-      default: [],
-    },
+    // order_items: {
+    //   type: [orderItemSchema],
+    //   default: [],
+    // },
     status: { type: String, required: true }, // E.g., 'Pending', 'Shipped', 'Delivered'
     discount: { type: Number, default: 0 },
     total_price: { type: Number, required: true, default: 0 },
@@ -19,8 +19,8 @@ const orderSchema = new Schema(
 );
 
 // Middleware giảm số lượng sản phẩm khi lưu OrderItem
-orderSchema.pre("save", reduceProductStock);
-orderSchema.post("findOneAndUpdate", increaseProductStock);
+// orderSchema.pre("save", reduceProductStock);
+// orderSchema.post("findOneAndUpdate", increaseProductStock);
 
 // Create the model based on the schema
 const Order = mongoose.model("Order", orderSchema);

@@ -14,12 +14,12 @@ import {
 export default class OrderDTO {
   @IsMongoId()
   @IsNotEmpty()
-  user_id: Object;
+  user: Object;
 
-  @IsArray()
-  @IsMongoId({ each: true })
-  @IsNotEmpty({ each: true })
-  order_items: OrderItemDTO[];
+  // @IsArray()
+  // @IsMongoId({ each: true })
+  // @IsNotEmpty({ each: true })
+  // order_items: OrderItemDTO[];
 
   @IsString()
   @IsNotEmpty()
@@ -44,15 +44,15 @@ export default class OrderDTO {
 
   constructor(
     user_id: Object,
-    order_items: OrderItemDTO[],
+    // order_items: OrderItemDTO[],
     status: string,
     discount: number,
     total_price: number,
     method: string,
     receive_date: Date
   ) {
-    this.user_id = user_id;
-    this.order_items = order_items;
+    this.user = user_id;
+    // this.order_items = order_items;
     this.status = status;
     this.discount = discount;
     this.total_price = total_price;
