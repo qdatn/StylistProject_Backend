@@ -90,6 +90,10 @@ class ProductService {
   async deleteProduct(productId: string) {
     return await ProductRepository.delete(productId);
   }
+
+  async searchProductsByName(name: string) {
+    return await ProductRepository.findByName(name);
+  }
 }
 
 export default new ProductService();

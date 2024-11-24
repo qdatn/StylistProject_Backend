@@ -31,6 +31,10 @@ class ProductRepository {
     const _id: Object = new mongoose.Types.ObjectId(id);
     return await Product.deleteOne({ _id: _id });
   }
+
+  async findByName(name: string) {
+    return Product.find({ product_name: { $regex: name, $options: "i" } });
+  }
 }
 
 export default new ProductRepository();

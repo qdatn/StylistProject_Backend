@@ -99,6 +99,27 @@ class ProductController {
       next(error);
     }
   }
+
+  public async searchProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const name = req.query.name as string; // Lấy từ query string
+      if (!name) {
+        res.status(400).json({ message: "Name query parameter is required" });
+        return;
+      }
+
+      const products = await ProductService.searchProductsByName(name);
+      await pagination(req, res, products, next);
+      res.status(200).json(res.locals.pagination);
+      // res.status(200).json(products);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new ProductController();
