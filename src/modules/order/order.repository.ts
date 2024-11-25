@@ -9,12 +9,16 @@ class OrderRepository {
   }
 
   async getOrderById(id: string) {
-    return await Order.findById({ _id: id }).populate("user", "email");
+    return await Order.findById({ _id: id })
+      .populate("user", "email")
+      .populate("address");
   }
 
   async getOrderByUserId(userid: string) {
     // const _id = new mongoose.Types.ObjectId(userid);
-    return await Order.find({ user: userid }).populate("user", "email");
+    return await Order.find({ user: userid })
+      .populate("user", "email")
+      .populate("address");
   }
 
   async getAllOrders() {

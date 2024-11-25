@@ -4,6 +4,7 @@ import OrderService from "./order.service";
 import { Request, Response, NextFunction } from "express";
 import OrderDTO from "./dtos/order.dto";
 import { OrderItemDTO } from "@modules/orderItem";
+import { AddressDTO } from "@modules/address";
 class OrderController {
   async createOrder(
     req: Request,
@@ -11,16 +12,7 @@ class OrderController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const {
-        // user,
-        // status,
-        // discount,
-        // total_price,
-        // method,
-        // receive_date,
-        order,
-        order_items,
-      } = req.body;
+      const { order, order_items } = req.body;
 
       const orderData: OrderDTO = order;
       const orderItemsData: OrderItemDTO[] = order_items;

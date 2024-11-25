@@ -13,6 +13,7 @@ const orderSchema = new Schema(
     discount: { type: Number, default: 0 },
     total_price: { type: Number, required: true, default: 0 },
     method: { type: String, required: true },
+    address: { type: Schema.Types.ObjectId, required: true, ref: "Address" },
     receive_date: { type: Date, default: "" },
   },
   { timestamps: true }

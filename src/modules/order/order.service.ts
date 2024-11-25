@@ -5,6 +5,7 @@ import orderRepository from "./order.repository";
 import { OrderItemDTO } from "@modules/orderItem";
 import orderItemRepository from "@modules/orderItem/orderItem.repository";
 import IOrder from "./order.interface";
+import { AddressDTO, AddressRepository } from "@modules/address";
 
 class OrderService {
   async createOrder(orderData: OrderDTO, orderItemsData: OrderItemDTO[]) {

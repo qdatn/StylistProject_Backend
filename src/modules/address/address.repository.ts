@@ -11,11 +11,13 @@ class AddressRepository {
 
   async findByUserId(userid: string) {
     const id = new mongoose.Types.ObjectId(userid);
-    return await Address.find({ user: id }).populate("user");
+    return await Address.find({ user: id })
+      .populate("user");
   }
 
   async findAll() {
-    return await Address.find().populate("user").populate("user");
+    return await Address.find()
+      .populate("user");
   }
 
   async update(id: string, addressData: AddressDTO) {

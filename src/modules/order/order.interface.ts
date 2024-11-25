@@ -5,6 +5,7 @@ export default interface IOrder {
   discount: number;
   total_price: number;
   method: string;
+  address: string;
   receive_date: Date;
   createdAt: Date;
   updatedAt: Date;

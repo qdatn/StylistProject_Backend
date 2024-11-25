@@ -38,25 +38,29 @@ export default class OrderDTO {
   @IsNotEmpty()
   method: string;
 
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
   @IsDate()
   @Type(() => Date)
   receive_date: Date;
 
   constructor(
     user_id: Object,
-    // order_items: OrderItemDTO[],
     status: string,
     discount: number,
     total_price: number,
     method: string,
+    address: string,
     receive_date: Date
   ) {
     this.user = user_id;
-    // this.order_items = order_items;
     this.status = status;
     this.discount = discount;
     this.total_price = total_price;
     this.method = method;
+    this.address = address;
     this.receive_date = receive_date;
   }
 }
