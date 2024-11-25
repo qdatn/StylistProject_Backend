@@ -8,6 +8,7 @@ import { CommentRoute } from "@modules/comment";
 import { DiscountRoute } from "@modules/discount";
 import { OrderRoute } from "@modules/order";
 import { OrderItemRoute } from "@modules/orderItem";
+import { AddressRoute } from "@modules/address";
 
 export {
   AuthRoute,
@@ -20,4 +21,5 @@ export {
   DiscountRoute,
   OrderRoute,
   OrderItemRoute,
+  AddressRoute,
 };
