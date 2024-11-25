@@ -9,9 +9,9 @@ import {
 export default class CommentDto {
   @IsMongoId()
   @IsNotEmpty()
-  comment: Object;
+  comment: string;
   product: Object;
-  user_id: Object;
+  user: Object;
 
   @IsNumber()
   rating: number;
@@ -21,15 +21,15 @@ export default class CommentDto {
   review: string;
 
   constructor(
-    comment: Object,
+    comment: string,
     product: Object,
-    user_id: Object,
+    user: Object,
     rating: number,
     review: string
   ) {
     this.comment = comment;
     this.product = product;
-    this.user_id = user_id;
+    this.user = user;
     this.rating = rating;
     this.review = review;
   }
