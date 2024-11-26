@@ -1,14 +1,15 @@
 import Category from "@modules/category/category.model";
 import CategoryDTO from "@modules/category/dtos/category.dto";
+import mongoose from "mongoose";
 class CategoryRepository {
   async findAll() {
     return await Category.find();
   }
 
-  async findByName(name: string) {
+  async findById(id: string) {
     return await Category.findOne({
       // search without casitive
-      category_name: { $regex: name, $options: "i" },
+      _id: id
     });
   }
 
@@ -16,24 +17,23 @@ class CategoryRepository {
     return await Category.create(CategoryData);
   }
 
-  async createMany(Categorys: CategoryDTO[]) {
-    return await Category.insertMany(Categorys);
+  async createMany(categories: CategoryDTO[]) {
+    return await Category.insertMany(categories);
   }
 
-  async update(name: string, CategoryData: CategoryDTO) {
+  async update(id: string, categoryData: CategoryDTO) {
     return await Category.findOneAndUpdate(
-      { category_name: { $regex: name, $options: "i" } },
-      CategoryData,
+      { _id: id },
+      categoryData,
       {
         new: true,
       }
     );
   }
 
-  async delete(name: string) {
-    return await Category.deleteOne({
-      category_name: { $regex: name, $options: "i" },
-    });
+  async delete(id: string) {
+    const _id: Object = new mongoose.Types.ObjectId(id);
+    return await Category.deleteOne({ _id: _id });
   }
 }
 
