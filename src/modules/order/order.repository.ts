@@ -1,4 +1,5 @@
 // repositories/orderRepository.js
+import mongoose from "mongoose";
 import OrderDTO from "./dtos/order.dto";
 import Order from "./order.model";
 
@@ -9,11 +10,19 @@ class OrderRepository {
 
   async getOrderById(id: string) {
     return await Order.findById({ _id: id })
-      .populate("user","email");
+      .populate("user", "email")
+      .populate("address");
+  }
+
+  async getOrderByUserId(userid: string) {
+    // const _id = new mongoose.Types.ObjectId(userid);
+    return await Order.find({ user: userid })
+      .populate("user", "email")
+      .populate("address");
   }
 
   async getAllOrders() {
-    return await Order.find().populate("user","email");
+    return await Order.find().populate("user", "email");
   }
 
   async updateOrder(id: string, data: OrderDTO) {

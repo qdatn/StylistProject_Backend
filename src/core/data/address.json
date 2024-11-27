@@ -1,0 +1,32 @@
+[
+  {
+    "user": "6738e403e09435c1bda61118",
+    "name": "Nguyễn Văn A",
+    "phone_num": "0912345678",
+    "address": "123 Đường Láng, Quận Đống Đa, Hà Nội"
+  },
+  {
+    "user": "6738e403e09435c1bda61118",
+    "name": "Trần Thị B",
+    "phone_num": "0987654321",
+    "address": "456 Đường Hai Bà Trưng, Quận 1, TP Hồ Chí Minh"
+  },
+  {
+    "user": "6738e403e09435c1bda61118",
+    "name": "Phạm Văn C",
+    "phone_num": "0909988776",
+    "address": "789 Phố Huế, Quận Hoàn Kiếm, Hà Nội"
+  },
+  {
+    "user": "64e2f56f9ab7c1c7a1f4a111",
+    "name": "Lê Thị D",
+    "phone_num": "0909090909",
+    "address": "12 Đường Trần Hưng Đạo, Quận 5, TP Hồ Chí Minh"
+  },
+  {
+    "user": "64e2f56f9ab7c1c7a1f4a111",
+    "name": "Hoàng Văn E",
+    "phone_num": "0901234567",
+    "address": "34 Đường Nguyễn Trãi, Quận Thanh Xuân, Hà Nội"
+  }
+]

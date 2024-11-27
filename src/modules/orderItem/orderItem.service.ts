@@ -3,7 +3,7 @@ import orderItemRepository from "./orderItem.repository";
 import OrderItemDTO from "./dtos/orderItem.dto.js";
 
 class OrderItemService {
-  async createOrderItem(data: OrderItemDTO) {
+  async createOrderItem(data: OrderItemDTO[]) {
     return await orderItemRepository.createOrderItem(data);
   }
 

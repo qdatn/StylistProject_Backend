@@ -22,7 +22,8 @@ class ProductRepository {
   }
 
   async update(id: string, productData: ProductDto) {
-    return await Product.findOneAndUpdate({ _id: id }, productData, {
+    const _id = new mongoose.Types.ObjectId(id);
+    return await Product.findOneAndUpdate({ _id: _id }, productData, {
       new: true,
     });
   }
@@ -30,6 +31,14 @@ class ProductRepository {
   async delete(id: string) {
     const _id: Object = new mongoose.Types.ObjectId(id);
     return await Product.deleteOne({ _id: _id });
+  }
+
+  async findByName(name: string) {
+    return Product.find({ product_name: { $regex: name, $options: "i" } });
+  }
+
+  async findByFilter(query: any) {
+    return Product.find(query);
   }
 }
 

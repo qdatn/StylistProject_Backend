@@ -9,9 +9,15 @@ const commentSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "UserInfo",
-    }, 
+    },
     rating: { type: Number, required: true, min: 1, max: 5 }, // Rating between 1 and 5
     review: { type: String },
+    attributes: [
+      {
+        key: { type: String },
+        value: { type: String },
+      },
+    ],
   },
   {
     timestamps: true,

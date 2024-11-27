@@ -12,6 +12,7 @@ import {
   DiscountRoute,
   OrderRoute,
   OrderItemRoute,
+  AddressRoute,
 } from "@routes";
 
 const routes = [
@@ -25,6 +26,7 @@ const routes = [
   DiscountRoute,
   OrderRoute,
   OrderItemRoute,
+  AddressRoute,
 ];
 
 const app = new App(routes);

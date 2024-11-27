@@ -49,10 +49,18 @@ export default class App {
       })
     ); // Bật CORS cho toàn bộ các route
     this.app.use(morgan("dev")); // Ghi log request
-    this.app.use(express.json()); // Parse JSON request body
-    this.app.use(bodyParser.json());
+    this.app.use(express.json({ limit: "50mb" })); // Parse JSON request body
+    this.app.use(bodyParser.json({ limit: "50mb", type: "application/json" }));
     this.app.use(cookieParser());
-    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(
+      bodyParser.urlencoded({
+        limit: "50mb",
+        extended: true,
+        parameterLimit: 50000,
+        type: "application/x-www-form-urlencoded",
+      })
+    );
+    this.app.use(bodyParser.text({ limit: "200mb" }));
     this.app.use(errorMiddleWare);
 
     // SWAGGER CONFIG

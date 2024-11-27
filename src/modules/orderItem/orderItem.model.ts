@@ -4,7 +4,7 @@ import mongoose, { Schema } from "mongoose";
 
 // Define the orderItem Schema
 export const orderItemSchema = new Schema({
-  // order: { type: Schema.Types.ObjectId, required: true, ref: "Order" },
+  order: { type: Schema.Types.ObjectId, required: true, ref: "Order" },
   product: { type: Schema.Types.ObjectId, required: true, ref: "Product" },
   quantity: { type: Number, required: true },
   attributes: [

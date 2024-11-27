@@ -3,7 +3,7 @@ import OrderRepository from "./order.repository";
 import OrderService from "./order.service";
 import OrderController from "./order.controller";
 import OrderRoute from "./order.route";
-// import IOrder from "./order.interface";
+import IOrder from "./order.interface";
 import OrderDTO from "./dtos/order.dto";
 
 export {
@@ -12,6 +12,6 @@ export {
   OrderService,
   OrderController,
   OrderRoute,
-  //   IOrder,
+  IOrder,
   OrderDTO,
 };
