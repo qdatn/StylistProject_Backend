@@ -13,7 +13,7 @@ class CategoryRoute implements RouteInterface {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/`, CategoryController.getAllCategories); // Lấy tất cả category
-    this.router.get(`${this.path}/:name`, CategoryController.getCategoryByName); // Lấy category theo ID
+    this.router.get(`${this.path}/:id`, CategoryController.getCategoryById); // Lấy category theo ID
     this.router.post(
       `${this.path}/`,
       CategoryController.createCategory
@@ -22,8 +22,8 @@ class CategoryRoute implements RouteInterface {
       `${this.path}/insertMany`,
       CategoryController.createManyCategories
     ); // Tạo nhiều category
-    this.router.put(`${this.path}/:name`, CategoryController.updateCategory); // Cập nhật category theo ID
-    this.router.delete(`${this.path}/:name`, CategoryController.deleteCategory); // Xóa category theo ID
+    this.router.put(`${this.path}/:id`, CategoryController.updateCategory); // Cập nhật category theo ID
+    this.router.delete(`${this.path}/:id`, CategoryController.deleteCategory); // Xóa category theo ID
   }
 }
 
