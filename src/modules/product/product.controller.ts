@@ -192,8 +192,8 @@ class ProductController {
           const uploadImage: any = await ProductService.uploadImage(
             image,
             "product",
-            // addProduct._id
-            "ABCTest"
+            productid
+            // "ABCTest"
           );
           return uploadImage.secure_url;
         })
