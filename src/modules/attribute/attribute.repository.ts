@@ -33,6 +33,16 @@ class AttributeRepository {
       }
     );
   }
+
+  async deleteValue(key: string, newValues: string[]) {
+    return await Attribute.findOneAndUpdate(
+      { key: key },
+      { $pull: { value: { $in: newValues } } },
+      {
+        new: true,
+      }
+    );
+  }
 }
 
 export default new AttributeRepository();

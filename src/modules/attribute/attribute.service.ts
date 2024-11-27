@@ -35,6 +35,20 @@ class AttributeService {
     // });
     return await AttributeRepository.addValue(key, newValues);
   }
+
+  async deleteValue(key: string, values: string[]) {
+    // const attribute: AttributeDTO = (await AttributeRepository.findOne(
+    //   key
+    // )) as AttributeDTO;
+
+    // const values = attribute.value ?? [];
+    // newValues.forEach((value) => {
+    //   if (!values.includes(value)) {
+    //     values.push(value);
+    //   }
+    // });
+    return await AttributeRepository.deleteValue(key, values);
+  }
 }
 
 export default new AttributeService();
