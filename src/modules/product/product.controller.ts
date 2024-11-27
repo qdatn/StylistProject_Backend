@@ -1,6 +1,9 @@
 import { pagination } from "@core/middlewares";
+import { uploadImage } from "@core/utils";
 import ProductService from "@modules/product/product.service";
 import { Request, Response, NextFunction } from "express";
+import ProductDto from "./dtos/product.dto";
+import IProduct from "./product.interface";
 
 class ProductController {
   async getAllProducts(
@@ -39,8 +42,37 @@ class ProductController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const product = await ProductService.createProduct(req.body);
-      res.status(201).json(product);
+      // const product = await ProductService.createProduct(req.body);
+      // res.status(201).json(product);
+      const products = req.body; // Dữ liệu sản phẩm gửi từ client
+      return await ProductService.createProduct({
+        ...products,
+        images: [],
+      });
+
+      // //Upload image to cloudinary
+      // const images: any = await Promise.all(
+      //   products.images.map(async (image: string) => {
+      //     const uploadImage: any = await ProductService.uploadImage(
+      //       image,
+      //       "product",
+      //       // addProduct._id
+      //       "ABCTest"
+      //     );
+      //     return uploadImage.secure_url;
+      //   })
+      // );
+
+      // const newProducts = await ProductService.updateProduct(addProduct._id, {
+      //   ...addProduct,
+      //   images: images,
+      // });
+      // res.status(201).json({
+      //   message: "Products added successfully",
+      //   addPriduct: addProduct,
+      //   newProduct: newProducts,
+      //   images: images,
+      // });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }
@@ -132,6 +164,39 @@ class ProductController {
       res.status(200).json(res.locals.pagination);
     } catch (error) {
       next(error);
+    }
+  }
+
+  async uploadImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      // const file: any = req.file;
+      const { productid, images } = req.body;
+      if (!images) res.status(400).json({ message: "No file uploaded" });
+
+      const data: any = await Promise.all(
+        images.map(async (image: string) => {
+          const uploadImage: any = await ProductService.uploadImage(
+            image,
+            "product",
+            // addProduct._id
+            "ABCTest"
+          );
+          return uploadImage.secure_url;
+        })
+      );
+      // const result: any = await ProductService.uploadImage(
+      //   images,
+      //   "product",
+      //   // product_name
+      //   "ABCTest"
+      // );
+      res.status(200).json({ data });
+    } catch (error: any) {
+      next(error.message);
     }
   }
 }

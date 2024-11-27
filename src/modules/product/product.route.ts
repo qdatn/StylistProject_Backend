@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ProductController from "@modules/product/product.controller";
 import RouteInterface from "@core/interfaces/route.interface";
+import upload from "@core/middlewares/uploadImg.middleware";
 
 class ProductRoute implements RouteInterface {
   public path = "/api/product";
@@ -15,7 +16,11 @@ class ProductRoute implements RouteInterface {
     this.router.get(`${this.path}/`, ProductController.getAllProducts);
     this.router.get(`${this.path}/search`, ProductController.searchProducts);
     this.router.get(`${this.path}/:id`, ProductController.getProductById);
-    this.router.post(`${this.path}/`, ProductController.createProduct);
+    this.router.post(
+      `${this.path}/`,
+      upload.single("image"),
+      ProductController.createProduct
+    );
     this.router.post(
       `${this.path}/insertMany`,
       ProductController.createManyProducts
@@ -25,6 +30,11 @@ class ProductRoute implements RouteInterface {
     this.router.get(
       `${this.path}/filter`,
       ProductController.getFilteredProducts
+    );
+    this.router.post(
+      `${this.path}/upload`,
+      upload.single("image"),
+      ProductController.uploadImage
     );
   }
 }

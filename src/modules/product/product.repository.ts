@@ -22,7 +22,8 @@ class ProductRepository {
   }
 
   async update(id: string, productData: ProductDto) {
-    return await Product.findOneAndUpdate({ _id: id }, productData, {
+    const _id = new mongoose.Types.ObjectId(id);
+    return await Product.findOneAndUpdate({ _id: _id }, productData, {
       new: true,
     });
   }
