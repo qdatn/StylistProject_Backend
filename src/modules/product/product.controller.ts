@@ -120,6 +120,20 @@ class ProductController {
       next(error);
     }
   }
+  async getFilteredProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const filters = req.query;
+      const products = await ProductService.filterProducts(filters);
+      await pagination(req, res, products, next);
+      res.status(200).json(res.locals.pagination);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new ProductController();

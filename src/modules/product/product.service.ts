@@ -94,6 +94,44 @@ class ProductService {
   async searchProductsByName(name: string) {
     return await ProductRepository.findByName(name);
   }
+
+  async filterProducts(filters: any) {
+    const query: any = {};
+
+    // filter by name
+    if (filters.product_name) {
+      query.product_name = { $regex: filters.product_name, $options: "i" };
+    }
+
+    // filter
+    if (filters.price_min || filters.price_max) {
+      query.price = {};
+      if (filters.price_min) query.price.$gte = filters.price_min;
+      if (filters.price_max) query.price.$lte = filters.price_max;
+    }
+
+    if (filters.brand) {
+      query.brand = filters.brand;
+    }
+
+    if (filters.status !== undefined) {
+      query.status = filters.status;
+    }
+
+    if (filters.categories) {
+      query.categories = { $in: filters.categories };
+    }
+
+    if (filters.attributes) {
+      query.attributes = {
+        $elemMatch: {
+          key: filters.attributes.key,
+          value: { $in: filters.attributes.values },
+        },
+      };
+    }
+    return await ProductRepository.findByFilter(query);
+  }
 }
 
 export default new ProductService();

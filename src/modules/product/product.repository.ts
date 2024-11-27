@@ -35,6 +35,10 @@ class ProductRepository {
   async findByName(name: string) {
     return Product.find({ product_name: { $regex: name, $options: "i" } });
   }
+
+  async findByFilter(query: any) {
+    return Product.find(query);
+  }
 }
 
 export default new ProductRepository();

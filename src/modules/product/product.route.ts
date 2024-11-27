@@ -22,6 +22,10 @@ class ProductRoute implements RouteInterface {
     );
     this.router.put(`${this.path}/:id`, ProductController.updateProduct);
     this.router.delete(`${this.path}/:id`, ProductController.deleteProduct);
+    this.router.get(
+      `${this.path}/filter`,
+      ProductController.getFilteredProducts
+    );
   }
 }
 
