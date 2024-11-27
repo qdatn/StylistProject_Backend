@@ -4,6 +4,9 @@ import { uploadImage } from "@core/utils";
 import IProduct from "./product.interface";
 import mongoose from "mongoose";
 import getFolderFromUrl from "@core/utils/getFolderFromUrl";
+import Product from "./product.model";
+import { Category } from "@modules/category";
+
 class ProductService {
   async getAllProducts() {
     return await ProductRepository.findAll();
@@ -65,42 +68,43 @@ class ProductService {
     return await ProductRepository.findByName(name);
   }
 
-  async filterProducts(filters: any) {
-    const query: any = {};
+  async filterProducts(
+    name: string = "",
+    category: string = "",
+    sortBy: string = "product_name",
+    sortOrder: string = "asc"
+  ) {
+    const filter: any = {};
 
-    // filter by name
-    if (filters.product_name) {
-      query.product_name = { $regex: filters.product_name, $options: "i" };
+    // Tìm kiếm theo tên sản phẩm
+    if (name) {
+      filter.product_name = { $regex: name, $options: "i" }; // Case-insensitive search
     }
 
-    // filter
-    if (filters.price_min || filters.price_max) {
-      query.price = {};
-      if (filters.price_min) query.price.$gte = filters.price_min;
-      if (filters.price_max) query.price.$lte = filters.price_max;
-    }
-
-    if (filters.brand) {
-      query.brand = filters.brand;
-    }
-
-    if (filters.status !== undefined) {
-      query.status = filters.status;
-    }
-
-    if (filters.categories) {
-      query.categories = { $in: filters.categories };
-    }
-
-    if (filters.attributes) {
-      query.attributes = {
-        $elemMatch: {
-          key: filters.attributes.key,
-          value: { $in: filters.attributes.values },
+    // Lọc theo tên danh mục
+    if (category) {
+      const categoryNames = category.split(",").map((name) => name.trim());
+      const categories = await Category.find({
+        category_name: {
+          $in: categoryNames.map((name) => new RegExp(name, "i")),
         },
-      };
+      });
+
+      if (categories.length === 0) {
+        throw new Error(
+          `No categories found for names: ${categoryNames.join(", ")}`
+        );
+      }
+
+      filter.categories = { $in: categories.map((cat) => cat._id) };
     }
-    return await ProductRepository.findByFilter(query);
+
+    // Sắp xếp kết quả
+    const sortOptions: any = {};
+    sortOptions[sortBy] = sortOrder.toLowerCase() === "desc" ? -1 : 1;
+
+    // Thực hiện tìm kiếm, lọc và sắp xếp
+    return await Product.find(filter).populate("categories").sort(sortOptions);
   }
 
   async uploadImage(

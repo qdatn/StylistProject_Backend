@@ -158,8 +158,18 @@ class ProductController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const filters = req.query;
-      const products = await ProductService.filterProducts(filters);
+      // const { name, category, sortBy, sortOrder } = req.query;
+      const name = req.query.name as string;
+      const category = req.query.category as string;
+      const sortBy = req.query.sortBy as string;
+      const sortOrder = req.query.sortOrder as string;
+
+      const products = await ProductService.filterProducts(
+        name,
+        category,
+        sortBy,
+        sortOrder
+      );
       await pagination(req, res, products, next);
       res.status(200).json(res.locals.pagination);
     } catch (error) {

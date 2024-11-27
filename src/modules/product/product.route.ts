@@ -13,8 +13,15 @@ class ProductRoute implements RouteInterface {
   }
 
   private initializeRoutes() {
+    this.router.get(
+      `${this.path}/search/query`,
+      ProductController.getFilteredProducts
+    );
     this.router.get(`${this.path}/`, ProductController.getAllProducts);
-    this.router.get(`${this.path}/search`, ProductController.searchProducts);
+    // this.router.get(
+    //   `${this.path}/search/query`,
+    //   ProductController.searchProducts
+    // );
     this.router.get(`${this.path}/:id`, ProductController.getProductById);
     this.router.post(
       `${this.path}/`,
@@ -27,10 +34,6 @@ class ProductRoute implements RouteInterface {
     );
     this.router.put(`${this.path}/:id`, ProductController.updateProduct);
     this.router.delete(`${this.path}/:id`, ProductController.deleteProduct);
-    this.router.get(
-      `${this.path}/filter`,
-      ProductController.getFilteredProducts
-    );
     this.router.post(
       `${this.path}/upload`,
       upload.single("image"),
