@@ -84,11 +84,15 @@ class ProductService {
     // Lọc theo tên danh mục
     if (category) {
       const categoryNames = category.split(",").map((name) => name.trim());
-      const categories = await Category.find({
-        category_name: {
-          $in: categoryNames.map((name) => new RegExp(name, "i")),
-        },
-      });
+      const categories = await Category.find(
+        categoryNames[0] == "All"
+          ? {}
+          : {
+              category_name: {
+                $in: categoryNames.map((name) => new RegExp(name, "i")),
+              },
+            }
+      );
 
       if (categories.length === 0) {
         throw new Error(

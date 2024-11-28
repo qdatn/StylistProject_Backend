@@ -9,6 +9,7 @@ import { DiscountRoute } from "@modules/discount";
 import { OrderRoute } from "@modules/order";
 import { OrderItemRoute } from "@modules/orderItem";
 import { AddressRoute } from "@modules/address";
+import { PaymentRoute } from "@modules/payment";
 
 export {
   AuthRoute,
@@ -22,4 +23,5 @@ export {
   OrderRoute,
   OrderItemRoute,
   AddressRoute,
+  PaymentRoute
 };
