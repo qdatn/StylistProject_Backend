@@ -12,10 +12,7 @@ class AttributeRoute implements RouteInterface {
   }
 
   private initializeRoutes() {
-    this.router.post(
-      `${this.path}/`,
-      AttributeController.createAttribute
-    );
+    this.router.post(`${this.path}/`, AttributeController.createAttribute);
     this.router.get(`${this.path}/`, AttributeController.getAllAttributes);
     this.router.get(`${this.path}/:key`, AttributeController.getAttributeByKey);
     this.router.put(`${this.path}/:key`, AttributeController.updateAttribute);
@@ -23,7 +20,14 @@ class AttributeRoute implements RouteInterface {
       `${this.path}/:key`,
       AttributeController.deleteAttribute
     );
-    this.router.put(`${this.path}/:key/addValues`, AttributeController.addValue);
+    this.router.put(
+      `${this.path}/:key/addValues`,
+      AttributeController.addValue
+    );
+    this.router.put(
+      `${this.path}/:key/deleteValues`,
+      AttributeController.deleteValue
+    );
   }
 }
 

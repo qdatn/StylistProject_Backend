@@ -109,6 +109,28 @@ class AttributeController {
       next(error);
     }
   }
+
+  async deleteValue(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const attribute = await AttributeService.deleteValue(
+        req.params.key,
+        req.body.values
+      );
+      if (!attribute) {
+        res.status(404).json({ message: "Attribute not found" });
+      } else {
+        res
+          .status(200)
+          .json({ attribute, message: "Value added successfully" });
+      }
+    } catch (error: any) {
+      next(error);
+    }
+  }
 }
 
 export default new AttributeController();
