@@ -14,6 +14,10 @@ class AttributeRoute implements RouteInterface {
   private initializeRoutes() {
     this.router.post(`${this.path}/`, AddressController.createAddress);
     this.router.get(`${this.path}/`, AddressController.getAllAddresses);
+    this.router.get(
+      `${this.path}/user/:userid`,
+      AddressController.getAddressUserById
+    );
     this.router.get(`${this.path}/:id`, AddressController.getAddressById);
     this.router.put(`${this.path}/:id`, AddressController.updateAddress);
     this.router.delete(`${this.path}/:id`, AddressController.deleteAddress);

@@ -15,6 +15,12 @@ class AddressRepository {
       .populate("user");
   }
 
+  async findById(id: string) {
+    const _id = new mongoose.Types.ObjectId(id);
+    return await Address.findOne({ _id: _id })
+      .populate("user");
+  }
+
   async findAll() {
     return await Address.find()
       .populate("user");

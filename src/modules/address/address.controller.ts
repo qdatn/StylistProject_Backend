@@ -16,6 +16,25 @@ class AddressController {
     }
   }
 
+  async getAddressUserById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const address = await AddressService.getAddressUserById(
+        req.params.userid
+      );
+      if (!address) {
+        res.status(404).json({ error: "Address not found" });
+      } else {
+        res.json(address);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getAddressById(
     req: Request,
     res: Response,

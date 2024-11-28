@@ -6,8 +6,12 @@ class AddressService {
     return await AddressRepository.create(addressData);
   }
 
-  async getAddressById(id: string) {
+  async getAddressUserById(id: string) {
     return await AddressRepository.findByUserId(id);
+  }
+
+  async getAddressById(id: string) {
+    return await AddressRepository.findById(id);
   }
 
   async getAllAddresses() {
