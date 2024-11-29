@@ -33,6 +33,22 @@ class OrderItemController {
       next(error);
     }
   }
+  async getOrderItemByOrderId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const orderItem = await orderItemService.getOrderItemByOrderId(req.params.order);
+      if (!orderItem) {
+        res.status(404).json({ message: "Order item not found" });
+      } else {
+        res.status(200).json(orderItem);
+      }
+    } catch (error: any) {
+      next(error);
+    }
+  }
 
   async getAllOrderItems(
     req: Request,
