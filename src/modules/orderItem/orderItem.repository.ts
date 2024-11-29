@@ -14,7 +14,7 @@ class OrderItemRepository {
 
   async getOrderItemByOrderId(order: string) {
     //const id = new mongoose.Types.ObjectId(order);
-    return await OrderItem.find({ order }).populate("product");
+    return await OrderItem.find({ order: order }).populate("product");
   }
 
   async getAllOrderItems() {
