@@ -19,6 +19,7 @@ class OrderItemRoute implements RouteInterface {
     );
     this.router.get(`${this.path}/`, OrderItemController.getAllOrderItems);
     this.router.get(`${this.path}/:id`, OrderItemController.getOrderItemById);
+    this.router.get(`${this.path}/order/:order`, OrderItemController.getOrderItemByOrderId);
     this.router.put(`${this.path}/:id`, OrderItemController.updateOrderItem);
     this.router.delete(`${this.path}/:id`, OrderItemController.deleteOrderItem);
   }

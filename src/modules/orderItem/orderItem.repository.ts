@@ -1,4 +1,5 @@
 // repositories/orderItemRepository.js
+import mongoose from "mongoose";
 import OrderItemDTO from "./dtos/orderItem.dto";
 import OrderItem from "./orderItem.model";
 
@@ -11,8 +12,9 @@ class OrderItemRepository {
     return await OrderItem.findById(id).populate("product");
   }
 
-  async getOrderItemByOrderId(orderid: string) {
-    return await OrderItem.find({ order: orderid }).populate("product");
+  async getOrderItemByOrderId(order: string) {
+    //const id = new mongoose.Types.ObjectId(order);
+    return await OrderItem.find({ order }).populate("product");
   }
 
   async getAllOrderItems() {

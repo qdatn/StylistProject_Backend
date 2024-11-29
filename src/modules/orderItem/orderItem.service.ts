@@ -10,6 +10,9 @@ class OrderItemService {
   async getOrderItemById(id: string) {
     return await orderItemRepository.getOrderItemById(id);
   }
+  async getOrderItemByOrderId(order: string) {
+    return await orderItemRepository.getOrderItemByOrderId(order);
+  }
 
   async getAllOrderItems() {
     return await orderItemRepository.getAllOrderItems();
