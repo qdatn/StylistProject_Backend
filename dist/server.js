@@ -18,6 +18,7 @@ const routes = [
     _routes_1.OrderRoute,
     _routes_1.OrderItemRoute,
     _routes_1.AddressRoute,
+    _routes_1.PaymentRoute,
 ];
 const app = new app_1.default(routes);
 app.listen();
