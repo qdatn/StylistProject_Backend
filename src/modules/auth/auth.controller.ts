@@ -54,7 +54,7 @@ class AuthController {
       if (user) {
         res.status(200).json({ exists: true, message: "Email already exists" });
       } else {
-        res.status(200).json({ exists: false, message: "Email is available" });
+        res.status(200).json({ exists: false, message: "Email haven't been registered" });
       }
     } catch (error: any) {
       next(error);
