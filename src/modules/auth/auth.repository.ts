@@ -19,6 +19,16 @@ class UserRepository {
     });
   }
 
+  async updateUserByEmail(email: string, password: string) {
+    return await User.findOneAndUpdate(
+      { email: email },
+      { password: password },
+      {
+        new: true,
+      }
+    );
+  }
+
   async deleteUser(id: string) {
     return await User.deleteOne({ _id: id });
   }

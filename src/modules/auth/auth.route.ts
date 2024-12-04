@@ -18,6 +18,7 @@ class AuthRoute implements RouteInterface {
     this.router.post(`${this.path}/register`, AuthController.register);
     this.router.post(`${this.path}/login`, AuthController.login);
     this.router.post(`${this.path}/logout`, AuthController.logout);
+    this.router.put(`${this.path}/change-password`, AuthController.changePassword);
     this.router.put(
       `${this.path}/:id`,
       authMiddleware,
@@ -33,6 +34,7 @@ class AuthRoute implements RouteInterface {
       AuthController.sendVerification
     );
     this.router.post(`${this.path}/verify`, AuthController.verifyOTP);
+    this.router.get(`${this.path}/check-email`, AuthController.checkEmail);
   }
 }
 
