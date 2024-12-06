@@ -43,6 +43,46 @@ class AuthController {
     }
   }
 
+  async checkEmail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { email } = req.body;
+      const user = await AuthService.checkEmail(email);
+      if (user) {
+        res.status(200).json({ exists: true, message: "Email already exists" });
+      } else {
+        res.status(200).json({ exists: false, message: "Email haven't been registered" });
+      }
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async changePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        res
+          .status(400)
+          .json({ message: "Email and new password are required" });
+        return;
+      }
+
+      await AuthService.updatePasswordByEmail(email, password);
+
+      res.status(200).json({ message: "Password updated successfully" });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     // Xóa cookie chứa token
     res

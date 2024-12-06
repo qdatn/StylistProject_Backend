@@ -134,6 +134,28 @@ class AuthService {
       }
     }
   }
+
+  async checkEmail(email: string) {
+    const existingUser = await UserRepository.findByEmail(email);
+    return !!existingUser;
+  }
+
+  async updatePasswordByEmail(email: string, password: string) {
+    const user = await UserRepository.findByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Hash mật khẩu mới
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Cập nhật mật khẩu
+    const updatedUser = await UserRepository.updateUserByEmail(
+      email,
+      hashedPassword
+    );
+    return !!updatedUser; // Trả về true nếu cập nhật thành công
+  }
 }
 
 export default new AuthService();
