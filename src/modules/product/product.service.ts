@@ -112,16 +112,16 @@ class ProductService {
   }
 
   async uploadImage(
-    fileBuffer: any,
+    image: any,
     folder: string,
     product_folder_name: string
   ) {
     const result: any = await uploadImage(
-      fileBuffer,
+      image,
       folder,
       product_folder_name
     );
-    return result;
+    return result.secure_url;
   }
 }
 

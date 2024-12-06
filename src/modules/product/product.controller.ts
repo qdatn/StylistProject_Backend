@@ -183,28 +183,13 @@ class ProductController {
     next: NextFunction
   ): Promise<void> {
     try {
-      // const file: any = req.file;
-      const { productid, images } = req.body;
-      if (!images) res.status(400).json({ message: "No file uploaded" });
-
-      const data: any = await Promise.all(
-        images.map(async (image: string) => {
-          const uploadImage: any = await ProductService.uploadImage(
-            image,
-            "product",
-            productid
-            // "ABCTest"
-          );
-          return uploadImage.secure_url;
-        })
+      const image: any = req.file;
+      const result = await ProductService.uploadImage(
+        image,
+        "product",
+        "ABCTest"
       );
-      // const result: any = await ProductService.uploadImage(
-      //   images,
-      //   "product",
-      //   // product_name
-      //   "ABCTest"
-      // );
-      res.status(200).json({ data });
+      res.status(200).json({ imageUrl: result });
     } catch (error: any) {
       next(error.message);
     }

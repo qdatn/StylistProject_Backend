@@ -2,7 +2,7 @@
 import cloudinary from "@core/configs/cloudinary";
 
 const uploadImage = async (
-  fileBuffer: any,
+  image: Express.Multer.File,
   folder: string,
   product_folder_name: string
 ) => {
@@ -21,7 +21,7 @@ const uploadImage = async (
           }
         }
       )
-      .end(fileBuffer);
+      .end(image.buffer);
   });
 };
 
