@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // server.js
 const app_1 = __importDefault(require("./app"));
-const _routes_1 = require("@routes");
+const _routes_1 = require("./routes");
 const routes = [
     _routes_1.AuthRoute,
     _routes_1.UserInfoRoute,

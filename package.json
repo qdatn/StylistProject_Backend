@@ -10,7 +10,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node dist/server.js"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "tsc-alias": "^1.8.10",
     "winston": "^3.15.0"
   },
   "devDependencies": {
@@ -61,5 +62,9 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3"
+  },
+  "_moduleAliases": {
+    "@core": "dist/core",
+    "@modules": "dist/modules"
   }
 }
