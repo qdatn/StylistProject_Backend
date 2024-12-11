@@ -66,7 +66,9 @@ class OrderService {
   }
 
   async deleteOrder(id: string) {
-    return await orderRepository.deleteOrder(id);
+    const order = await orderRepository.deleteOrder(id);  
+    const order_items = await orderItemRepository.deleteOrderItemByOrderId(id);
+    return order;
   }
 }
 

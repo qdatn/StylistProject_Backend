@@ -28,6 +28,10 @@ class OrderItemRepository {
   async deleteOrderItem(id: string) {
     return await OrderItem.findOneAndDelete({ _id: id });
   }
+
+  async deleteOrderItemByOrderId(id: string) {
+    return await OrderItem.deleteMany({ order: id });
+  }
 }
 
 export default new OrderItemRepository();
