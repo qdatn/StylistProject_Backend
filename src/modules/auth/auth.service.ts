@@ -156,6 +156,14 @@ class AuthService {
     );
     return !!updatedUser; // Trả về true nếu cập nhật thành công
   }
+
+  async findUserbyEmail(email: string) {
+    const user = await UserRepository.findByEmail(email);
+    // if (!user) {
+    //   return "User not found";
+    // }
+    return user;
+  }
 }
 
 export default new AuthService();

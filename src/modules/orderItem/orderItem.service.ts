@@ -25,6 +25,10 @@ class OrderItemService {
   async deleteOrderItem(id: string) {
     return await orderItemRepository.deleteOrderItem(id);
   }
+
+  async deleteOrderItemByOrderId(id: string) {
+    return await orderItemRepository.deleteOrderItemByOrderId(id);
+  }
 }
 
 export default new OrderItemService();

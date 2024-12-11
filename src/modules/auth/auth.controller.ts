@@ -5,6 +5,8 @@ import RegisterDto from "./dtos/register.dto";
 import OTP from "./otp.model";
 import IAuth from "./auth.interface";
 // import AuthDto from "./dtos/auth.dto";
+import jwt from "jsonwebtoken";
+import generateJwt from "@core/utils/generateJwt";
 
 class AuthController {
   async register(
@@ -54,7 +56,9 @@ class AuthController {
       if (user) {
         res.status(200).json({ exists: true, message: "Email already exists" });
       } else {
-        res.status(200).json({ exists: false, message: "Email haven't been registered" });
+        res
+          .status(200)
+          .json({ exists: false, message: "Email haven't been registered" });
       }
     } catch (error: any) {
       next(error);
@@ -184,6 +188,38 @@ class AuthController {
       }
     } catch (error: any) {
       next(error);
+    }
+  }
+
+  async refreshToken(req: Request, res: Response, next: NextFunction) {
+    const refreshToken = req.cookies.token;
+
+    if (!refreshToken) {
+      return next("Refresh token is required");
+    }
+
+    try {
+      // Giải mã refresh token để kiểm tra tính hợp lệ
+      const decoded: any = jwt.verify(refreshToken, process.env.JWT_SECRET!);
+
+      // Lấy thông tin người dùng từ decoded (hoặc từ DB nếu cần)
+      const user = await AuthService.findUserbyEmail(decoded.email);
+
+      if (!user) {
+        return next("User not found");
+      }
+
+      // Tạo lại access token và refresh token mới
+      const newRefreshToken = generateJwt(user);
+
+      // Cập nhật refresh token vào cookie mới
+      res.cookie("token", newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 60 * 60 * 24 * 2 * 1000, // refresh token sống 2 ngày
+      });
+    } catch (error) {
+      return next(error);
     }
   }
 }
