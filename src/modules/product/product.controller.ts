@@ -1,5 +1,5 @@
 import { pagination } from "@core/middlewares";
-import { uploadImage } from "@core/utils";
+import { deleteImage, uploadImage } from "@core/utils";
 import ProductService from "@modules/product/product.service";
 import { Request, Response, NextFunction } from "express";
 import ProductDto from "./dtos/product.dto";
@@ -184,12 +184,29 @@ class ProductController {
   ): Promise<void> {
     try {
       const image: any = req.file;
-      const result = await ProductService.uploadImage(
-        image,
-        "product",
-        "ABCTest"
-      );
-      res.status(200).json({ imageUrl: result });
+      const { id } = req.params;
+      const result = await ProductService.uploadImage(image, "product", id);
+      res.status(200).json({imageUrl: result });
+    } catch (error: any) {
+      next(error.message);
+    }
+  }
+
+  async deleteImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { imageUrl } = req.body;
+      const { id } = req.params;
+      const result = await ProductService.deleteImage(imageUrl, "product", id);
+      if (result.result === "ok") {
+        res.status(200).json({ message: `Delete success image ${imageUrl}` });
+      } else {
+        next({ message: `Delete fail image ${imageUrl}` });
+      }
+      // ({ imageUrl: result });
     } catch (error: any) {
       next(error.message);
     }
