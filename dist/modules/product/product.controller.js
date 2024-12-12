@@ -162,8 +162,28 @@ class ProductController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const image = req.file;
-                const result = yield product_service_1.default.uploadImage(image, "product", "ABCTest");
+                const { id } = req.params;
+                const result = yield product_service_1.default.uploadImage(image, "product", id);
                 res.status(200).json({ imageUrl: result });
+            }
+            catch (error) {
+                next(error.message);
+            }
+        });
+    }
+    deleteImage(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { imageUrl } = req.body;
+                const { id } = req.params;
+                const result = yield product_service_1.default.deleteImage(imageUrl, "product", id);
+                if (result.result === "ok") {
+                    res.status(200).json({ message: `Delete success image ${imageUrl}` });
+                }
+                else {
+                    next({ message: `Delete fail image ${imageUrl}` });
+                }
+                // ({ imageUrl: result });
             }
             catch (error) {
                 next(error.message);

@@ -164,6 +164,15 @@ class AuthService {
             return !!updatedUser; // Trả về true nếu cập nhật thành công
         });
     }
+    findUserbyEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield auth_repository_1.default.findByEmail(email);
+            // if (!user) {
+            //   return "User not found";
+            // }
+            return user;
+        });
+    }
 }
 exports.default = new AuthService();
 //# sourceMappingURL=auth.service.js.map

@@ -17,6 +17,7 @@ class AuthRoute {
         this.router.post(`${this.path}/register`, auth_controller_1.default.register);
         this.router.post(`${this.path}/login`, auth_controller_1.default.login);
         this.router.post(`${this.path}/logout`, auth_controller_1.default.logout);
+        this.router.post(`${this.path}/refresh-token`, auth_controller_1.default.refreshToken);
         this.router.put(`${this.path}/change-password`, auth_controller_1.default.changePassword);
         this.router.put(`${this.path}/:id`, auth_middleware_1.default, auth_controller_1.default.updateUser);
         this.router.delete(`${this.path}/:id`, auth_middleware_1.default, auth_controller_1.default.deleteUser);

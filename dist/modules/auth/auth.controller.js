@@ -16,6 +16,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const auth_service_1 = __importDefault(require("../auth/auth.service"));
 const otp_model_1 = __importDefault(require("./otp.model"));
 // import AuthDto from "./dtos/auth.dto";
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const generateJwt_1 = __importDefault(require("../../core/utils/generateJwt"));
 class AuthController {
     register(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,7 +64,9 @@ class AuthController {
                     res.status(200).json({ exists: true, message: "Email already exists" });
                 }
                 else {
-                    res.status(200).json({ exists: false, message: "Email haven't been registered" });
+                    res
+                        .status(200)
+                        .json({ exists: false, message: "Email haven't been registered" });
                 }
             }
             catch (error) {
@@ -184,6 +188,34 @@ class AuthController {
             }
             catch (error) {
                 next(error);
+            }
+        });
+    }
+    refreshToken(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const refreshToken = req.cookies.token;
+            if (!refreshToken) {
+                return next("Refresh token is required");
+            }
+            try {
+                // Giải mã refresh token để kiểm tra tính hợp lệ
+                const decoded = jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_SECRET);
+                // Lấy thông tin người dùng từ decoded (hoặc từ DB nếu cần)
+                const user = yield auth_service_1.default.findUserbyEmail(decoded.email);
+                if (!user) {
+                    return next("User not found");
+                }
+                // Tạo lại access token và refresh token mới
+                const newRefreshToken = (0, generateJwt_1.default)(user);
+                // Cập nhật refresh token vào cookie mới
+                res.cookie("token", newRefreshToken, {
+                    httpOnly: true,
+                    secure: true,
+                    maxAge: 60 * 60 * 24 * 2 * 1000, // refresh token sống 2 ngày
+                });
+            }
+            catch (error) {
+                return next(error);
             }
         });
     }

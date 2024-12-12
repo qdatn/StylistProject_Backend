@@ -25,7 +25,8 @@ class ProductRoute {
         this.router.post(`${this.path}/insertMany`, product_controller_1.default.createManyProducts);
         this.router.put(`${this.path}/:id`, product_controller_1.default.updateProduct);
         this.router.delete(`${this.path}/:id`, product_controller_1.default.deleteProduct);
-        this.router.post(`${this.path}/upload`, uploadImg_middleware_1.default.single("image"), product_controller_1.default.uploadImage);
+        this.router.post(`${this.path}/upload/:id`, uploadImg_middleware_1.default.single("image"), product_controller_1.default.uploadImage);
+        this.router.post(`${this.path}/delete-img/:id`, product_controller_1.default.deleteImage);
     }
 }
 exports.default = new ProductRoute();
