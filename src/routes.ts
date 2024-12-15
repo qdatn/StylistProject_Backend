@@ -10,6 +10,7 @@ import { OrderRoute } from "@modules/order";
 import { OrderItemRoute } from "@modules/orderItem";
 import { AddressRoute } from "@modules/address";
 import { PaymentRoute } from "@modules/payment";
+import { StatisticRoute } from "@modules/statistic";
 
 export {
   AuthRoute,
@@ -23,5 +24,6 @@ export {
   OrderRoute,
   OrderItemRoute,
   AddressRoute,
-  PaymentRoute
+  PaymentRoute,
+  StatisticRoute,
 };

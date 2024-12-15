@@ -35,9 +35,13 @@ class ProductRoute implements RouteInterface {
     this.router.put(`${this.path}/:id`, ProductController.updateProduct);
     this.router.delete(`${this.path}/:id`, ProductController.deleteProduct);
     this.router.post(
-      `${this.path}/upload`,
+      `${this.path}/upload/:id`,
       upload.single("image"),
       ProductController.uploadImage
+    );
+    this.router.post(
+      `${this.path}/delete-img/:id`,
+      ProductController.deleteImage
     );
   }
 }

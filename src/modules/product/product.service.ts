@@ -1,6 +1,6 @@
 import ProductRepository from "@modules/product/product.repository";
 import ProductDto from "@modules/product/dtos/product.dto";
-import { uploadImage } from "@core/utils";
+import { deleteImage, uploadImage } from "@core/utils";
 import IProduct from "./product.interface";
 import mongoose from "mongoose";
 import getFolderFromUrl from "@core/utils/getFolderFromUrl";
@@ -111,17 +111,17 @@ class ProductService {
     return await Product.find(filter).populate("categories").sort(sortOptions);
   }
 
-  async uploadImage(
-    image: any,
+  async uploadImage(image: any, folder: string, product_folder_name: string) {
+    const result: any = await uploadImage(image, folder, product_folder_name);
+    return result.secure_url;
+  }
+
+  async deleteImage(
+    imageUrl: string,
     folder: string,
     product_folder_name: string
   ) {
-    const result: any = await uploadImage(
-      image,
-      folder,
-      product_folder_name
-    );
-    return result.secure_url;
+    return await deleteImage(imageUrl, folder, product_folder_name);
   }
 }
 
