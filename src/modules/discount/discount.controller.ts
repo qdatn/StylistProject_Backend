@@ -83,6 +83,24 @@ class DiscountController {
       next(error);
     }
   }
+  async getDiscountsByProductId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const productId = req.params.productId;
+      const discounts = await DiscountService.getDiscountsByProductId(productId);
+  
+      if (!discounts || discounts.length === 0) {
+        res.status(404).json({ message: "No discounts found for this product" });
+      } else {
+        res.status(200).json(discounts);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new DiscountController(); // Xuất một thể hiện duy nhất của lớp

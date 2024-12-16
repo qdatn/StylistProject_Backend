@@ -1,3 +1,4 @@
+import Discount from "./discount.model";
 import DiscountRepository from "./discount.repository";
 import DiscountDto from "./dtos/discount.dto";
 
@@ -20,6 +21,9 @@ class DiscountService {
 
   async deleteDiscount(id: string) {
     return await DiscountRepository.delete(id);
+  }
+  async getDiscountsByProductId(productId: string) {
+    return await DiscountRepository.findByProductId(productId);
   }
 }
 
