@@ -112,6 +112,73 @@ class StatisticService {
       totalProducts,
     };
   }
+
+  async getOrdersByDateRange(startDate: Date, endDate: Date) {
+    const orders = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Nhóm theo ngày
+          averageTotalPrice: { $avg: "$total_price" }, // Tính giá trị trung bình của total_price
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          averageTotalPrice: { $round: ["$averageTotalPrice", 2] }, // Làm tròn 2 chữ số thập phân
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    const dailyRevenue = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Nhóm theo ngày
+          totalRevenue: { $sum: "$total_price" }, // Tổng doanh thu theo ngày
+          totalOrders: { $sum: 1 }, // Số lượng đơn hàng trong ngày
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sắp xếp theo ngày tăng dần
+      },
+    ]);
+
+    const dailyOrderCounts = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Nhóm theo ngày
+          orderCount: { $sum: 1 }, // Đếm số lượng đơn hàng trong mỗi ngày
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sắp xếp theo ngày tăng dần
+      },
+    ]);
+
+    return {
+      orders,
+      // totalRevenue: totalRevenue[0]?.totalRevenue || 0,
+      dailyRevenue,
+      dailyOrderCounts,
+    };
+  }
 }
 
 export default new StatisticService();

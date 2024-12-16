@@ -68,6 +68,29 @@ class StatisticController {
       });
     }
   }
+
+  async fetchOrdersByDateRange(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const { startDate, endDate } = req.query;
+
+    const start = new Date(startDate as string);
+    const end = new Date(endDate as string);
+
+    if (!startDate || !endDate) {
+      next({ message: "Start date and end date are required" });
+    }
+
+    try {
+      const { orders, dailyRevenue, dailyOrderCounts } =
+        await StatisticService.getOrdersByDateRange(start, end);
+      res.status(200).json({ orders, dailyRevenue, dailyOrderCounts });
+    } catch (error: any) {
+      next({ message: error.message });
+    }
+  }
 }
 
 export default new StatisticController();
