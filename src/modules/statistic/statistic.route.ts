@@ -20,7 +20,8 @@ class StatisticRoute implements RouteInterface {
       `${this.path}/revenue`,
       StatisticController.getRevenueByDate
     );
-    this.router.get(`${this.path}/order`, StatisticController.fetchOrdersByDateRange);
+    this.router.get(`${this.path}/order`, StatisticController.getOrdersByDate);
+    // this.router.get(`${this.path}/order`, StatisticController.fetchOrdersByDateRange);
   }
 }
 
