@@ -179,6 +179,26 @@ class StatisticService {
       dailyOrderCounts,
     };
   }
+
+  async getOrdersByDate(startDate: Date, endDate: Date) {
+    const orders = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        },
+      },
+      // {
+      //   $group: {
+      //     _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Nhóm theo ngày
+      //     averageTotalPrice: { $avg: "$total_price" }, // Tính giá trị trung bình của total_price
+      //   },
+      // },
+      // {
+      //   $sort: { _id: 1 },
+      // },
+    ]);
+    return { orders };
+  }
 }
 
 export default new StatisticService();
