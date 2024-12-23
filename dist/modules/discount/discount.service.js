@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const product_1 = require("../product");
+const discount_model_1 = __importDefault(require("./discount.model"));
 const discount_repository_1 = __importDefault(require("./discount.repository"));
 class DiscountService {
     createDiscount(data) {
@@ -37,6 +39,39 @@ class DiscountService {
     deleteDiscount(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield discount_repository_1.default.delete(id);
+        });
+    }
+    getAvailableDiscounts(productIds, totalPrice) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const discounts = yield discount_model_1.default.find({
+                $or: [
+                    { type: "all" },
+                    { type: "product", apply_items: { $in: productIds } },
+                    {
+                        type: "category",
+                        apply_items: {
+                            $in: yield this.getCategoryIdsFromProductIds(productIds),
+                        },
+                    },
+                ],
+                start_date: { $lte: new Date() },
+                end_date: { $gte: new Date() },
+                status: true,
+            });
+            return discounts.filter((discount) => {
+                // Check conditions for minimum value and max discount
+                if (discount.minimum_value && totalPrice < discount.minimum_value) {
+                    return false;
+                }
+                return true;
+            });
+        });
+    }
+    getCategoryIdsFromProductIds(productIds) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const products = yield product_1.Product.find({ _id: { $in: productIds } }).select("categories");
+            const categoryIds = products.flatMap((product) => product.categories);
+            return [...new Set(categoryIds.map((id) => id.toString()))]; // Remove duplicates
         });
     }
 }

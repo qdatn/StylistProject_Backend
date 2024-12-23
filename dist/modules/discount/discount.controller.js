@@ -86,6 +86,29 @@ class DiscountController {
             }
         });
     }
+    getAvailableDiscounts(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { productIds, totalPrice } = req.body;
+                if (!Array.isArray(productIds) || typeof totalPrice !== "number") {
+                    res.status(400).json({
+                        message: "Invalid input. `productIds` must be an array and `totalPrice` must be a number.",
+                    });
+                }
+                const discounts = yield discount_service_1.default.getAvailableDiscounts(productIds, totalPrice);
+                res.status(200).json({
+                    message: "Available discounts retrieved successfully.",
+                    data: discounts,
+                });
+            }
+            catch (error) {
+                next({
+                    message: "Failed to retrieve available discounts.",
+                    error: error.message,
+                });
+            }
+        });
+    }
 }
 exports.default = new DiscountController(); // Xuất một thể hiện duy nhất của lớp
 //# sourceMappingURL=discount.controller.js.map

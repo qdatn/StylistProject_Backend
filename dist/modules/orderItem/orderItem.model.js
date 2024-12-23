@@ -48,7 +48,7 @@ exports.orderItemSchema = new mongoose_1.Schema({
         },
     ],
     note: { type: String },
-});
+}, { timestamps: true });
 // Middleware giảm số lượng sản phẩm khi lưu OrderItem
 exports.orderItemSchema.pre("save", middlewares_1.reduceProductStock);
 exports.orderItemSchema.post("findOneAndDelete", middlewares_1.increaseProductStock);
