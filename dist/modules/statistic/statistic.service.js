@@ -100,10 +100,10 @@ class StatisticService {
             });
             // Tổng số sản phẩm
             const totalProducts = yield product_1.Product.countDocuments({
-                createdAt: {
-                    $gte: new Date(startDate),
-                    $lte: new Date(endDate),
-                },
+            // createdAt: {
+            //   $gte: new Date(startDate),
+            //   $lte: new Date(endDate),
+            // },
             });
             return {
                 totalRevenue: ((_a = totalRevenue[0]) === null || _a === void 0 ? void 0 : _a.total) || 0,
