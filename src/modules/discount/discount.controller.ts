@@ -114,6 +114,32 @@ class DiscountController {
       });
     }
   }
+  async applyDiscount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { code, productIds, totalPrice } = req.body;
+
+      if (!code || !productIds || !totalPrice) {
+        res.status(400).json({ message: "Missing required fields." });
+      }
+
+      const result = await DiscountService.applyDiscount(
+        code,
+        productIds,
+        totalPrice
+      );
+
+      res.status(200).json({
+        message: "Discount applied successfully.",
+        data: result,
+      });
+    } catch (error: any) {
+      next({ message: error.message });
+    }
+  }
 }
 
 export default new DiscountController(); // Xuất một thể hiện duy nhất của lớp
