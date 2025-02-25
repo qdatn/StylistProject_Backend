@@ -98,10 +98,10 @@ class StatisticService {
 
     // Tổng số sản phẩm
     const totalProducts = await Product.countDocuments({
-      createdAt: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      },
+      // createdAt: {
+      //   $gte: new Date(startDate),
+      //   $lte: new Date(endDate),
+      // },
     });
 
     return {
