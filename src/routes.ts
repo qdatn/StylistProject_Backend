@@ -11,6 +11,7 @@ import { OrderItemRoute } from "@modules/orderItem";
 import { AddressRoute } from "@modules/address";
 import { PaymentRoute } from "@modules/payment";
 import { StatisticRoute } from "@modules/statistic";
+import { ChatRoute } from "@modules/chat";
 
 export {
   AuthRoute,
@@ -26,4 +27,5 @@ export {
   AddressRoute,
   PaymentRoute,
   StatisticRoute,
+  ChatRoute,
 };
