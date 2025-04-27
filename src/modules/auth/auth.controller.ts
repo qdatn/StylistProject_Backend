@@ -10,6 +10,8 @@ import generateJwt from "@core/utils/generateJwt";
 import axios from "axios";
 import { UserInfo } from "@modules/userInfo";
 import User from "./user.model";
+import bcrypt from "bcrypt";
+import { UserRepository } from ".";
 
 class AuthController {
   async register(
@@ -52,6 +54,9 @@ class AuthController {
       if (!user) {
         // Nếu người dùng chưa tồn tại, tạo mới thông qua register
         // Tạo đối tượng user để gửi vào đăng ký
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash("1234", salt); // Mã hóa mật khẩu mặc định '1234'
+
         const registerDto = {
           name: googleUser.name,
           email: googleUser.email,
@@ -279,6 +284,34 @@ class AuthController {
       });
     } catch (error) {
       return next(error);
+    }
+  }
+
+  async setPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId, password } = req.body;
+
+      // Mã hóa mật khẩu trước khi lưu vào DB
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Cập nhật mật khẩu cho người dùng
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { password: hashedPassword },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        throw new Error("User not found");
+      }
+
+      // Trả về thông tin người dùng và thông báo thành công
+      res.status(200).json({
+        message: "Password updated successfully",
+        user: updatedUser,
+      });
+    } catch (error) {
+      next(error);
     }
   }
 }

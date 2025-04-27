@@ -18,6 +18,7 @@ class AuthRoute implements RouteInterface {
     this.router.post(`${this.path}/register`, AuthController.register);
     this.router.post(`${this.path}/login`, AuthController.login);
     this.router.post(`${this.path}/google-login`, AuthController.googleLogin);
+    this.router.post(`${this.path}/set-password`, AuthController.setPassword);
     this.router.post(`${this.path}/logout`, AuthController.logout);
     this.router.post(`${this.path}/refresh-token`, AuthController.refreshToken);
     this.router.put(`${this.path}/change-password`, AuthController.changePassword);
