@@ -109,6 +109,24 @@ class DiscountController {
             }
         });
     }
+    applyDiscount(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { code, productIds, totalPrice } = req.body;
+                if (!code || !productIds || !totalPrice) {
+                    res.status(400).json({ message: "Missing required fields." });
+                }
+                const result = yield discount_service_1.default.applyDiscount(code, productIds, totalPrice);
+                res.status(200).json({
+                    message: "Discount applied successfully.",
+                    data: result,
+                });
+            }
+            catch (error) {
+                next({ message: error.message });
+            }
+        });
+    }
 }
 exports.default = new DiscountController(); // Xuất một thể hiện duy nhất của lớp
 //# sourceMappingURL=discount.controller.js.map

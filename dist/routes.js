@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StatisticRoute = exports.PaymentRoute = exports.AddressRoute = exports.OrderItemRoute = exports.OrderRoute = exports.DiscountRoute = exports.CommentRoute = exports.CartRoute = exports.AttributeRoute = exports.CategoryRoute = exports.ProductRoute = exports.UserInfoRoute = exports.AuthRoute = void 0;
+exports.ChatRoute = exports.StatisticRoute = exports.PaymentRoute = exports.AddressRoute = exports.OrderItemRoute = exports.OrderRoute = exports.DiscountRoute = exports.CommentRoute = exports.CartRoute = exports.AttributeRoute = exports.CategoryRoute = exports.ProductRoute = exports.UserInfoRoute = exports.AuthRoute = void 0;
 const auth_1 = require("./modules/auth");
 Object.defineProperty(exports, "AuthRoute", { enumerable: true, get: function () { return auth_1.AuthRoute; } });
 const userInfo_1 = require("./modules/userInfo");
@@ -27,4 +27,6 @@ const payment_1 = require("./modules/payment");
 Object.defineProperty(exports, "PaymentRoute", { enumerable: true, get: function () { return payment_1.PaymentRoute; } });
 const statistic_1 = require("./modules/statistic");
 Object.defineProperty(exports, "StatisticRoute", { enumerable: true, get: function () { return statistic_1.StatisticRoute; } });
+const chat_1 = require("./modules/chat");
+Object.defineProperty(exports, "ChatRoute", { enumerable: true, get: function () { return chat_1.ChatRoute; } });
 //# sourceMappingURL=routes.js.map
