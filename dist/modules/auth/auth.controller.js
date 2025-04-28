@@ -16,6 +16,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const auth_service_1 = __importDefault(require("../auth/auth.service"));
 const otp_model_1 = __importDefault(require("./otp.model"));
 // import AuthDto from "./dtos/auth.dto";
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const generateJwt_1 = __importDefault(require("../../core/utils/generateJwt"));
+const axios_1 = __importDefault(require("axios"));
+const user_model_1 = __importDefault(require("./user.model"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class AuthController {
     register(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,6 +34,53 @@ class AuthController {
                 // } else {
                 //   res.status(400).json({ message: result.message });
                 // }
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    googleLogin(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { token } = req.body;
+                // Xác thực token từ Google
+                const response = yield axios_1.default.get(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${token}`);
+                const googleUser = response.data;
+                // Kiểm tra người dùng đã tồn tại trong DB chưa
+                let user = yield user_model_1.default.findOne({ email: googleUser.email });
+                if (!user) {
+                    // Nếu người dùng chưa tồn tại, tạo mới thông qua register
+                    // Tạo đối tượng user để gửi vào đăng ký
+                    const salt = yield bcrypt_1.default.genSalt(10);
+                    const hashedPassword = yield bcrypt_1.default.hash("1234", salt); // Mã hóa mật khẩu mặc định '1234'
+                    const registerDto = {
+                        name: googleUser.name,
+                        email: googleUser.email,
+                        password: "1234", // Mật khẩu tạm thời
+                        role: "customer", // Hoặc xác định vai trò tùy theo yêu cầu
+                    };
+                    // Gọi hàm register từ AuthService để đăng ký người dùng
+                    yield auth_service_1.default.register(registerDto);
+                    // Sau khi đăng ký, tìm lại người dùng trong DB
+                    user = yield user_model_1.default.findOne({ email: googleUser.email });
+                }
+                // Tạo JWT token cho người dùng
+                if (user) {
+                    const tokenJWT = (0, generateJwt_1.default)(user);
+                    // Lưu token vào cookie
+                    res.cookie("token", tokenJWT, {
+                        httpOnly: true, // Không thể truy cập cookie từ JavaScript
+                        secure: process.env.NODE_ENV === "production", // Chỉ gửi cookie qua HTTPS trong môi trường production
+                        maxAge: 60 * 60 * 24 * 1000, // Cookie tồn tại 1 ngày
+                    });
+                    // Trả về user và token
+                    res.status(200).json({
+                        message: "Login success",
+                        token: tokenJWT,
+                        user,
+                    });
+                }
             }
             catch (error) {
                 next(error);
@@ -62,7 +114,9 @@ class AuthController {
                     res.status(200).json({ exists: true, message: "Email already exists" });
                 }
                 else {
-                    res.status(200).json({ exists: false, message: "Email haven't been registered" });
+                    res
+                        .status(200)
+                        .json({ exists: false, message: "Email haven't been registered" });
                 }
             }
             catch (error) {
@@ -181,6 +235,56 @@ class AuthController {
                         res.status(200).json({ message: "OTP verified successfully" });
                     }
                 }
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    refreshToken(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const refreshToken = req.cookies.token;
+            if (!refreshToken) {
+                return next("Refresh token is required");
+            }
+            try {
+                // Giải mã refresh token để kiểm tra tính hợp lệ
+                const decoded = jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_SECRET);
+                // Lấy thông tin người dùng từ decoded (hoặc từ DB nếu cần)
+                const user = yield auth_service_1.default.findUserbyEmail(decoded.email);
+                if (!user) {
+                    return next("User not found");
+                }
+                // Tạo lại access token và refresh token mới
+                const newRefreshToken = (0, generateJwt_1.default)(user);
+                // Cập nhật refresh token vào cookie mới
+                res.cookie("token", newRefreshToken, {
+                    httpOnly: true,
+                    secure: true,
+                    maxAge: 60 * 60 * 24 * 2 * 1000, // refresh token sống 2 ngày
+                });
+            }
+            catch (error) {
+                return next(error);
+            }
+        });
+    }
+    setPassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { userId, password } = req.body;
+                // Mã hóa mật khẩu trước khi lưu vào DB
+                const hashedPassword = yield bcrypt_1.default.hash(password, 10);
+                // Cập nhật mật khẩu cho người dùng
+                const updatedUser = yield user_model_1.default.findByIdAndUpdate(userId, { password: hashedPassword }, { new: true });
+                if (!updatedUser) {
+                    throw new Error("User not found");
+                }
+                // Trả về thông tin người dùng và thông báo thành công
+                res.status(200).json({
+                    message: "Password updated successfully",
+                    user: updatedUser,
+                });
             }
             catch (error) {
                 next(error);

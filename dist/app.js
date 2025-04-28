@@ -13,13 +13,38 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const middlewares_1 = require("./core/middlewares");
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const http_1 = require("http"); // Import HTTP server
+const socket_io_1 = __importDefault(require("socket.io")); // Import Socket.IO
 class App {
     constructor(routes) {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || 3000;
+        this.server = (0, http_1.createServer)(this.app); // Tạo HTTP server từ Express
+        // this.wss = new WebSocketServer({ server: this.server }); // Tạo WebSocket Server
+        this.io = new socket_io_1.default.Server(this.server); // Tạo Socket.IO Server
+        // this.io = new socketIO.Server(this.server, {
+        //   cors: {
+        //     origin: function (origin, callback) {
+        //       if (
+        //         !origin ||
+        //         origin === "http://localhost:3000" ||
+        //         origin === "http://localhost:5000" ||
+        //         /vercel\.app$/.test(origin)
+        //       ) {
+        //         callback(null, true);
+        //       } else {
+        //         callback(new Error("Not allowed by CORS"));
+        //       }
+        //     },
+        //     methods: ["GET", "POST"], // Các phương thức cho phép
+        //     credentials: true,
+        //   },
+        // }); // Tạo Socket.IO Server
         this.ConnectToDB();
         this.initializeMiddlewares();
         this.initializeRoutes(routes);
+        // this.initializeWebSocket(); // Khởi tạo WebSocket
+        this.initializeSocketIO(); // Khởi tạo Socket.IO
     }
     initializeMiddlewares() {
         this.app.use((0, cors_1.default)({
@@ -102,9 +127,44 @@ class App {
     ConnectToDB() {
         (0, database_1.default)();
     }
+    // initializeWebSocket
+    // private initializeWebSocket() {
+    //   this.wss.on("connection", (ws) => {
+    //     console.log("New WebSocket connection");
+    //     ws.on("message", (message) => {
+    //       console.log(`Received: ${message}`);
+    //       // Gửi lại tin nhắn cho tất cả client kết nối
+    //       this.wss.clients.forEach((client) => {
+    //         if (client.readyState === ws.OPEN) {
+    //           client.send(`Server received: ${message}`);
+    //         }
+    //       });
+    //     });
+    //     ws.on("close", () => {
+    //       console.log("WebSocket connection closed");
+    //     });
+    //   });
+    // }
+    // initializeSocketIO
+    initializeSocketIO() {
+        this.io.on("connection", (socket) => {
+            console.log("New WebSocket connection");
+            socket.on("message", (message) => {
+                console.log(`Received: ${message}`);
+                // Gửi lại tin nhắn cho tất cả client kết nối
+                this.io.sockets.emit("message", `Server received: ${message}`);
+            });
+            socket.on("disconnect", () => {
+                console.log("WebSocket connection closed");
+            });
+        });
+    }
     listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Server is running on port ${this.port}`);
+        // this.app.listen(this.port, () => {
+        //   console.log(`Server is running on port ${this.port}`);
+        // });
+        this.server.listen(this.port, () => {
+            console.log(`✅ Server is running on port ${this.port}`);
         });
     }
 }

@@ -62,7 +62,9 @@ class OrderService {
     }
     deleteOrder(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield order_repository_1.default.deleteOrder(id);
+            const order = yield order_repository_1.default.deleteOrder(id);
+            const order_items = yield orderItem_repository_1.default.deleteOrderItemByOrderId(id);
+            return order;
         });
     }
 }

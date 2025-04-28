@@ -45,6 +45,11 @@ class OrderItemService {
             return yield orderItem_repository_1.default.deleteOrderItem(id);
         });
     }
+    deleteOrderItemByOrderId(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield orderItem_repository_1.default.deleteOrderItemByOrderId(id);
+        });
+    }
 }
 exports.default = new OrderItemService();
 //# sourceMappingURL=orderItem.service.js.map

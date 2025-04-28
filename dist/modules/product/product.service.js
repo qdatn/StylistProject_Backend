@@ -114,6 +114,11 @@ class ProductService {
             return result.secure_url;
         });
     }
+    deleteImage(imageUrl, folder, product_folder_name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield (0, utils_1.deleteImage)(imageUrl, folder, product_folder_name);
+        });
+    }
 }
 exports.default = new ProductService();
 //# sourceMappingURL=product.service.js.map

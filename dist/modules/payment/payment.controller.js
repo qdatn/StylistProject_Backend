@@ -64,7 +64,7 @@ class PaymentController {
                     data: requestBody,
                 };
                 // Gửi request tới MoMo
-                const result = yield (0, axios_1.default)(options);
+                const result = yield axios_1.default.request(options);
                 res.status(200).json(result.data);
             }
             catch (error) {
