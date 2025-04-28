@@ -11,7 +11,7 @@ import { generateOTP } from "@core/utils";
 import generateJwt from "@core/utils/generateJwt";
 import { OTP } from "@modules/auth";
 import nodemailer from "nodemailer";
-import resend, { Resend } from "resend";
+import { Resend } from "resend";
 
 class AuthService {
   async register(userData: RegisterDto) {
@@ -95,15 +95,15 @@ class AuthService {
     });
 
     // Gửi email chứa đường dẫn xác minh
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER, // SendGrid SMTP uses 'apikey' as the username
-        pass: process.env.SMTP_PASS, // Replace with your SendGrid API key
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   host: process.env.SMTP_HOST,
+    //   port: 587,
+    //   secure: false,
+    //   auth: {
+    //     user: process.env.SMTP_USER, // SendGrid SMTP uses 'apikey' as the username
+    //     pass: process.env.SMTP_PASS, // Replace with your SendGrid API key
+    //   },
+    // });
     // await transporter.sendMail({
     //   // from: process.env.SMTP_USER,
     //   from: process.env.RESEND_EMAIL,

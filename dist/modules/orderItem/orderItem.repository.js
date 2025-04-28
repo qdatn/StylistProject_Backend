@@ -45,6 +45,11 @@ class OrderItemRepository {
             return yield orderItem_model_1.default.findOneAndDelete({ _id: id });
         });
     }
+    deleteOrderItemByOrderId(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield orderItem_model_1.default.deleteMany({ order: id });
+        });
+    }
 }
 exports.default = new OrderItemRepository();
 //# sourceMappingURL=orderItem.repository.js.map

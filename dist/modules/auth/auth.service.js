@@ -20,7 +20,7 @@ const cart_1 = require("../cart");
 const utils_1 = require("../../core/utils");
 const generateJwt_1 = __importDefault(require("../../core/utils/generateJwt"));
 const auth_1 = require("../auth");
-const nodemailer_1 = __importDefault(require("nodemailer"));
+const resend_1 = require("resend");
 class AuthService {
     register(userData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -77,6 +77,7 @@ class AuthService {
     }
     sendVerificationEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
+            const resend = new resend_1.Resend(process.env.RESEND_API_KEY);
             const otp = (0, utils_1.generateOTP)();
             const verificationUrl = `
     Hello,
@@ -101,18 +102,25 @@ class AuthService {
                 expiresAt: Date.now() + 5 * 60 * 1000, // 5 phút
             });
             // Gửi email chứa đường dẫn xác minh
-            const transporter = nodemailer_1.default.createTransport({
-                host: process.env.SMTP_HOST,
-                port: 587,
-                secure: false,
-                auth: {
-                    user: process.env.SMTP_USER, // SendGrid SMTP uses 'apikey' as the username
-                    pass: process.env.SMTP_PASS, // Replace with your SendGrid API key
-                },
-            });
-            yield transporter.sendMail({
-                from: process.env.SMTP_USER,
-                to: email,
+            // const transporter = nodemailer.createTransport({
+            //   host: process.env.SMTP_HOST,
+            //   port: 587,
+            //   secure: false,
+            //   auth: {
+            //     user: process.env.SMTP_USER, // SendGrid SMTP uses 'apikey' as the username
+            //     pass: process.env.SMTP_PASS, // Replace with your SendGrid API key
+            //   },
+            // });
+            // await transporter.sendMail({
+            //   // from: process.env.SMTP_USER,
+            //   from: process.env.RESEND_EMAIL,
+            //   to: email,
+            //   subject: "Email Verification for [ Stylist ] registrations",
+            //   text: `${verificationUrl}`,
+            // });
+            resend.emails.send({
+                from: "onboarding@resend.dev",
+                to: "datnq2003@gmail.com",
                 subject: "Email Verification for [ Stylist ] registrations",
                 text: `${verificationUrl}`,
             });
@@ -162,6 +170,15 @@ class AuthService {
             // Cập nhật mật khẩu
             const updatedUser = yield auth_repository_1.default.updateUserByEmail(email, hashedPassword);
             return !!updatedUser; // Trả về true nếu cập nhật thành công
+        });
+    }
+    findUserbyEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield auth_repository_1.default.findByEmail(email);
+            // if (!user) {
+            //   return "User not found";
+            // }
+            return user;
         });
     }
 }
