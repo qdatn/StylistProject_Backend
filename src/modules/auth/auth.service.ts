@@ -11,6 +11,7 @@ import { generateOTP } from "@core/utils";
 import generateJwt from "@core/utils/generateJwt";
 import { OTP } from "@modules/auth";
 import nodemailer from "nodemailer";
+import resend, { Resend } from "resend";
 
 class AuthService {
   async register(userData: RegisterDto) {
@@ -67,6 +68,7 @@ class AuthService {
   }
 
   async sendVerificationEmail(email: string) {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const otp = generateOTP();
     const verificationUrl = `
     Hello,
@@ -102,9 +104,16 @@ class AuthService {
         pass: process.env.SMTP_PASS, // Replace with your SendGrid API key
       },
     });
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: email,
+    // await transporter.sendMail({
+    //   // from: process.env.SMTP_USER,
+    //   from: process.env.RESEND_EMAIL,
+    //   to: email,
+    //   subject: "Email Verification for [ Stylist ] registrations",
+    //   text: `${verificationUrl}`,
+    // });
+    resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: "datnq2003@gmail.com",
       subject: "Email Verification for [ Stylist ] registrations",
       text: `${verificationUrl}`,
     });
