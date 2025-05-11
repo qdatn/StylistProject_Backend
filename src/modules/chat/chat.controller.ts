@@ -26,6 +26,84 @@ class ChatController {
       res.status(500).json({ message: "Failed to fetch messages." });
     }
   }
+
+  async getProductAnswer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log("BODY:", req.body);
+      const { productId, question } = req.body;
+
+      console.log("id:", productId, question);
+      // if (!productId || !question) {
+      //   res.status(400).json({ message: "Missing productId or question" });
+      //   return; 
+      // }
+
+      const answer = await ChatService.generateProductAnswer(
+        productId,
+        question
+      );
+      res.status(200).json({ answer });
+    } catch (err: any) {
+      console.error(err);
+      if (res.headersSent) return;
+      res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  }
+
+  // Tạo câu hỏi tự động về sản phẩm dựa trên các thuộc tính của sản phẩm
+  // generateProductQuestions = async (productId) => {
+  //   try {
+  //     // Lấy dữ liệu sản phẩm từ database
+  //     const product = await Product.findById(productId).populate("categories");
+
+  //     if (!product) {
+  //       throw new Error("Product not found");
+  //     }
+
+  //     // Tạo các câu hỏi dựa trên dữ liệu sản phẩm
+  //     const questions = [
+  //       `What is the price of the product ${product.product_name}?`,
+  //       `What is the discounted price of ${product.product_name}?`,
+  //       `What categories does ${product.product_name} belong to?`,
+  //       `What is the brand of ${product.product_name}?`,
+  //       `What is the description of ${product.product_name}?`,
+  //       `What are the available sizes of ${product.product_name}?`, // Giả sử bạn có size trong thuộc tính
+  //       `How many units of ${product.product_name} are available in stock?`,
+  //       `What is the minimum quantity for purchasing ${product.product_name}?`,
+  //       `What attributes are available for ${product.product_name}?`,
+  //     ];
+
+  //     // Gửi câu hỏi và thông tin sản phẩm tới API Gemini để lấy câu trả lời
+  //     const responses = await Promise.all(
+  //       questions.map((question) =>
+  //         axios.post(
+  //           GEMINI_API_URL,
+  //           {
+  //             question,
+  //             context: product, // Dữ liệu sản phẩm gửi vào để API có thể trả lời chính xác
+  //           },
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${GEMINI_API_KEY}`,
+  //             },
+  //           }
+  //         )
+  //       )
+  //     );
+
+  //     // Trả về các câu trả lời từ Gemini
+  //     const answers = responses.map((response) => response.data.answer);
+
+  //     return answers;
+  //   } catch (error) {
+  //     console.error("Error generating product questions:", error);
+  //     throw new Error("Error generating product questions");
+  //   }
+  // };
   // /**
   //  * Gửi tin nhắn qua API REST (Không cần nếu dùng WebSocket)
   //  */

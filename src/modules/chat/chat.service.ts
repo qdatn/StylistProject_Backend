@@ -1,10 +1,10 @@
+import { Product, ProductService } from "@modules/product";
 import { ChatModel } from ".";
 import Message, { IMessage } from "./chat.model";
+import { askGeminiAboutProduct } from "./gemini.service";
+import mongoose from "mongoose";
 
 class ChatService {
-  /**
-   * Lưu tin nhắn vào database
-   */
   public async saveMessage(
     sender: string,
     receiver: string,
@@ -14,9 +14,6 @@ class ChatService {
     return await message.save();
   }
 
-  /**
-   * Lấy tất cả tin nhắn giữa 2 người dùng
-   */
   public async getMessagesBetweenUsers(
     user1Id: string,
     user2Id: string
@@ -26,28 +23,32 @@ class ChatService {
     return messages;
   }
 
-  /**
-   * Lấy tin nhắn theo ID
-   */
   public async getMessageById(id: string): Promise<IMessage | null> {
     return await Message.findById(id);
   }
 
-  /**
-   * Lấy tất cả tin nhắn của một người dùng
-   */
   public async getMessagesByUserId(userId: string): Promise<IMessage[]> {
     return await Message.find({
       $or: [{ sender: userId }, { receiver: userId }],
     }).sort({ timestamp: -1 });
   }
 
-  /**
-   * Xóa tin nhắn theo ID
-   */
   public async deleteMessage(id: string): Promise<boolean> {
     const deleted = await Message.findByIdAndDelete(id);
     return !!deleted;
+  }
+
+  public async generateProductAnswer(productId: string, question: string) {
+    const product = await ProductService.getProductById(productId);
+    console.log("productId received:", product);
+    console.log("Checking in DB for ID:", product?._id);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    const answer = await askGeminiAboutProduct(question, product);
+
+    return answer;
   }
 }
 

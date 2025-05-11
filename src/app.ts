@@ -17,6 +17,12 @@ import socketIO from "socket.io"; // Import Socket.IO
 import { ChatModel } from "@modules/chat";
 import generateGroupId from "@core/utils/generateGroupIdForChat";
 
+declare module "socket.io" {
+  interface Socket {
+    userId?: string;
+  }
+}
+
 export default class App {
   public app: Application;
   public port: string | number;
@@ -53,37 +59,45 @@ export default class App {
     this.io.on("connection", (socket) => {
       console.log("User connected:", socket.id);
 
+      socket.userId = socket.id;
+
+      // Khi người dùng kết nối, gán trạng thái là online
+      socket.on("user_status", (userId: string, status: string) => {
+        // Phát trạng thái tới các client khác
+        console.log(`User ${userId} status is now ${status}`);
+        socket.userId = userId;
+        socket.broadcast.emit("user_status", userId, status);
+      });
+
       // Nhận sự kiện chat từ client
-      socket.on(
-        "send_message",
-        async (/*{ message, senderId, receiverId }*/ data) => {
-          console.log(
-            `Message from ${data.sender} to ${data.receiver}: ${data.content}`
-          );
+      socket.on("send_message", async (data) => {
+        console.log(
+          `Message from ${data.sender} to ${data.receiver}: ${data.content}`
+        );
 
-          const groupId = generateGroupId(data.sender, data.receiver);
+        const groupId = generateGroupId(data.sender, data.receiver);
 
-          // Lưu tin nhắn vào DB
-          const newMessage = new ChatModel({
-            sender: data.sender,
-            receiver: data.receiver,
-            content: data.content,
-            groupId: groupId,
-          });
-          await newMessage.save();
+        // Lưu tin nhắn vào DB
+        const newMessage = new ChatModel({
+          sender: data.sender,
+          receiver: data.receiver,
+          content: data.content,
+          groupId: groupId,
+        });
+        await newMessage.save();
 
-          // Gửi lại cho người nhận (broadcast)
-          this.io.emit("receive_message", {
-            sender: data.sender,
-            receiver: data.receiver,
-            content: data.content,
-            groupId,
-          });
-        }
-      );
+        // Gửi lại cho người nhận (broadcast)
+        this.io.emit("receive_message", {
+          sender: data.sender,
+          receiver: data.receiver,
+          content: data.content,
+          groupId,
+        });
+      });
 
       socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
+        socket.broadcast.emit("user_status", socket.userId, "offline");
       });
     });
     // this.io = new socketIO.Server(this.server, {
@@ -157,11 +171,11 @@ export default class App {
         type: "application/x-www-form-urlencoded",
       })
     );
-    this.app.use(
-      bodyParser.text({
-        //  limit: "200mb"
-      })
-    );
+    // this.app.use(
+    //   bodyParser.text({
+    //     //  limit: "200mb"
+    //   })
+    // );
     this.app.use(errorMiddleWare);
 
     // SWAGGER CONFIG

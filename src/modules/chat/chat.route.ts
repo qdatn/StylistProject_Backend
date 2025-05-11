@@ -12,6 +12,7 @@ class ChatRoute implements RouteInterface {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/messages`, ChatController.getMessages);
+    this.router.post(`${this.path}/ask`, ChatController.getProductAnswer);
     // this.router.post(`${this.path}/send`, ChatController.sendMessage);
     // this.router.get(`${this.path}/:id`, ChatController.getMessageById);
     // this.router.get(`${this.path}/user/:id`, ChatController.getMessagesByUserId);
