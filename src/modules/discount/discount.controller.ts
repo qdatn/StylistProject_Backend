@@ -137,6 +137,7 @@ class DiscountController {
         data: result,
       });
     } catch (error: any) {
+      console.error("Error in applyDiscount controller:", error);
       next({ message: error.message });
     }
   }

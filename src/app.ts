@@ -171,11 +171,11 @@ export default class App {
         type: "application/x-www-form-urlencoded",
       })
     );
-    this.app.use(
-      bodyParser.text({
-        //  limit: "200mb"
-      })
-    );
+    // this.app.use(
+    //   bodyParser.text({
+    //     //  limit: "200mb"
+    //   })
+    // );
     this.app.use(errorMiddleWare);
 
     // SWAGGER CONFIG
