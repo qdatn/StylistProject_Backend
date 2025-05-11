@@ -1,10 +1,15 @@
+import { ChatModel } from ".";
 import Message, { IMessage } from "./chat.model";
 
 class ChatService {
   /**
    * Lưu tin nhắn vào database
    */
-  public async saveMessage(sender: string, receiver: string, content: string): Promise<IMessage> {
+  public async saveMessage(
+    sender: string,
+    receiver: string,
+    content: string
+  ): Promise<IMessage> {
     const message = new Message({ sender, receiver, content });
     return await message.save();
   }
@@ -12,13 +17,13 @@ class ChatService {
   /**
    * Lấy tất cả tin nhắn giữa 2 người dùng
    */
-  public async getMessagesBetweenUsers(user1: string, user2: string): Promise<IMessage[]> {
-    return await Message.find({
-      $or: [
-        { sender: user1, receiver: user2 },
-        { sender: user2, receiver: user1 },
-      ],
-    }).sort({ timestamp: 1 });
+  public async getMessagesBetweenUsers(
+    user1Id: string,
+    user2Id: string
+  ): Promise<IMessage[]> {
+    const groupId = [user1Id, user2Id].sort().join("_");
+    const messages = await Message.find({ groupId }).sort({ timestamp: 1 });
+    return messages;
   }
 
   /**
