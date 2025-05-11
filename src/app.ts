@@ -14,6 +14,8 @@ import swaggerUI from "swagger-ui-express";
 import { createServer } from "http"; // Import HTTP server
 import { WebSocketServer } from "ws"; // Import WebSocket
 import socketIO from "socket.io"; // Import Socket.IO
+import { ChatModel } from "@modules/chat";
+import generateGroupId from "@core/utils/generateGroupIdForChat";
 
 export default class App {
   public app: Application;
@@ -29,7 +31,61 @@ export default class App {
 
     this.server = createServer(this.app); // Tạo HTTP server từ Express
     // this.wss = new WebSocketServer({ server: this.server }); // Tạo WebSocket Server
-    this.io = new socketIO.Server(this.server); // Tạo Socket.IO Server
+    this.io = new socketIO.Server(this.server, {
+      cors: {
+        origin: function (origin, callback) {
+          if (
+            !origin ||
+            origin === "http://localhost:3000" ||
+            origin === "http://localhost:5000" ||
+            /vercel\.app$/.test(origin)
+          ) {
+            callback(null, true);
+          } else {
+            callback(new Error("Not allowed by CORS"));
+          }
+        },
+        methods: ["GET", "POST", "UPDATE", "DELETE"], // Các phương thức cho phép
+        credentials: true,
+      },
+    }); // Tạo Socket.IO Server
+
+    this.io.on("connection", (socket) => {
+      console.log("User connected:", socket.id);
+
+      // Nhận sự kiện chat từ client
+      socket.on(
+        "send_message",
+        async (/*{ message, senderId, receiverId }*/ data) => {
+          console.log(
+            `Message from ${data.sender} to ${data.receiver}: ${data.content}`
+          );
+
+          const groupId = generateGroupId(data.sender, data.receiver);
+
+          // Lưu tin nhắn vào DB
+          const newMessage = new ChatModel({
+            sender: data.sender,
+            receiver: data.receiver,
+            content: data.content,
+            groupId: groupId,
+          });
+          await newMessage.save();
+
+          // Gửi lại cho người nhận (broadcast)
+          this.io.emit("receive_message", {
+            sender: data.sender,
+            receiver: data.receiver,
+            content: data.content,
+            groupId,
+          });
+        }
+      );
+
+      socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+      });
+    });
     // this.io = new socketIO.Server(this.server, {
     //   cors: {
     //     origin: function (origin, callback) {
