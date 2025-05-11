@@ -13,10 +13,10 @@ class DiscountRoute implements RouteInterface {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/`, DiscountController.getAllDiscounts);
+    this.router.get(`${this.path}/available-discounts`, DiscountController.getAvailableDiscounts);
+    this.router.post(`${this.path}/apply-discount`, DiscountController.applyDiscount);
     this.router.get(`${this.path}/:id`, DiscountController.getDiscountById);
     this.router.post(`${this.path}/`, DiscountController.createDiscount);
-    this.router.post(`${this.path}/available-discounts`, DiscountController.getAvailableDiscounts);
-    this.router.post(`${this.path}/apply-discount`, DiscountController.applyDiscount);
     this.router.put(`${this.path}/:id`, DiscountController.updateDiscount);
     this.router.delete(`${this.path}/:id`, DiscountController.deleteDiscount);
   }
