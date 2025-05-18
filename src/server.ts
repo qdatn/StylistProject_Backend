@@ -16,6 +16,7 @@ import {
   PaymentRoute,
   StatisticRoute,
   ChatRoute,
+  NotificationRoute,
 } from "@routes";
 
 const routes = [
@@ -33,6 +34,7 @@ const routes = [
   PaymentRoute,
   StatisticRoute,
   ChatRoute,
+  NotificationRoute,
 ];
 
 const app = new App(routes);

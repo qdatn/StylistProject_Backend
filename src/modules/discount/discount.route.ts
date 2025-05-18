@@ -22,7 +22,6 @@ class DiscountRoute implements RouteInterface {
       DiscountController.applyDiscount
     );
     this.router.get(`${this.path}/:id`, DiscountController.getDiscountById);
-    this.router.get(`${this.path}/product/:productId`, DiscountController.getDiscountsByProductId); // Thêm route này
     this.router.post(`${this.path}/`, DiscountController.createDiscount);
     this.router.put(`${this.path}/:id`, DiscountController.updateDiscount);
     this.router.delete(`${this.path}/:id`, DiscountController.deleteDiscount);}
