@@ -4,7 +4,13 @@ import UserInfoDto from "@modules/userInfo/dtos/userInfo.dto";
 
 class UserInfoRepository {
   async findAll() {
-    return await UserInfo.find().populate("user");
+    // return await UserInfo.find().populate("user");
+    return await UserInfo.find()
+      .populate({
+        path: "user",
+        match: { role: "customer" },
+      })
+      .then((userInfos) => userInfos.filter((info) => info.user !== null));
   }
 
   async findById(id: string) {

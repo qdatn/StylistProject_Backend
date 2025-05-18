@@ -83,22 +83,62 @@ class DiscountController {
       next(error);
     }
   }
-  async getDiscountsByProductId(
+
+  async getAvailableDiscounts(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const productId = req.params.productId;
-      const discounts = await DiscountService.getDiscountsByProductId(productId);
-  
-      if (!discounts || discounts.length === 0) {
-        res.status(404).json({ message: "No discounts found for this product" });
-      } else {
-        res.status(200).json(discounts);
+      const { productIds, totalPrice } = req.body;
+
+      if (!Array.isArray(productIds) || typeof totalPrice !== "number") {
+        res.status(400).json({
+          message:
+            "Invalid input. `productIds` must be an array and `totalPrice` must be a number.",
+        });
       }
-    } catch (error) {
-      next(error);
+
+      const discounts = await DiscountService.getAvailableDiscounts(
+        productIds,
+        totalPrice
+      );
+      res.status(200).json({
+        message: "Available discounts retrieved successfully.",
+        data: discounts,
+      });
+    } catch (error: any) {
+      next({
+        message: "Failed to retrieve available discounts.",
+        error: error.message,
+      });
+    }
+  }
+  async applyDiscount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { code, productIds, totalPrice } = req.body;
+
+      if (!code || !productIds || !totalPrice) {
+        res.status(400).json({ message: "Missing required fields." });
+      }
+
+      const result = await DiscountService.applyDiscount(
+        code,
+        productIds,
+        totalPrice
+      );
+
+      res.status(200).json({
+        message: "Discount applied successfully.",
+        data: result,
+      });
+    } catch (error: any) {
+      console.error("Error in applyDiscount controller:", error);
+      next({ message: error.message });
     }
   }
 }
