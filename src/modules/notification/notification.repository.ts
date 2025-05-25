@@ -16,7 +16,7 @@ class NotificationRepository {
       },
       {
         $unwind: {
-          path: "$userInfo",
+          path: "$user",
           preserveNullAndEmptyArrays: true, // nếu không tìm thấy UserInfo
         },
       },
