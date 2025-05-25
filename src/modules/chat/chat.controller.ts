@@ -1,5 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import ChatService from "./chat.service";
+import { UserService } from "@modules/auth";
+import userInfoService from "@modules/userInfo/userInfo.service";
+import productService from "@modules/product/product.service";
+import { askGeminiAboutRecommendation } from "./gemini.service";
+
+const BASE_URL = process.env.BASE_URL;
+
+interface RecommendedProduct {
+  name: string;
+  description: string;
+  productId: string;
+  link: string;
+}
 
 class ChatController {
   async getMessages(
@@ -33,13 +46,11 @@ class ChatController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("BODY:", req.body);
       const { productId, question } = req.body;
 
-      console.log("id:", productId, question);
       // if (!productId || !question) {
       //   res.status(400).json({ message: "Missing productId or question" });
-      //   return; 
+      //   return;
       // }
 
       const answer = await ChatService.generateProductAnswer(
@@ -51,6 +62,57 @@ class ChatController {
       console.error(err);
       if (res.headersSent) return;
       res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  }
+
+  async getRecommendedProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.params.userId;
+
+      // Lấy thông tin người dùng
+      const userInfo = await userInfoService.getUserInfoById(userId);
+      if (!userInfo) {
+        next({ message: "Không tìm thấy thông tin người dùng." });
+      }
+
+      // Lấy danh sách sản phẩm
+      const products = await productService.getAllProductActive();
+
+      // Gọi Gemini để nhận gợi ý
+      const content = await askGeminiAboutRecommendation(userInfo, products);
+
+      // Parse JSON từ Gemini (giả sử Gemini trả đúng định dạng)
+      let recommendedProducts: RecommendedProduct[] = [];
+      try {
+        // Bước 1: Tách phần JSON thực sự từ chuỗi có định dạng ```json ... ```
+        const jsonString = content.match(/```json\s*([\s\S]*?)\s*```/)?.[1];
+
+        if (!jsonString) {
+          throw new Error("Không tìm thấy nội dung JSON trong phản hồi.");
+        }
+
+        // Bước 2: Parse JSON
+        recommendedProducts = JSON.parse(jsonString);
+
+        // Bước 3: Thêm link vào từng sản phẩm
+        const productsWithLink = recommendedProducts.map((prod) => ({
+          ...prod,
+          link: `${BASE_URL}/product/${prod.productId}`,
+        }));
+
+        // Bước 4: Trả kết quả
+        res.json({ content: productsWithLink });
+      } catch (err) {
+        console.warn("Failed to parse Gemini response as JSON:", err);
+        next({ message: "Can't process response from Gemini." });
+      }
+    } catch (error: any) {
+      console.error("Recommendation error:", error.message);
+      next({ message: "System error when recommend." });
     }
   }
 
