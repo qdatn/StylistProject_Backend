@@ -1,5 +1,6 @@
 // controllers/userInfoController.js
 import { pagination } from "@core/middlewares";
+import { uploadImage } from "@core/utils";
 import userInfoService from "@modules/userInfo/userInfo.service";
 import { NextFunction, Request, Response } from "express";
 
@@ -84,6 +85,27 @@ class UserInfoController {
       }
     } catch (error: any) {
       res.status(500).json({ message: error.message });
+    }
+  }
+
+  async uploadBodyShapeImage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.file) {
+        next({ error: "No image file provided" });
+      }
+
+      const file = req.file as Express.Multer.File;
+
+      const result: any = await uploadImage(file, "body_shape", "images");
+
+      res.json({ imageUrl: result.secure_url });
+    } catch (error) {
+      console.error(error);
+      next({ error: "Upload failed" });
     }
   }
 }
