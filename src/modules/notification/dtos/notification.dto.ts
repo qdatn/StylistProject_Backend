@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 export default class NotificationDto {
   @IsString()
   @IsNotEmpty()
-  user: ObjectId;
+  user: ObjectId[];
 
   @IsString()
   type?: string;
@@ -27,7 +27,7 @@ export default class NotificationDto {
   order?: ObjectId;
 
   constructor(
-    user: ObjectId,
+    user: ObjectId[],
     type: string,
     title: string,
     priority: string,
