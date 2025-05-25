@@ -11,7 +11,7 @@ class NotificationRepository {
           from: "userinfos", // tên collection (viết thường và thêm "s")
           localField: "user", // Notification.user
           foreignField: "user", // UserInfo.user
-          as: "userInfo",
+          as: "user",
         },
       },
       {
