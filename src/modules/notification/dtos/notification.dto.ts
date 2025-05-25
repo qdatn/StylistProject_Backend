@@ -1,12 +1,9 @@
-import {
-  IsString,
-  IsNotEmpty,
-} from "class-validator";
+import { IsString, IsNotEmpty } from "class-validator";
 
 export default class NotificationDto {
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  user: string;
 
   @IsString()
   type?: string;
@@ -26,26 +23,23 @@ export default class NotificationDto {
   status: string;
 
   @IsString()
-  productId?: string;
+  order?: string;
 
   constructor(
-    userId: string,
+    user: string,
     type: string,
     title: string,
     priority: string,
     content: string,
     status: string,
-    productId?: string
+    order?: string
   ) {
-    this.userId = userId;
+    this.user = user;
     this.type = type;
     this.title = title;
     this.priority = priority;
     this.content = content;
     this.status = status;
-    this.productId = productId;
+    this.order = order;
   }
 }
-
-
-
