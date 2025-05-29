@@ -53,6 +53,11 @@ class NotificationService {
     return NotificationRepository.findById(id);
   }
 
+  async getUserNotifications(userId: string) {
+    // const objectId = new Types.ObjectId(userId);
+    return await NotificationRepository.findNotificationsByUserId(userId);
+  }
+
   // async getAllNotifications(
   //   filters: any = {},
   //   page: number = 1,

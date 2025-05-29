@@ -13,7 +13,7 @@ class NotificationRoute implements RouteInterface {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/`, NotificationController.getAllNotifications);
-    // this.router.get(`${this.path}/:id`, NotificationController.getNotificationById);
+    this.router.get(`${this.path}/user/:userId`, NotificationController.getUserNotifications);
     this.router.post(`${this.path}/`, NotificationController.createNotification);
     this.router.put(`${this.path}/:id`, NotificationController.updateNotification);
     this.router.delete(`${this.path}/:id`, NotificationController.deleteNotification);

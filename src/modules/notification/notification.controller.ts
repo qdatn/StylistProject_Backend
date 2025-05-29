@@ -3,12 +3,15 @@ import { pagination } from "@core/middlewares";
 import { NotificationService } from ".";
 
 class NotificationController {
-  async createNotification(req: Request,
+  async createNotification(
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const notification = await NotificationService.createNotification(req.body);
+      const notification = await NotificationService.createNotification(
+        req.body
+      );
       res.status(201).json(notification);
     } catch (error) {
       next(error);
@@ -25,12 +28,15 @@ class NotificationController {
   //   res.json(result);
   // }
 
-  async getNotificationDetails(req: Request,
+  async getNotificationDetails(
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const notification = await NotificationService.getNotificationById(req.params.id);
+      const notification = await NotificationService.getNotificationById(
+        req.params.id
+      );
       if (!notification) {
         res.status(404).json({ message: "Notification not found" });
       } else {
@@ -73,6 +79,29 @@ class NotificationController {
       res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       next(error);
+    }
+  }
+
+  async getUserNotifications(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.params.userId;
+
+      const notifications =
+        await NotificationService.getUserNotifications(userId);
+
+      res.status(200).json({
+        data: notifications,
+      });
+    } catch (err: any) {
+      next({
+        success: false,
+        message: "Failed to fetch notifications",
+        error: err.message,
+      });
     }
   }
 }

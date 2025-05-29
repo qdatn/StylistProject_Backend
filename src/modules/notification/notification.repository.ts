@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 import Notification from "./notification.model";
 import NotificationDto from "./dtos/notification.dto";
+import { UserInfo } from "@modules/userInfo";
 
 class NotificationRepository {
   async findAll() {
@@ -56,6 +57,28 @@ class NotificationRepository {
 
   async delete(id: string) {
     return await Notification.findByIdAndDelete(id);
+  }
+
+  async findNotificationsByUserId(userId: string) {
+    const userInfo = await UserInfo.findOne({ user: userId });
+
+    if (!userInfo) return [];
+
+    // B2: Tìm tất cả notification có chứa userInfo._id
+    // const notifications = await Notification.find({
+    //   user: userInfo._id,
+    // }).populate("user"); 
+
+
+    const notifications = await Notification.find({
+      $or: [
+        { user: userInfo._id },          
+        { user: { $exists: false } },     
+        { user: { $size: 0 } },      
+      ],
+    }).populate("user");
+
+    return notifications;
   }
 }
 
