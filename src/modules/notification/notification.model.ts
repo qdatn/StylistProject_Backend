@@ -19,7 +19,7 @@ const NotificationSchema = new Schema(
     content: { type: String, required: true },
     status: {
       type: String,
-      enum: ["unread", "read", "archived"],
+      enum: ["unread", "read", "archieved"],
       default: "unread",
       index: true,
     },
