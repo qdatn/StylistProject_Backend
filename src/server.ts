@@ -17,6 +17,7 @@ import {
   StatisticRoute,
   ChatRoute,
   NotificationRoute,
+  StylePreferenceRoute
 } from "@routes";
 
 const routes = [
@@ -35,6 +36,7 @@ const routes = [
   StatisticRoute,
   ChatRoute,
   NotificationRoute,
+  StylePreferenceRoute
 ];
 
 const app = new App(routes);
