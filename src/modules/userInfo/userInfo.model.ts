@@ -19,9 +19,13 @@ const userInfoSchema = new Schema(
     },
     birthday: { type: Date, default: new Date() },
     body_shape: { type: String, default: "No provided" }, // Optional, e.g., 'Slim', 'Athletic', 'Curvy', etc.
-    height: { type: Number, default: 0 }, // Height in centimeters
-    weight: { type: Number, default: 0 }, // Weight in kilograms
-    style_preferences: { type: [String] }, // Array of style preferences
+    // height: { type: Number, default: 0 }, // Height in centimeters
+    // weight: { type: Number, default: 0 }, // Weight in kilograms
+    style_preference: {
+      type: Schema.Types.ObjectId,
+      ref: "StylePreference",
+      required: false,
+    }, // Array of style preferences
   },
   { timestamps: true } // Adds createdAt and updatedAt fields
 );

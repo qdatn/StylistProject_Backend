@@ -6,6 +6,7 @@ class UserInfoRepository {
   async findAll() {
     // return await UserInfo.find().populate("user");
     return await UserInfo.find()
+      .populate("style_preference")
       .populate({
         path: "user",
         match: { role: "customer" },
@@ -14,7 +15,9 @@ class UserInfoRepository {
   }
 
   async findById(id: string) {
-    return await UserInfo.findOne({ user: id }).populate("user");
+    return await UserInfo.findOne({ user: id })
+      .populate("user")
+      .populate("style_preference");
   }
 
   async create(userInfoData: UserInfoDto) {
@@ -24,7 +27,9 @@ class UserInfoRepository {
   async update(id: string, userInfoData: UserInfoDto) {
     return await UserInfo.findOneAndUpdate({ user: id }, userInfoData, {
       new: true,
-    }).populate("user");
+    })
+      .populate("user")
+      .populate("style_preference");
   }
 
   async delete(id: string) {
