@@ -6,7 +6,7 @@ class UserInfoRepository {
   async findAll() {
     // return await UserInfo.find().populate("user");
     return await UserInfo.find()
-      .populate("style_preference")
+      .populate("style_preferences")
       .populate({
         path: "user",
         match: { role: "customer" },
@@ -17,7 +17,7 @@ class UserInfoRepository {
   async findById(id: string) {
     return await UserInfo.findOne({ user: id })
       .populate("user")
-      .populate("style_preference");
+      .populate("style_preferences");
   }
 
   async create(userInfoData: UserInfoDto) {
