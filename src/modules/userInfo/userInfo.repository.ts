@@ -29,7 +29,7 @@ class UserInfoRepository {
       new: true,
     })
       .populate("user")
-      .populate("style_preference");
+      .populate("style_preferences");
   }
 
   async delete(id: string) {
