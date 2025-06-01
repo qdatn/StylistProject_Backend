@@ -38,8 +38,8 @@ const MessageSchema = new mongoose_1.Schema({
     sender: { type: String, required: true },
     receiver: { type: String, required: true },
     content: { type: String, required: true },
-    timestamp: { type: Date, default: Date.now },
-});
+    groupId: { type: String, required: true },
+}, { timestamps: true });
 const Message = mongoose_1.default.model("Message", MessageSchema);
 exports.default = Message;
 //# sourceMappingURL=chat.model.js.map

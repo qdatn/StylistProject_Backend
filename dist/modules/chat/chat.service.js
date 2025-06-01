@@ -12,41 +12,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const product_1 = require("../product");
 const chat_model_1 = __importDefault(require("./chat.model"));
+const gemini_service_1 = require("./gemini.service");
 class ChatService {
-    /**
-     * Lưu tin nhắn vào database
-     */
     saveMessage(sender, receiver, content) {
         return __awaiter(this, void 0, void 0, function* () {
             const message = new chat_model_1.default({ sender, receiver, content });
             return yield message.save();
         });
     }
-    /**
-     * Lấy tất cả tin nhắn giữa 2 người dùng
-     */
-    getMessagesBetweenUsers(user1, user2) {
+    getMessagesBetweenUsers(user1Id, user2Id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield chat_model_1.default.find({
-                $or: [
-                    { sender: user1, receiver: user2 },
-                    { sender: user2, receiver: user1 },
-                ],
-            }).sort({ timestamp: 1 });
+            const groupId = [user1Id, user2Id].sort().join("_");
+            const messages = yield chat_model_1.default.find({ groupId }).sort({ timestamp: 1 });
+            return messages;
         });
     }
-    /**
-     * Lấy tin nhắn theo ID
-     */
     getMessageById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield chat_model_1.default.findById(id);
         });
     }
-    /**
-     * Lấy tất cả tin nhắn của một người dùng
-     */
     getMessagesByUserId(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield chat_model_1.default.find({
@@ -54,13 +41,22 @@ class ChatService {
             }).sort({ timestamp: -1 });
         });
     }
-    /**
-     * Xóa tin nhắn theo ID
-     */
     deleteMessage(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const deleted = yield chat_model_1.default.findByIdAndDelete(id);
             return !!deleted;
+        });
+    }
+    generateProductAnswer(productId, question) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const product = yield product_1.ProductService.getProductById(productId);
+            console.log("productId received:", product);
+            console.log("Checking in DB for ID:", product === null || product === void 0 ? void 0 : product._id);
+            if (!product) {
+                throw new Error("Product not found");
+            }
+            const answer = yield (0, gemini_service_1.askGeminiAboutProduct)(question, product);
+            return answer;
         });
     }
 }

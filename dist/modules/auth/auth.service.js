@@ -58,7 +58,8 @@ class AuthService {
             if (!isPasswordValid)
                 throw new Error("Invalid email or password");
             const token = (0, generateJwt_1.default)(user);
-            return { user, token };
+            const refreshToken = (0, generateJwt_1.default)(user, "3d");
+            return { user, token, refreshToken };
         });
     }
     updateUser(id, updateData) {

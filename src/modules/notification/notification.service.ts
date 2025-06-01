@@ -1,21 +1,83 @@
-import NotificationModel from "./notification.model";
+import { NotificationRepository } from ".";
+import NotificationDto from "./dtos/notification.dto";
+
 
 class NotificationService {
-  async createNotification(userId: string, messageId: string, content: string) {
-    return await NotificationModel.create({ userId, messageId, content });
+  async createNotification(data: NotificationDto) {
+    return NotificationRepository.create(data);
   }
 
-  async getNotificationsByUserId(userId: string) {
-    return await NotificationModel.find({ userId }).sort({ createdAt: -1 });
+  async getAllNotifications() {
+    return await NotificationRepository.findAll();
+  }
+  
+  // async getUserNotifications(
+  //   userId: string,
+  //   filters: any = {},
+  //   page: number = 1,
+  //   limit: number = 10
+  // ) {
+  //   const skip = (page - 1) * limit;
+  // const [notifications, total] = await Promise.all([
+  //   NotificationRepository.findByUserId(userId, filters, skip, limit),
+  //   NotificationRepository.countDocuments({ userId, ...filters })
+  // ]);
+
+  // return {
+  //   notifications,
+  //   total,
+  //   page,
+  //   totalPages: Math.ceil(total / limit)
+  // };
+  // }
+
+  // async markAsRead(notificationId: string, userId: string) {
+  //   return NotificationRepository.updateById(notificationId, {
+  //     status: 'read',
+  //     readAt: new Date()
+  //   });
+  // }
+
+  async updateNotification(
+    id: string,
+    data : NotificationDto
+  ) {
+    return await NotificationRepository.update(id, data);
   }
 
-  async markAsRead(notificationId: string) {
-    return await NotificationModel.findByIdAndUpdate(notificationId, { read: true }, { new: true });
+  async deleteNotification(id: string) {
+    return NotificationRepository.delete(id);
   }
 
-  async deleteNotification(notificationId: string) {
-    return await NotificationModel.findByIdAndDelete(notificationId);
+  async getNotificationById(id: string) {
+    return NotificationRepository.findById(id);
   }
+
+  async getUserNotifications(userId: string) {
+    // const objectId = new Types.ObjectId(userId);
+    return await NotificationRepository.findNotificationsByUserId(userId);
+  }
+
+  // async getAllNotifications(
+  //   filters: any = {},
+  //   page: number = 1,
+  //   limit: number = 10
+  // ) {
+  //   const skip = (page - 1) * limit;
+  //   const [notifications, total] = await Promise.all([
+  //     NotificationRepository.findByUserId('', filters, skip, limit),
+  //     NotificationRepository.countDocuments(filters)
+  //   ]);
+
+  //   return {
+  //     notifications,
+  //     total,
+  //     page,
+  //     totalPages: Math.ceil(total / limit)
+  //   };
+  // }
+
+
 }
 
 export default new NotificationService();

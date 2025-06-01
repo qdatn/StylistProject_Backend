@@ -20,6 +20,11 @@ class ProductRepository {
             return yield product_model_1.default.find().populate("categories").populate("attributes");
         });
     }
+    findAllProductActive() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield product_model_1.default.find({ status: true }).populate("categories").populate("attributes");
+        });
+    }
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield product_model_1.default.findOne({ _id: id })

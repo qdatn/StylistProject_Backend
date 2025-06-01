@@ -7,6 +7,10 @@ class ProductRepository {
     return await Product.find().populate("categories").populate("attributes");
   }
 
+  async findAllProductActive() {
+    return await Product.find({ status: true }).populate("categories").populate("attributes");
+  }
+
   async findById(id: string) {
     return await Product.findOne({ _id: id })
       .populate("categories")

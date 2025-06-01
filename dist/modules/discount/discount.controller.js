@@ -123,6 +123,7 @@ class DiscountController {
                 });
             }
             catch (error) {
+                console.error("Error in applyDiscount controller:", error);
                 next({ message: error.message });
             }
         });

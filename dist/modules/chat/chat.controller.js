@@ -13,92 +13,84 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chat_service_1 = __importDefault(require("./chat.service"));
+const userInfo_service_1 = __importDefault(require("../userInfo/userInfo.service"));
+const product_service_1 = __importDefault(require("../product/product.service"));
+const gemini_service_1 = require("./gemini.service");
+const BASE_URL = process.env.BASE_URL;
 class ChatController {
-    /**
-     * Gửi tin nhắn qua API REST (Không cần nếu dùng WebSocket)
-     */
-    sendMessage(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { sender, receiver, content } = req.body;
-                if (!sender || !receiver || !content) {
-                    res.status(400).json({ message: "Sender, receiver, and content are required" });
-                    return;
-                }
-                const message = yield chat_service_1.default.saveMessage(sender, receiver, content);
-                res.status(201).json(message);
-            }
-            catch (error) {
-                res.status(400).json({ message: error.message });
-            }
-        });
-    }
-    /**
-     * Lấy tất cả tin nhắn giữa 2 người dùng
-     */
     getMessages(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            const { user1Id, user2Id } = req.query;
             try {
-                const { user1, user2 } = req.query;
-                if (!user1 || !user2) {
-                    res.status(400).json({ message: "User1 and User2 are required" });
-                    return;
-                }
-                const messages = yield chat_service_1.default.getMessagesBetweenUsers(user1, user2);
+                const messages = yield chat_service_1.default.getMessagesBetweenUsers(user1Id, user2Id);
+                // 👉 Tắt cache để luôn trả dữ liệu mới
+                res.setHeader("Cache-Control", "no-store");
+                res.setHeader("Pragma", "no-cache");
+                res.setHeader("Expires", "0");
                 res.status(200).json(messages);
             }
             catch (error) {
-                res.status(500).json({ message: error.message });
+                console.error("Error fetching messages:", error);
+                res.status(500).json({ message: "Failed to fetch messages." });
             }
         });
     }
-    /**
-     * Lấy tin nhắn theo ID
-     */
-    getMessageById(req, res, next) {
+    getProductAnswer(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const message = yield chat_service_1.default.getMessageById(req.params.id);
-                if (!message) {
-                    res.status(404).json({ message: "Message not found" });
+                const { productId, question } = req.body;
+                // if (!productId || !question) {
+                //   res.status(400).json({ message: "Missing productId or question" });
+                //   return;
+                // }
+                const answer = yield chat_service_1.default.generateProductAnswer(productId, question);
+                res.status(200).json({ answer });
+            }
+            catch (err) {
+                console.error(err);
+                if (res.headersSent)
                     return;
-                }
-                res.status(200).json(message);
-            }
-            catch (error) {
-                next(error);
+                res.status(500).json({ message: err.message || "Internal server error" });
             }
         });
     }
-    /**
-     * Lấy tất cả tin nhắn của một người dùng
-     */
-    getMessagesByUserId(req, res, next) {
+    getRecommendedProducts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
-                const messages = yield chat_service_1.default.getMessagesByUserId(req.params.id);
-                res.status(200).json(messages);
-            }
-            catch (error) {
-                next(error);
-            }
-        });
-    }
-    /**
-     * Xóa tin nhắn theo ID
-     */
-    deleteMessage(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const deleted = yield chat_service_1.default.deleteMessage(req.params.id);
-                if (!deleted) {
-                    res.status(404).json({ message: "Message not found" });
-                    return;
+                const userId = req.params.userId;
+                // Lấy thông tin người dùng
+                const userInfo = yield userInfo_service_1.default.getUserInfoById(userId);
+                if (!userInfo) {
+                    next({ message: "Không tìm thấy thông tin người dùng." });
                 }
-                res.status(200).json({ message: "Message deleted successfully" });
+                // Lấy danh sách sản phẩm
+                const products = yield product_service_1.default.getAllProductActive();
+                // Gọi Gemini để nhận gợi ý
+                const content = yield (0, gemini_service_1.askGeminiAboutRecommendation)(userInfo, products);
+                // Parse JSON từ Gemini (giả sử Gemini trả đúng định dạng)
+                let recommendedProducts = [];
+                try {
+                    // Bước 1: Tách phần JSON thực sự từ chuỗi có định dạng ```json ... ```
+                    const jsonString = (_a = content.match(/```json\s*([\s\S]*?)\s*```/)) === null || _a === void 0 ? void 0 : _a[1];
+                    if (!jsonString) {
+                        throw new Error("Không tìm thấy nội dung JSON trong phản hồi.");
+                    }
+                    // Bước 2: Parse JSON
+                    recommendedProducts = JSON.parse(jsonString);
+                    // Bước 3: Thêm link vào từng sản phẩm
+                    const productsWithLink = recommendedProducts.map((prod) => (Object.assign(Object.assign({}, prod), { link: `${BASE_URL}/product/${prod.productId}` })));
+                    // Bước 4: Trả kết quả
+                    res.json({ content: productsWithLink });
+                }
+                catch (err) {
+                    console.warn("Failed to parse Gemini response as JSON:", err);
+                    next({ message: "Can't process response from Gemini." });
+                }
             }
             catch (error) {
-                next(error);
+                console.error("Recommendation error:", error.message);
+                next({ message: "System error when recommend." });
             }
         });
     }

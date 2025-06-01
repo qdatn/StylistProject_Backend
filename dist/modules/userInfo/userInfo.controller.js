@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // controllers/userInfoController.js
 const middlewares_1 = require("../../core/middlewares");
+const utils_1 = require("../../core/utils");
 const userInfo_service_1 = __importDefault(require("../userInfo/userInfo.service"));
 class UserInfoController {
     getAllUserInfo(req, res, next) {
@@ -84,6 +85,22 @@ class UserInfoController {
             }
             catch (error) {
                 res.status(500).json({ message: error.message });
+            }
+        });
+    }
+    uploadBodyShapeImage(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!req.file) {
+                    next({ error: "No image file provided" });
+                }
+                const file = req.file;
+                const result = yield (0, utils_1.uploadImage)(file, "body_shape", "images");
+                res.json({ imageUrl: result.secure_url });
+            }
+            catch (error) {
+                console.error(error);
+                next({ error: "Upload failed" });
             }
         });
     }

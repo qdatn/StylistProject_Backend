@@ -14,7 +14,6 @@ const category_controller_1 = __importDefault(require("./category.controller"));
 exports.CategoryController = category_controller_1.default;
 const category_route_1 = __importDefault(require("./category.route"));
 exports.CategoryRoute = category_route_1.default;
-// import ICategory from "./category.interface";
 const category_dto_1 = __importDefault(require("./dtos/category.dto"));
 exports.CategoryDto = category_dto_1.default;
 //# sourceMappingURL=index.js.map

@@ -68,11 +68,17 @@ class AuthController {
                 // Tạo JWT token cho người dùng
                 if (user) {
                     const tokenJWT = (0, generateJwt_1.default)(user);
+                    const refreshToken = (0, generateJwt_1.default)(user, "3d");
                     // Lưu token vào cookie
                     res.cookie("token", tokenJWT, {
                         httpOnly: true, // Không thể truy cập cookie từ JavaScript
                         secure: process.env.NODE_ENV === "production", // Chỉ gửi cookie qua HTTPS trong môi trường production
                         maxAge: 60 * 60 * 24 * 1000, // Cookie tồn tại 1 ngày
+                    });
+                    res.cookie("refreshToken", refreshToken, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === "production",
+                        maxAge: 3 * 24 * 60 * 60 * 1000, // 3 ngày
                     });
                     // Trả về user và token
                     res.status(200).json({
@@ -91,14 +97,19 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = req.body;
-                const { user, token } = yield auth_service_1.default.login(email, password);
+                const { user, token, refreshToken } = yield auth_service_1.default.login(email, password);
                 res.cookie("token", token, {
                     httpOnly: true,
                     secure: true,
                     maxAge: 60 * 60 * 24 * 1000,
                     // signed: true,
                 });
-                res.json({ user, token });
+                res.cookie("refreshToken", refreshToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    maxAge: 3 * 24 * 60 * 60 * 1000, // 3 ngày
+                });
+                res.json({ user, token, refreshToken });
             }
             catch (error) {
                 next(error);
@@ -243,7 +254,7 @@ class AuthController {
     }
     refreshToken(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const refreshToken = req.cookies.token;
+            const refreshToken = req.cookies.refreshToken;
             if (!refreshToken) {
                 return next("Refresh token is required");
             }
@@ -256,12 +267,17 @@ class AuthController {
                     return next("User not found");
                 }
                 // Tạo lại access token và refresh token mới
-                const newRefreshToken = (0, generateJwt_1.default)(user);
+                const newAccessToken = (0, generateJwt_1.default)(user);
                 // Cập nhật refresh token vào cookie mới
-                res.cookie("token", newRefreshToken, {
+                res.cookie("token", newAccessToken, {
                     httpOnly: true,
                     secure: true,
                     maxAge: 60 * 60 * 24 * 2 * 1000, // refresh token sống 2 ngày
+                });
+                res.status(200).json({
+                    accessToken: newAccessToken,
+                    refreshToken: refreshToken,
+                    message: "Refresh token success",
                 });
             }
             catch (error) {

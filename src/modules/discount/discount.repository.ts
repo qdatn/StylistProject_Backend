@@ -21,6 +21,14 @@ class DiscountRepository {
   async delete(id: string) {
     return await Discount.findByIdAndDelete(id);
   }
+  async findByProductId(productId: string) {
+    return await Discount.find({
+      $or: [
+        { apply_items: productId, type: "product", status: true },
+        { type: "all", status: true },
+      ],
+    }).populate("apply_items");
+  }
 }
 
 export default new DiscountRepository();

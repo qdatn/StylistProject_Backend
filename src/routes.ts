@@ -12,6 +12,8 @@ import { AddressRoute } from "@modules/address";
 import { PaymentRoute } from "@modules/payment";
 import { StatisticRoute } from "@modules/statistic";
 import { ChatRoute } from "@modules/chat";
+import { NotificationRoute } from "@modules/notification";
+import { StylePreferenceRoute } from "@modules/style_preference";
 
 export {
   AuthRoute,
@@ -28,4 +30,6 @@ export {
   PaymentRoute,
   StatisticRoute,
   ChatRoute,
+  NotificationRoute,
+  StylePreferenceRoute
 };

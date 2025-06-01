@@ -26,6 +26,8 @@ class DiscountService {
   }
 
   async getAvailableDiscounts(productIds: string[], totalPrice: number) {
+    const categoryIds = await this.getCategoryIdsFromProductIds(productIds);
+
     const discounts = await Discount.find({
       $or: [
         { type: "all" },
@@ -33,7 +35,7 @@ class DiscountService {
         {
           type: "category",
           apply_items: {
-            $in: await this.getCategoryIdsFromProductIds(productIds),
+            $in: categoryIds,
           },
         },
       ],
@@ -42,13 +44,18 @@ class DiscountService {
       status: true,
     });
 
-    return discounts.filter((discount) => {
-      // Check conditions for minimum value and max discount
-      if (discount.minimum_value && totalPrice < discount.minimum_value) {
-        return false;
-      }
-      return true;
-    });
+    return discounts
+      .filter((discount) => {
+        // Check conditions for minimum value and max discount
+        if (
+          (discount.minimum_value && totalPrice < discount.minimum_value) ||
+          (discount.usage_limit && discount.used_count >= discount.usage_limit)
+        ) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a, b) => b.value - a.value);
   }
 
   private async getCategoryIdsFromProductIds(productIds: string[]) {

@@ -22,6 +22,11 @@ class ProductService {
             return yield product_repository_1.default.findAll();
         });
     }
+    getAllProductActive() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield product_repository_1.default.findAllProductActive();
+        });
+    }
     getProductById(productId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield product_repository_1.default.findById(productId);

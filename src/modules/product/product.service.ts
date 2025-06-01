@@ -12,6 +12,10 @@ class ProductService {
     return await ProductRepository.findAll();
   }
 
+  async getAllProductActive() {
+    return await ProductRepository.findAllProductActive();
+  }
+
   async getProductById(productId: string) {
     return await ProductRepository.findById(productId);
   }

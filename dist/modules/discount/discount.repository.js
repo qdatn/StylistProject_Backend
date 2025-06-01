@@ -39,6 +39,16 @@ class DiscountRepository {
             return yield discount_model_1.default.findByIdAndDelete(id);
         });
     }
+    findByProductId(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield discount_model_1.default.find({
+                $or: [
+                    { apply_items: productId, type: "product", status: true },
+                    { type: "all", status: true },
+                ],
+            }).populate("apply_items");
+        });
+    }
 }
 exports.default = new DiscountRepository();
 //# sourceMappingURL=discount.repository.js.map

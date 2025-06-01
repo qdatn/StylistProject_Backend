@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,13 +24,66 @@ const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const http_1 = require("http"); // Import HTTP server
 const socket_io_1 = __importDefault(require("socket.io")); // Import Socket.IO
+const chat_1 = require("./modules/chat");
+const generateGroupIdForChat_1 = __importDefault(require("./core/utils/generateGroupIdForChat"));
 class App {
     constructor(routes) {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || 3000;
         this.server = (0, http_1.createServer)(this.app); // Tạo HTTP server từ Express
         // this.wss = new WebSocketServer({ server: this.server }); // Tạo WebSocket Server
-        this.io = new socket_io_1.default.Server(this.server); // Tạo Socket.IO Server
+        this.io = new socket_io_1.default.Server(this.server, {
+            cors: {
+                origin: function (origin, callback) {
+                    if (!origin ||
+                        origin === "http://localhost:3000" ||
+                        origin === "http://localhost:5000" ||
+                        /vercel\.app$/.test(origin)) {
+                        callback(null, true);
+                    }
+                    else {
+                        callback(new Error("Not allowed by CORS"));
+                    }
+                },
+                methods: ["GET", "POST", "UPDATE", "DELETE"], // Các phương thức cho phép
+                credentials: true,
+            },
+        }); // Tạo Socket.IO Server
+        this.io.on("connection", (socket) => {
+            console.log("User connected:", socket.id);
+            socket.userId = socket.id;
+            // Khi người dùng kết nối, gán trạng thái là online
+            socket.on("user_status", (userId, status) => {
+                // Phát trạng thái tới các client khác
+                console.log(`User ${userId} status is now ${status}`);
+                socket.userId = userId;
+                socket.broadcast.emit("user_status", userId, status);
+            });
+            // Nhận sự kiện chat từ client
+            socket.on("send_message", (data) => __awaiter(this, void 0, void 0, function* () {
+                console.log(`Message from ${data.sender} to ${data.receiver}: ${data.content}`);
+                const groupId = (0, generateGroupIdForChat_1.default)(data.sender, data.receiver);
+                // Lưu tin nhắn vào DB
+                const newMessage = new chat_1.ChatModel({
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    content: data.content,
+                    groupId: groupId,
+                });
+                yield newMessage.save();
+                // Gửi lại cho người nhận (broadcast)
+                this.io.emit("receive_message", {
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    content: data.content,
+                    groupId,
+                });
+            }));
+            socket.on("disconnect", () => {
+                console.log("User disconnected:", socket.id);
+                socket.broadcast.emit("user_status", socket.userId, "offline");
+            });
+        });
         // this.io = new socketIO.Server(this.server, {
         //   cors: {
         //     origin: function (origin, callback) {
@@ -83,9 +145,11 @@ class App {
             // parameterLimit: 50000,
             type: "application/x-www-form-urlencoded",
         }));
-        this.app.use(body_parser_1.default.text({
-        //  limit: "200mb"
-        }));
+        // this.app.use(
+        //   bodyParser.text({
+        //     //  limit: "200mb"
+        //   })
+        // );
         this.app.use(middlewares_1.errorMiddleWare);
         // SWAGGER CONFIG
         const options = {

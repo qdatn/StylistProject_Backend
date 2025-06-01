@@ -17,12 +17,21 @@ const userInfo_model_1 = __importDefault(require("../userInfo/userInfo.model"));
 class UserInfoRepository {
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield userInfo_model_1.default.find().populate("user");
+            // return await UserInfo.find().populate("user");
+            return yield userInfo_model_1.default.find()
+                .populate("style_preference")
+                .populate({
+                path: "user",
+                match: { role: "customer" },
+            })
+                .then((userInfos) => userInfos.filter((info) => info.user !== null));
         });
     }
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield userInfo_model_1.default.findOne({ user: id }).populate("user");
+            return yield userInfo_model_1.default.findOne({ user: id })
+                .populate("user")
+                .populate("style_preference");
         });
     }
     create(userInfoData) {
@@ -34,7 +43,9 @@ class UserInfoRepository {
         return __awaiter(this, void 0, void 0, function* () {
             return yield userInfo_model_1.default.findOneAndUpdate({ user: id }, userInfoData, {
                 new: true,
-            }).populate("user");
+            })
+                .populate("user")
+                .populate("style_preference");
         });
     }
     delete(id) {

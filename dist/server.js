@@ -21,6 +21,8 @@ const routes = [
     _routes_1.PaymentRoute,
     _routes_1.StatisticRoute,
     _routes_1.ChatRoute,
+    _routes_1.NotificationRoute,
+    _routes_1.StylePreferenceRoute
 ];
 const app = new app_1.default(routes);
 app.listen();

@@ -8,30 +8,62 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const notification_model_1 = __importDefault(require("./notification.model"));
+const _1 = require(".");
 class NotificationService {
-    createNotification(userId, messageId, content) {
+    createNotification(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield notification_model_1.default.create({ userId, messageId, content });
+            return _1.NotificationRepository.create(data);
         });
     }
-    getNotificationsByUserId(userId) {
+    getAllNotifications() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield notification_model_1.default.find({ userId }).sort({ createdAt: -1 });
+            return yield _1.NotificationRepository.findAll();
         });
     }
-    markAsRead(notificationId) {
+    // async getUserNotifications(
+    //   userId: string,
+    //   filters: any = {},
+    //   page: number = 1,
+    //   limit: number = 10
+    // ) {
+    //   const skip = (page - 1) * limit;
+    // const [notifications, total] = await Promise.all([
+    //   NotificationRepository.findByUserId(userId, filters, skip, limit),
+    //   NotificationRepository.countDocuments({ userId, ...filters })
+    // ]);
+    // return {
+    //   notifications,
+    //   total,
+    //   page,
+    //   totalPages: Math.ceil(total / limit)
+    // };
+    // }
+    // async markAsRead(notificationId: string, userId: string) {
+    //   return NotificationRepository.updateById(notificationId, {
+    //     status: 'read',
+    //     readAt: new Date()
+    //   });
+    // }
+    updateNotification(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield notification_model_1.default.findByIdAndUpdate(notificationId, { read: true }, { new: true });
+            return yield _1.NotificationRepository.update(id, data);
         });
     }
-    deleteNotification(notificationId) {
+    deleteNotification(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield notification_model_1.default.findByIdAndDelete(notificationId);
+            return _1.NotificationRepository.delete(id);
+        });
+    }
+    getNotificationById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return _1.NotificationRepository.findById(id);
+        });
+    }
+    getUserNotifications(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // const objectId = new Types.ObjectId(userId);
+            return yield _1.NotificationRepository.findNotificationsByUserId(userId);
         });
     }
 }

@@ -2,10 +2,29 @@ import mongoose, { Schema } from "mongoose";
 
 const NotificationSchema = new Schema(
   {
-    userId: { type: String, required: true },
-    messageId: { type: String, required: true },
+    user: [{ type: Schema.Types.ObjectId, required: true, ref: "UserInfo" }],
+    type: {
+      type: String,
+      enum: ["general", "user", "system", "event", "alert", "custom"],
+      default: "general",
+      index: true,
+    },
+    title: { type: String, require: true },
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "medium",
+      index: true,
+    },
     content: { type: String, required: true },
-    read: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["unread", "read", "archieved"],
+      default: "unread",
+      index: true,
+    },
+
+    order: { type: Schema.Types.ObjectId, ref: "Order" },
   },
   { timestamps: true }
 );

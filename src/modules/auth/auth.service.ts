@@ -52,7 +52,8 @@ class AuthService {
     if (!isPasswordValid) throw new Error("Invalid email or password");
 
     const token = generateJwt(user);
-    return { user, token };
+    const refreshToken = generateJwt(user, "3d");
+    return { user, token, refreshToken };
   }
 
   async updateUser(id: string, updateData: AuthDto) {
