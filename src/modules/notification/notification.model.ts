@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const NotificationSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, required: true, ref: "UserInfo" },
+    user: [{ type: Schema.Types.ObjectId, required: true, ref: "UserInfo" }],
     type: {
       type: String,
       enum: ["general", "user", "system", "event", "alert", "custom"],

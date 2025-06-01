@@ -1,10 +1,10 @@
-import { IsString, IsNotEmpty, IsMongoId } from "class-validator";
+import { IsString, IsNotEmpty, IsMongoId, IsArray, IsObject } from "class-validator";
 import { ObjectId } from "mongodb";
 
 export default class NotificationDto {
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  user: ObjectId;
+  user: ObjectId[];
 
   @IsString()
   type?: string;
@@ -23,11 +23,11 @@ export default class NotificationDto {
   @IsString()
   status: string;
 
-  @IsString()
+  @IsObject()
   order?: ObjectId;
 
   constructor(
-    user: ObjectId,
+    user: ObjectId[],
     type: string,
     title: string,
     priority: string,
