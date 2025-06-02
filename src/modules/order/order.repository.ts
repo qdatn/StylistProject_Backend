@@ -11,18 +11,20 @@ class OrderRepository {
   async getOrderById(id: string) {
     return await Order.findById({ _id: id })
       .populate("user", "email")
-      .populate("address");
+      .populate("address")
+      .sort({ createdAt: -1 });
   }
 
   async getOrderByUserId(userid: string) {
     // const _id = new mongoose.Types.ObjectId(userid);
     return await Order.find({ user: userid })
       .populate("user", "email")
-      .populate("address");
+      .populate("address")
+      .sort({ createdAt: -1 });
   }
 
   async getAllOrders() {
-    return await Order.find().populate("user", "email");
+    return await Order.find().populate("user", "email").sort({ createdAt: -1 });
   }
 
   async updateOrder(id: string, data: OrderDTO) {

@@ -4,17 +4,24 @@ import mongoose from "mongoose";
 
 class ProductRepository {
   async findAll() {
-    return await Product.find().populate("categories").populate("attributes");
+    return await Product.find()
+      .populate("categories")
+      .populate("attributes")
+      .sort({ createdAt: -1 });
   }
 
   async findAllProductActive() {
-    return await Product.find({ status: true }).populate("categories").populate("attributes");
+    return await Product.find({ status: true })
+      .populate("categories")
+      .populate("attributes")
+      .sort({ createdAt: -1 });
   }
 
   async findById(id: string) {
     return await Product.findOne({ _id: id })
       .populate("categories")
-      .populate("attributes");
+      .populate("attributes")
+      .sort({ createdAt: -1 });
   }
 
   async create(productData: ProductDto) {
@@ -34,15 +41,27 @@ class ProductRepository {
 
   async delete(id: string) {
     const _id: Object = new mongoose.Types.ObjectId(id);
+
+    const isUsed = await mongoose.model("OrderItem").exists({ product: _id });
+    if (isUsed) {
+      const error = new Error(
+        "Product is used in an order item and cannot be deleted."
+      );
+      (error as any).status = 409;
+      throw error;
+    }
+
     return await Product.deleteOne({ _id: _id });
   }
 
   async findByName(name: string) {
-    return Product.find({ product_name: { $regex: name, $options: "i" } });
+    return Product.find({ product_name: { $regex: name, $options: "i" } }).sort(
+      { createdAt: -1 }
+    );
   }
 
   async findByFilter(query: any) {
-    return Product.find(query);
+    return Product.find(query).sort({ createdAt: -1 });
   }
 }
 

@@ -7,11 +7,15 @@ class DiscountRepository {
   }
 
   async findById(id: string) {
-    return await Discount.findById(id).populate("apply_items");
+    return await Discount.findById(id)
+      .populate("apply_items")
+      .sort({ createdAt: -1 });
   }
 
   async findAll() {
-    return await Discount.find().populate("apply_items");
+    return await Discount.find()
+      .populate("apply_items")
+      .sort({ createdAt: -1 });
   }
 
   async update(id: string, discountData: DiscountDto) {
@@ -27,7 +31,9 @@ class DiscountRepository {
         { apply_items: productId, type: "product", status: true },
         { type: "all", status: true },
       ],
-    }).populate("apply_items");
+    })
+      .populate("apply_items")
+      .sort({ createdAt: -1 });
   }
 }
 
