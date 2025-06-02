@@ -129,7 +129,11 @@ class ProductController {
       // res.status(204).send();
     } catch (error: any) {
       if (error.status === 409) {
-        res.status(409).json({ message: error.message });
+        res
+          .status(409)
+          .json({
+            message: "Product is used in an order item and cannot be deleted.",
+          });
       } else {
         next(error);
       }

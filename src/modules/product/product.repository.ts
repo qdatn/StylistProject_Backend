@@ -1,7 +1,6 @@
 import Product from "@modules/product/product.model";
 import ProductDto from "@modules/product/dtos/product.dto";
 import mongoose from "mongoose";
-import { OrderItem } from "@modules/orderItem";
 
 class ProductRepository {
   async findAll() {
@@ -42,6 +41,16 @@ class ProductRepository {
 
   async delete(id: string) {
     const _id: Object = new mongoose.Types.ObjectId(id);
+
+    const isUsed = await mongoose.model("OrderItem").exists({ product: _id });
+    if (isUsed) {
+      const error = new Error(
+        "Product is used in an order item and cannot be deleted."
+      );
+      (error as any).status = 409;
+      throw error;
+    }
+
     return await Product.deleteOne({ _id: _id });
   }
 
