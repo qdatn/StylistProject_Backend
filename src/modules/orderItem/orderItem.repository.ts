@@ -9,16 +9,20 @@ class OrderItemRepository {
   }
 
   async getOrderItemById(id: string) {
-    return await OrderItem.findById(id).populate("product");
+    return await OrderItem.findById(id)
+      .populate("product")
+      .sort({ createdAt: -1 });
   }
 
   async getOrderItemByOrderId(order: string) {
     //const id = new mongoose.Types.ObjectId(order);
-    return await OrderItem.find({ order: order }).populate("product");
+    return await OrderItem.find({ order: order })
+      .populate("product")
+      .sort({ createdAt: -1 });
   }
 
   async getAllOrderItems() {
-    return await OrderItem.find().populate("product");
+    return await OrderItem.find().populate("product").sort({ createdAt: -1 });
   }
 
   async updateOrderItem(id: string, data: OrderItemDTO) {

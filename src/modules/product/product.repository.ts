@@ -1,20 +1,28 @@
 import Product from "@modules/product/product.model";
 import ProductDto from "@modules/product/dtos/product.dto";
 import mongoose from "mongoose";
+import { OrderItem } from "@modules/orderItem";
 
 class ProductRepository {
   async findAll() {
-    return await Product.find().populate("categories").populate("attributes");
+    return await Product.find()
+      .populate("categories")
+      .populate("attributes")
+      .sort({ createdAt: -1 });
   }
 
   async findAllProductActive() {
-    return await Product.find({ status: true }).populate("categories").populate("attributes");
+    return await Product.find({ status: true })
+      .populate("categories")
+      .populate("attributes")
+      .sort({ createdAt: -1 });
   }
 
   async findById(id: string) {
     return await Product.findOne({ _id: id })
       .populate("categories")
-      .populate("attributes");
+      .populate("attributes")
+      .sort({ createdAt: -1 });
   }
 
   async create(productData: ProductDto) {
@@ -38,11 +46,13 @@ class ProductRepository {
   }
 
   async findByName(name: string) {
-    return Product.find({ product_name: { $regex: name, $options: "i" } });
+    return Product.find({ product_name: { $regex: name, $options: "i" } }).sort(
+      { createdAt: -1 }
+    );
   }
 
   async findByFilter(query: any) {
-    return Product.find(query);
+    return Product.find(query).sort({ createdAt: -1 });
   }
 }
 

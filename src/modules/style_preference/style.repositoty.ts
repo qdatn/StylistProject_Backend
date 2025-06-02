@@ -3,11 +3,11 @@ import StylePreference from "./style.model";
 
 class StylePreferenceRepository {
   async findAll() {
-    return await StylePreference.find();
+    return await StylePreference.find().sort({ createdAt: -1 });
   }
 
   async findById(id: string) {
-    return await StylePreference.findById(id);
+    return await StylePreference.findById(id).sort({ createdAt: -1 });
   }
 
   async create(stylePreferenceData: IStylePreference) {

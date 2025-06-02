@@ -128,7 +128,11 @@ class ProductController {
       }
       // res.status(204).send();
     } catch (error: any) {
-      next(error);
+      if (error.status === 409) {
+        res.status(409).json({ message: error.message });
+      } else {
+        next(error);
+      }
     }
   }
 
@@ -186,7 +190,7 @@ class ProductController {
       const image: any = req.file;
       const { id } = req.params;
       const result = await ProductService.uploadImage(image, "product", id);
-      res.status(200).json({imageUrl: result });
+      res.status(200).json({ imageUrl: result });
     } catch (error: any) {
       next(error.message);
     }

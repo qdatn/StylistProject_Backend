@@ -7,11 +7,11 @@ class AttributeRepository {
   }
 
   async findOne(key: string) {
-    return await Attribute.findOne({ key: key });
+    return await Attribute.findOne({ key: key }).sort({ createdAt: -1 });
   }
 
   async findAll() {
-    return await Attribute.find();
+    return await Attribute.find().sort({ createdAt: -1 });
   }
 
   async update(key: string, updateData: AttributeDTO) {

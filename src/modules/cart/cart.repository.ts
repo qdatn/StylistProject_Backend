@@ -7,13 +7,17 @@ class CartRepository {
   }
 
   async getAllCart() {
-    return await Cart.find().populate("user", "email").populate("products");
+    return await Cart.find()
+      .populate("user", "email")
+      .populate("products")
+      .sort({ createdAt: -1 });
   }
 
   async getCartByUserId(id: string) {
     return await Cart.findOne({ user: id })
       .populate("user", "email")
-      .populate("products");
+      .populate("products")
+      .sort({ createdAt: -1 });
   }
 
   async updateCart(id: string, updateData: CartDto) {

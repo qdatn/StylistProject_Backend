@@ -1,4 +1,3 @@
-// orderItemMiddleware.ts
 import { ProductDto, ProductService } from "@modules/product"; // Cập nhật đường dẫn tới mô hình Product
 import { OrderItemDTO } from "@modules/orderItem";
 import { OrderDTO } from "@modules/order";
