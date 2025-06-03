@@ -6,21 +6,18 @@ class ProductRepository {
   async findAll() {
     return await Product.find()
       .populate("categories")
-      .populate("attributes")
       .sort({ createdAt: -1 });
   }
 
   async findAllProductActive() {
     return await Product.find({ status: true })
       .populate("categories")
-      .populate("attributes")
       .sort({ createdAt: -1 });
   }
 
   async findById(id: string) {
     return await Product.findOne({ _id: id })
       .populate("categories")
-      .populate("attributes")
       .sort({ createdAt: -1 });
   }
 

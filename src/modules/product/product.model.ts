@@ -22,10 +22,25 @@ const productSchema = new Schema(
     stock_update_date: { type: Date, default: new Date() },
     status: { type: Boolean, default: true },
     images: { type: [String], default: [] },
-    attributes: [
+    // attributes: [
+    //   {
+    //     key: { type: String },
+    //     value: [{ type: String }],
+    //   },
+    // ],
+    variants: [
       {
-        key: { type: String },
-        value: [{ type: String }],
+        attributes: [
+          {
+            key: { type: String, required: true },
+            value: { type: String, required: true },
+          },
+        ],
+        price: { type: Number, required: true },
+        discounted_price: { type: Number },
+        stock_quantity: { type: Number, required: true, default: 0 },
+        min_quantity: { type: Number, required: true, default: 0 },
+        sold_quantity: { type: Number, default: 0 },
       },
     ],
   },
