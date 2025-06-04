@@ -55,7 +55,8 @@ export default class ProductDto {
   images?: string[];
 
   @IsArray()
-  attributes?: Object[];
+  // attributes?: Object[];
+  variants?: Object[]
 
   @IsDate()
   createdAt?: Date;
@@ -75,7 +76,7 @@ export default class ProductDto {
     stock_update_date?: Date,
     status?: boolean,
     images?: string[],
-    attributes?: Object[],
+    variants?: Object[],
     createdAt?: Date,
     updatedAt?: Date
   ) {
@@ -91,7 +92,7 @@ export default class ProductDto {
     this.stock_update_date = stock_update_date;
     this.status = status;
     this.images = images;
-    this.attributes = attributes;
+    this.variants = variants;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }

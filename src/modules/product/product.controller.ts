@@ -4,6 +4,7 @@ import ProductService from "@modules/product/product.service";
 import { Request, Response, NextFunction } from "express";
 import ProductDto from "./dtos/product.dto";
 import IProduct from "./product.interface";
+import Product from "./product.model";
 
 class ProductController {
   async getAllProducts(
@@ -12,9 +13,41 @@ class ProductController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const products = await ProductService.getAllProducts();
+      const products = Array.isArray(req.body?.products) && req.body.products.length > 0
+      ? req.body.products
+      : await ProductService.getAllProducts();
+      // const products = await ProductService.getAllProducts();
       await pagination(req, res, products, next);
       res.status(200).json(res.locals.pagination);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async getAllProductsByStyle(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.params.userId;
+      const sortedProductIds = await ProductService.getRecommendedProductsForUser(userId);
+
+      // Lấy toàn bộ sản phẩm theo các ID đó
+      const products = await Product.find({
+        _id: { $in: sortedProductIds },
+      }).lean();
+
+      // Map lại sản phẩm theo thứ tự đã gợi ý
+      const productMap = new Map(products.map((p) => [String(p._id), p]));
+      const orderedProducts = sortedProductIds
+        .map((id) => productMap.get(String(id)))
+        .filter(Boolean);
+
+      // Phân trang
+      // await pagination(req, res, orderedProducts, next);
+      // res.status(200).json(res.locals.pagination);
+      res.status(200).json(orderedProducts);
     } catch (error: any) {
       next(error);
     }
@@ -129,11 +162,9 @@ class ProductController {
       // res.status(204).send();
     } catch (error: any) {
       if (error.status === 409) {
-        res
-          .status(409)
-          .json({
-            message: "Product is used in an order item and cannot be deleted.",
-          });
+        res.status(409).json({
+          message: "Product is used in an order item and cannot be deleted.",
+        });
       } else {
         next(error);
       }

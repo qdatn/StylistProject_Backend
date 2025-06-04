@@ -18,6 +18,7 @@ class ProductRoute implements RouteInterface {
       ProductController.getFilteredProducts
     );
     this.router.get(`${this.path}/`, ProductController.getAllProducts);
+    this.router.get(`${this.path}/user/:userId`, ProductController.getAllProductsByStyle);
     // this.router.get(
     //   `${this.path}/search/query`,
     //   ProductController.searchProducts
