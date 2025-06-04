@@ -36,7 +36,7 @@ const productSchema = new Schema(
           },
         ],
         price: { type: Number, required: true },
-        discounted_price: { type: Number },
+        // discounted_price: { type: Number },
         stock_quantity: { type: Number, required: true, default: 0 },
         min_quantity: { type: Number, required: true, default: 0 },
         sold_quantity: { type: Number, default: 0 },
