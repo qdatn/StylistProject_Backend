@@ -13,15 +13,45 @@ class ProductController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const products = Array.isArray(req.body?.products) && req.body.products.length > 0
-      ? req.body.products
-      : await ProductService.getAllProducts();
+      const products =
+        Array.isArray(req.body?.products) && req.body.products.length > 0
+          ? req.body.products
+          : await ProductService.getAllProducts();
       // const products = await ProductService.getAllProducts();
       await pagination(req, res, products, next);
       res.status(200).json(res.locals.pagination);
     } catch (error: any) {
       next(error);
     }
+  }
+
+  async fetchAllProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const productIds: string[] = req.body.productIds;
+
+    if (!productIds || !Array.isArray(productIds)) {
+      res
+        .status(400)
+        .json({ message: "Missing or invalid productIds in request body" });
+      return;
+    }
+
+    // Truy vấn DB lấy sản phẩm theo ID
+    const products = await Product.find({ _id: { $in: productIds } }).lean();
+
+    // Bảo toàn thứ tự ID từ client
+    const productMap = new Map(products.map((p) => [String(p._id), p]));
+    const orderedProducts = productIds
+      .map((id) => productMap.get(String(id)))
+      .filter(Boolean);
+
+    // Gọi hàm phân trang
+    await pagination(req, res, orderedProducts, next);
+
+    res.status(200).json(res.locals.pagination);
   }
 
   async getAllProductsByStyle(
@@ -31,23 +61,25 @@ class ProductController {
   ): Promise<void> {
     try {
       const userId = req.params.userId;
-      const sortedProductIds = await ProductService.getRecommendedProductsForUser(userId);
+      const sortedProductIds =
+        await ProductService.getRecommendedProductsForUser(userId);
 
-      // Lấy toàn bộ sản phẩm theo các ID đó
-      const products = await Product.find({
-        _id: { $in: sortedProductIds },
-      }).lean();
+      // // Lấy toàn bộ sản phẩm theo các ID đó
+      // const products = await Product.find({
+      //   _id: { $in: sortedProductIds },
+      // }).lean();
 
-      // Map lại sản phẩm theo thứ tự đã gợi ý
-      const productMap = new Map(products.map((p) => [String(p._id), p]));
-      const orderedProducts = sortedProductIds
-        .map((id) => productMap.get(String(id)))
-        .filter(Boolean);
+      // // Map lại sản phẩm theo thứ tự đã gợi ý
+      // const productMap = new Map(products.map((p) => [String(p._id), p]));
+      // const orderedProducts = sortedProductIds
+      //   .map((id) => productMap.get(String(id)))
+      //   .filter(Boolean);
 
       // Phân trang
       // await pagination(req, res, orderedProducts, next);
       // res.status(200).json(res.locals.pagination);
-      res.status(200).json(orderedProducts);
+      // res.status(200).json(orderedProducts);
+      res.status(200).json(sortedProductIds);
     } catch (error: any) {
       next(error);
     }
@@ -77,11 +109,42 @@ class ProductController {
     try {
       // const product = await ProductService.createProduct(req.body);
       // res.status(201).json(product);
-      const products = req.body; // Dữ liệu sản phẩm gửi từ client
-      return await ProductService.createProduct({
-        ...products,
+      const products_req = req.body; // Dữ liệu sản phẩm gửi từ client
+      const productData = await ProductService.createProduct({
+        ...products_req,
         images: [],
       });
+      const product = await ProductService.createProduct(productData);
+
+      // Nếu có ảnh, upload từng ảnh
+      if (req.body.images && req.body.images.length > 0) {
+        const uploadPromises = req.body.images.map(async (image: string) => {
+          try {
+            return await ProductService.uploadImage(
+              image,
+              "product",
+              product._id
+            );
+          } catch (error) {
+            console.error(`Error uploading image: ${image}`, error);
+            return null;
+          }
+        });
+
+        const uploadedImages = (await Promise.all(uploadPromises)).filter(
+          (url) => url !== null
+        );
+
+        // Cập nhật sản phẩm với danh sách ảnh đã upload
+        const updatedProduct = await ProductService.updateProduct(product._id, {
+          ...productData,
+          images: uploadedImages,
+        });
+
+        res.status(201).json(updatedProduct);
+      } else {
+        res.status(201).json(product);
+      }
 
       // //Upload image to cloudinary
       // const images: any = await Promise.all(
@@ -222,10 +285,21 @@ class ProductController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const image: any = req.file;
+      // const image: any = req.file;
+      const files = req.files as Express.Multer.File[];
       const { id } = req.params;
-      const result = await ProductService.uploadImage(image, "product", id);
-      res.status(200).json({ imageUrl: result });
+      // const result = await ProductService.uploadImage(image, "product", id);
+      const uploadPromises = files.map((file) =>
+        ProductService.uploadImage(file, "product", id)
+      );
+
+      const results = await Promise.all(uploadPromises);
+      const imageUrls = results.map((result) => result);
+      // Cập nhật sản phẩm với ảnh mới
+      await Product.findByIdAndUpdate(id, {
+        $push: { images: { $each: imageUrls } },
+      });
+      res.status(200).json({ imageUrls: imageUrls });
     } catch (error: any) {
       next(error.message);
     }
