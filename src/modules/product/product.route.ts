@@ -19,6 +19,7 @@ class ProductRoute implements RouteInterface {
     );
     this.router.get(`${this.path}/`, ProductController.getAllProducts);
     this.router.get(`${this.path}/user/:userId`, ProductController.getAllProductsByStyle);
+    this.router.post(`${this.path}/by-style`, ProductController.fetchAllProducts)
     // this.router.get(
     //   `${this.path}/search/query`,
     //   ProductController.searchProducts
@@ -37,7 +38,7 @@ class ProductRoute implements RouteInterface {
     this.router.delete(`${this.path}/:id`, ProductController.deleteProduct);
     this.router.post(
       `${this.path}/upload/:id`,
-      upload.single("image"),
+      upload.array("images"),
       ProductController.uploadImage
     );
     this.router.post(
