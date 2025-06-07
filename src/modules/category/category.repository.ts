@@ -3,14 +3,14 @@ import CategoryDTO from "@modules/category/dtos/category.dto";
 import mongoose from "mongoose";
 class CategoryRepository {
   async findAll() {
-    return await Category.find();
+    return await Category.find().sort({ createdAt: -1 });
   }
 
   async findById(id: string) {
     return await Category.findOne({
       // search without casitive
-      _id: id
-    });
+      _id: id,
+    }).sort({ createdAt: -1 });
   }
 
   async create(CategoryData: CategoryDTO) {
@@ -22,13 +22,9 @@ class CategoryRepository {
   }
 
   async update(id: string, categoryData: CategoryDTO) {
-    return await Category.findOneAndUpdate(
-      { _id: id },
-      categoryData,
-      {
-        new: true,
-      }
-    );
+    return await Category.findOneAndUpdate({ _id: id }, categoryData, {
+      new: true,
+    });
   }
 
   async delete(id: string) {
