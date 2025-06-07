@@ -23,7 +23,8 @@ class OrderRepository {
         return __awaiter(this, void 0, void 0, function* () {
             return yield order_model_1.default.findById({ _id: id })
                 .populate("user", "email")
-                .populate("address");
+                .populate("address")
+                .sort({ createdAt: -1 });
         });
     }
     getOrderByUserId(userid) {
@@ -31,12 +32,13 @@ class OrderRepository {
             // const _id = new mongoose.Types.ObjectId(userid);
             return yield order_model_1.default.find({ user: userid })
                 .populate("user", "email")
-                .populate("address");
+                .populate("address")
+                .sort({ createdAt: -1 });
         });
     }
     getAllOrders() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield order_model_1.default.find().populate("user", "email");
+            return yield order_model_1.default.find().populate("user", "email").sort({ createdAt: -1 });
         });
     }
     updateOrder(id, data) {

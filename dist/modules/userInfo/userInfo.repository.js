@@ -19,7 +19,7 @@ class UserInfoRepository {
         return __awaiter(this, void 0, void 0, function* () {
             // return await UserInfo.find().populate("user");
             return yield userInfo_model_1.default.find()
-                .populate("style_preference")
+                .populate("style_preferences")
                 .populate({
                 path: "user",
                 match: { role: "customer" },
@@ -31,7 +31,7 @@ class UserInfoRepository {
         return __awaiter(this, void 0, void 0, function* () {
             return yield userInfo_model_1.default.findOne({ user: id })
                 .populate("user")
-                .populate("style_preference");
+                .populate("style_preferences");
         });
     }
     create(userInfoData) {
@@ -45,7 +45,7 @@ class UserInfoRepository {
                 new: true,
             })
                 .populate("user")
-                .populate("style_preference");
+                .populate("style_preferences");
         });
     }
     delete(id) {

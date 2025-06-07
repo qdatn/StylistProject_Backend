@@ -17,19 +17,23 @@ const mongoose_1 = __importDefault(require("mongoose"));
 class ProductRepository {
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield product_model_1.default.find().populate("categories").populate("attributes");
+            return yield product_model_1.default.find()
+                .populate("categories")
+                .sort({ createdAt: -1 });
         });
     }
     findAllProductActive() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield product_model_1.default.find({ status: true }).populate("categories").populate("attributes");
+            return yield product_model_1.default.find({ status: true })
+                .populate("categories")
+                .sort({ createdAt: -1 });
         });
     }
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield product_model_1.default.findOne({ _id: id })
                 .populate("categories")
-                .populate("attributes");
+                .sort({ createdAt: -1 });
         });
     }
     create(productData) {
@@ -53,17 +57,23 @@ class ProductRepository {
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const _id = new mongoose_1.default.Types.ObjectId(id);
+            const isUsed = yield mongoose_1.default.model("OrderItem").exists({ product: _id });
+            if (isUsed) {
+                const error = new Error("Product is used in an order item and cannot be deleted.");
+                error.status = 409;
+                throw error;
+            }
             return yield product_model_1.default.deleteOne({ _id: _id });
         });
     }
     findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            return product_model_1.default.find({ product_name: { $regex: name, $options: "i" } });
+            return product_model_1.default.find({ product_name: { $regex: name, $options: "i" } }).sort({ createdAt: -1 });
         });
     }
     findByFilter(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            return product_model_1.default.find(query);
+            return product_model_1.default.find(query).sort({ createdAt: -1 });
         });
     }
 }

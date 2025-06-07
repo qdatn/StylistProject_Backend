@@ -17,15 +17,15 @@ const mongoose_1 = __importDefault(require("mongoose"));
 class CategoryRepository {
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield category_model_1.default.find();
+            return yield category_model_1.default.find().sort({ createdAt: -1 });
         });
     }
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield category_model_1.default.findOne({
                 // search without casitive
-                _id: id
-            });
+                _id: id,
+            }).sort({ createdAt: -1 });
         });
     }
     create(CategoryData) {

@@ -16,6 +16,8 @@ class ProductRoute {
     initializeRoutes() {
         this.router.get(`${this.path}/search/query`, product_controller_1.default.getFilteredProducts);
         this.router.get(`${this.path}/`, product_controller_1.default.getAllProducts);
+        this.router.get(`${this.path}/user/:userId`, product_controller_1.default.getAllProductsByStyle);
+        this.router.post(`${this.path}/by-style`, product_controller_1.default.fetchAllProducts);
         // this.router.get(
         //   `${this.path}/search/query`,
         //   ProductController.searchProducts
@@ -25,7 +27,7 @@ class ProductRoute {
         this.router.post(`${this.path}/insertMany`, product_controller_1.default.createManyProducts);
         this.router.put(`${this.path}/:id`, product_controller_1.default.updateProduct);
         this.router.delete(`${this.path}/:id`, product_controller_1.default.deleteProduct);
-        this.router.post(`${this.path}/upload/:id`, uploadImg_middleware_1.default.single("image"), product_controller_1.default.uploadImage);
+        this.router.post(`${this.path}/upload/:id`, uploadImg_middleware_1.default.array("images"), product_controller_1.default.uploadImage);
         this.router.post(`${this.path}/delete-img/:id`, product_controller_1.default.deleteImage);
     }
 }

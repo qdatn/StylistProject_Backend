@@ -21,14 +21,18 @@ class CartRepository {
     }
     getAllCart() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield cart_model_1.default.find().populate("user", "email").populate("products");
+            return yield cart_model_1.default.find()
+                .populate("user", "email")
+                .populate("products")
+                .sort({ createdAt: -1 });
         });
     }
     getCartByUserId(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield cart_model_1.default.findOne({ user: id })
                 .populate("user", "email")
-                .populate("products");
+                .populate("products")
+                .sort({ createdAt: -1 });
         });
     }
     updateCart(id, updateData) {

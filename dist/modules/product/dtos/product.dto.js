@@ -10,7 +10,7 @@ const class_validator_1 = require("class-validator");
 require("reflect-metadata");
 const class_transformer_1 = require("class-transformer");
 class ProductDto {
-    constructor(_id, product_name, price, stock_quantity, min_quantity, description, brand, sold_quantity, categories, stock_update_date, status, images, attributes, createdAt, updatedAt) {
+    constructor(_id, product_name, price, stock_quantity, min_quantity, description, brand, sold_quantity, categories, stock_update_date, status, images, variants, createdAt, updatedAt) {
         this.sold_quantity = 0;
         this._id = _id;
         this.product_name = product_name;
@@ -24,7 +24,7 @@ class ProductDto {
         this.stock_update_date = stock_update_date;
         this.status = status;
         this.images = images;
-        this.attributes = attributes;
+        this.variants = variants;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -75,7 +75,8 @@ __decorate([
 ], ProductDto.prototype, "images", void 0);
 __decorate([
     (0, class_validator_1.IsArray)()
-], ProductDto.prototype, "attributes", void 0);
+    // attributes?: Object[];
+], ProductDto.prototype, "variants", void 0);
 __decorate([
     (0, class_validator_1.IsDate)()
 ], ProductDto.prototype, "createdAt", void 0);

@@ -21,12 +21,16 @@ class DiscountRepository {
     }
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield discount_model_1.default.findById(id).populate("apply_items");
+            return yield discount_model_1.default.findById(id)
+                .populate("apply_items")
+                .sort({ createdAt: -1 });
         });
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield discount_model_1.default.find().populate("apply_items");
+            return yield discount_model_1.default.find()
+                .populate("apply_items")
+                .sort({ createdAt: -1 });
         });
     }
     update(id, discountData) {
@@ -46,7 +50,9 @@ class DiscountRepository {
                     { apply_items: productId, type: "product", status: true },
                     { type: "all", status: true },
                 ],
-            }).populate("apply_items");
+            })
+                .populate("apply_items")
+                .sort({ createdAt: -1 });
         });
     }
 }

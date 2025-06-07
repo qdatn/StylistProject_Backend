@@ -9,29 +9,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// orderItemMiddleware.ts
 const product_1 = require("../../modules/product"); // Cập nhật đường dẫn tới mô hình Product
 const reduceProductStock = function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // Duyệt qua từng order item trong order_items
-            // if (Array.isArray(this.product)) {
-            // await Promise.all(
-            // this.order_items.map(async (order_item: any) => {
             const product = yield product_1.ProductService.getProductById(this.product);
             if (!product) {
                 throw new Error("Sản phẩm không tồn tại");
             }
-            // Kiểm tra nếu số lượng đặt hàng lớn hơn số lượng tồn kho
-            if (product.stock_quantity < this.quantity) {
+            // Tìm biến thể đúng dựa trên attributes từ OrderItem
+            const matchedVariant = product.variants.find((variant) => {
+                return (variant.attributes.length === this.attributes.length &&
+                    variant.attributes.every((attr) => this.attributes.some((orderAttr) => orderAttr.key === attr.key && orderAttr.value === attr.value)));
+            });
+            // Kiểm tra tồn kho
+            if (matchedVariant.stock_quantity < this.quantity) {
                 throw new Error("Số lượng đặt hàng vượt quá tồn kho");
             }
-            // Giảm số lượng sản phẩm trong kho
-            product.stock_quantity -= this.quantity;
-            yield product.save(); // Lưu thay đổi số lượng vào cơ sở dữ liệu
-            // })
-            // );
+            // Cập nhật tồn kho và số lượng đã bán
+            matchedVariant.stock_quantity -= this.quantity;
+            matchedVariant.sold_quantity += this.quantity;
+            matchedVariant.stock_update_date = new Date();
+            yield product.save();
+            // if (!matchedVariant) {
+            //   throw new Error("Không tìm thấy biến thể sản phẩm phù hợp");
             // }
+            // // Kiểm tra nếu số lượng đặt hàng lớn hơn số lượng tồn kho
+            // if (product.stock_quantity < this.quantity) {
+            //   throw new Error("Số lượng đặt hàng vượt quá tồn kho");
+            // }
+            // // Giảm số lượng sản phẩm trong kho
+            // product.stock_quantity -= this.quantity;
+            // await product.save(); // Lưu thay đổi số lượng vào cơ sở dữ liệu
+            // // })
+            // // );
+            // // }
             next();
         }
         catch (error) {

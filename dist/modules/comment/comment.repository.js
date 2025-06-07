@@ -22,28 +22,34 @@ class CommentRepository {
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield comment_model_1.default.find().populate("product").populate("user", "email");
+            return yield comment_model_1.default.find()
+                .populate("product")
+                .populate("user", "email")
+                .sort({ createdAt: -1 });
         });
     }
     findByCommentId(commentId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield comment_model_1.default.find({ _id: commentId })
                 .populate("product")
-                .populate("user");
+                .populate("user")
+                .sort({ createdAt: -1 });
         });
     }
     findByProductId(productId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield comment_model_1.default.find({ product: productId })
                 // .populate("product")
-                .populate("user_info");
+                .populate("user_info")
+                .sort({ createdAt: -1 });
         });
     }
     findByUserId(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield comment_model_1.default.find({ user: userId })
                 .populate("product")
-                .populate("user", "email");
+                .populate("user", "email")
+                .sort({ createdAt: -1 });
         });
     }
     update(commentId, updateData) {

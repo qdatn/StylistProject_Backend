@@ -16,12 +16,12 @@ const style_model_1 = __importDefault(require("./style.model"));
 class StylePreferenceRepository {
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield style_model_1.default.find();
+            return yield style_model_1.default.find().sort({ createdAt: -1 });
         });
     }
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield style_model_1.default.findById(id);
+            return yield style_model_1.default.findById(id).sort({ createdAt: -1 });
         });
     }
     create(stylePreferenceData) {

@@ -17,37 +17,7 @@ const userInfo_1 = require("../userInfo");
 class NotificationRepository {
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield notification_model_1.default.find().populate("user");
-            // return await Notification.aggregate([
-            //   {
-            //     $lookup: {
-            //       from: "userinfos", // tên collection (viết thường và thêm "s")
-            //       localField: "user", // Notification.user
-            //       foreignField: "user", // UserInfo.user
-            //       as: "userInfo",
-            //     },
-            //   },
-            //   // {
-            //   //   $unwind: {
-            //   //     path: "$user",
-            //   //     preserveNullAndEmptyArrays: true, // nếu không tìm thấy UserInfo
-            //   //   },
-            //   // },
-            //   {
-            //     $lookup: {
-            //       from: "orders", // nếu bạn cũng muốn populate thêm "order"
-            //       localField: "order",
-            //       foreignField: "_id",
-            //       as: "order",
-            //     },
-            //   },
-            //   // {
-            //   //   $unwind: {
-            //   //     path: "$order",
-            //   //     preserveNullAndEmptyArrays: true,
-            //   //   },
-            //   // },
-            // ]);
+            return yield notification_model_1.default.find().populate("user").sort({ createdAt: -1 });
         });
     }
     findById(id) {
@@ -55,7 +25,7 @@ class NotificationRepository {
             return yield notification_model_1.default.findOne({
                 // search without casitive
                 _id: id,
-            });
+            }).sort({ createdAt: -1 });
         });
     }
     create(notificationData) {
@@ -83,14 +53,14 @@ class NotificationRepository {
             // B2: Tìm tất cả notification có chứa userInfo._id
             // const notifications = await Notification.find({
             //   user: userInfo._id,
-            // }).populate("user"); 
+            // }).populate("user");
             const notifications = yield notification_model_1.default.find({
                 $or: [
                     { user: userInfo._id },
                     { user: { $exists: false } },
                     { user: { $size: 0 } },
                 ],
-            }).populate("user");
+            }).populate("user").sort({ createdAt: -1 });
             return notifications;
         });
     }

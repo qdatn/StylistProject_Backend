@@ -26,20 +26,21 @@ class AddressRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const id = new mongoose_1.default.Types.ObjectId(userid);
             return yield address_model_1.default.find({ user: id })
-                .populate("user");
+                .populate("user")
+                .sort({ createdAt: -1 });
         });
     }
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const _id = new mongoose_1.default.Types.ObjectId(id);
             return yield address_model_1.default.findOne({ _id: _id })
-                .populate("user");
+                .populate("user")
+                .sort({ createdAt: -1 });
         });
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield address_model_1.default.find()
-                .populate("user");
+            return yield address_model_1.default.find().populate("user").sort({ createdAt: -1 });
         });
     }
     update(id, addressData) {

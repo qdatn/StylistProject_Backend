@@ -21,12 +21,12 @@ class AttributeRepository {
     }
     findOne(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield attribute_model_1.default.findOne({ key: key });
+            return yield attribute_model_1.default.findOne({ key: key }).sort({ createdAt: -1 });
         });
     }
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield attribute_model_1.default.find();
+            return yield attribute_model_1.default.find().sort({ createdAt: -1 });
         });
     }
     update(key, updateData) {

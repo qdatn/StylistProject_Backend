@@ -53,7 +53,7 @@ const userInfoSchema = new mongoose_1.Schema({
     body_shape: { type: String, default: "No provided" }, // Optional, e.g., 'Slim', 'Athletic', 'Curvy', etc.
     // height: { type: Number, default: 0 }, // Height in centimeters
     // weight: { type: Number, default: 0 }, // Weight in kilograms
-    style_preference: {
+    style_preferences: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "StylePreference",
         required: false,

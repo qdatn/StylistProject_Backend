@@ -21,18 +21,22 @@ class OrderItemRepository {
     }
     getOrderItemById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield orderItem_model_1.default.findById(id).populate("product");
+            return yield orderItem_model_1.default.findById(id)
+                .populate("product")
+                .sort({ createdAt: -1 });
         });
     }
     getOrderItemByOrderId(order) {
         return __awaiter(this, void 0, void 0, function* () {
             //const id = new mongoose.Types.ObjectId(order);
-            return yield orderItem_model_1.default.find({ order: order }).populate("product");
+            return yield orderItem_model_1.default.find({ order: order })
+                .populate("product")
+                .sort({ createdAt: -1 });
         });
     }
     getAllOrderItems() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield orderItem_model_1.default.find().populate("product");
+            return yield orderItem_model_1.default.find().populate("product").sort({ createdAt: -1 });
         });
     }
     updateOrderItem(id, data) {

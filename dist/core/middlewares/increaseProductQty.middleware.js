@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// orderItemMiddleware.ts
 const product_1 = require("../../modules/product"); // Cập nhật đường dẫn tới mô hình Product
 const increaseProductStock = function (order_item
 // next: NextFunction
@@ -25,9 +24,24 @@ const increaseProductStock = function (order_item
             if (!product) {
                 throw new Error("Sản phẩm không tồn tại");
             }
+            // Tìm đúng biến thể dựa trên attributes
+            const matchedVariant = product.variants.find((variant) => {
+                return (variant.attributes.length === order_item.attributes.length &&
+                    variant.attributes.every((attr) => order_item.attributes.some((orderAttr) => orderAttr.key === attr.key && orderAttr.value === attr.value)));
+            });
+            if (!matchedVariant) {
+                throw new Error("Không tìm thấy biến thể sản phẩm phù hợp");
+            }
+            // Cập nhật số lượng tồn kho và số lượng đã bán
+            matchedVariant.stock_quantity += order_item.quantity;
+            matchedVariant.sold_quantity -= order_item.quantity;
+            if (matchedVariant.sold_quantity < 0)
+                matchedVariant.sold_quantity = 0;
+            matchedVariant.stock_update_date = new Date();
+            yield product.save(); // Lưu thay đổi
             // Tăng số lượng sản phẩm
-            product.stock_quantity += order_item.quantity;
-            yield product.save();
+            // product.stock_quantity += order_item.quantity;
+            // await product.save();
             // })
             // );
             // }

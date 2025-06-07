@@ -14,13 +14,64 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const middlewares_1 = require("../../core/middlewares");
 const product_service_1 = __importDefault(require("../product/product.service"));
+const product_model_1 = __importDefault(require("./product.model"));
 class ProductController {
     getAllProducts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
-                const products = yield product_service_1.default.getAllProducts();
+                const products = Array.isArray((_a = req.body) === null || _a === void 0 ? void 0 : _a.products) && req.body.products.length > 0
+                    ? req.body.products
+                    : yield product_service_1.default.getAllProducts();
+                // const products = await ProductService.getAllProducts();
                 yield (0, middlewares_1.pagination)(req, res, products, next);
                 res.status(200).json(res.locals.pagination);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    fetchAllProducts(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const productIds = req.body.productIds;
+            if (!productIds || !Array.isArray(productIds)) {
+                res
+                    .status(400)
+                    .json({ message: "Missing or invalid productIds in request body" });
+                return;
+            }
+            // Truy vấn DB lấy sản phẩm theo ID
+            const products = yield product_model_1.default.find({ _id: { $in: productIds } }).lean();
+            // Bảo toàn thứ tự ID từ client
+            const productMap = new Map(products.map((p) => [String(p._id), p]));
+            const orderedProducts = productIds
+                .map((id) => productMap.get(String(id)))
+                .filter(Boolean);
+            // Gọi hàm phân trang
+            yield (0, middlewares_1.pagination)(req, res, orderedProducts, next);
+            res.status(200).json(res.locals.pagination);
+        });
+    }
+    getAllProductsByStyle(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.params.userId;
+                const sortedProductIds = yield product_service_1.default.getRecommendedProductsForUser(userId);
+                // // Lấy toàn bộ sản phẩm theo các ID đó
+                // const products = await Product.find({
+                //   _id: { $in: sortedProductIds },
+                // }).lean();
+                // // Map lại sản phẩm theo thứ tự đã gợi ý
+                // const productMap = new Map(products.map((p) => [String(p._id), p]));
+                // const orderedProducts = sortedProductIds
+                //   .map((id) => productMap.get(String(id)))
+                //   .filter(Boolean);
+                // Phân trang
+                // await pagination(req, res, orderedProducts, next);
+                // res.status(200).json(res.locals.pagination);
+                // res.status(200).json(orderedProducts);
+                res.status(200).json(sortedProductIds);
             }
             catch (error) {
                 next(error);
@@ -46,8 +97,28 @@ class ProductController {
             try {
                 // const product = await ProductService.createProduct(req.body);
                 // res.status(201).json(product);
-                const products = req.body; // Dữ liệu sản phẩm gửi từ client
-                return yield product_service_1.default.createProduct(Object.assign(Object.assign({}, products), { images: [] }));
+                const products_req = req.body; // Dữ liệu sản phẩm gửi từ client
+                const productData = yield product_service_1.default.createProduct(Object.assign(Object.assign({}, products_req), { images: [] }));
+                const product = yield product_service_1.default.createProduct(productData);
+                // Nếu có ảnh, upload từng ảnh
+                if (req.body.images && req.body.images.length > 0) {
+                    const uploadPromises = req.body.images.map((image) => __awaiter(this, void 0, void 0, function* () {
+                        try {
+                            return yield product_service_1.default.uploadImage(image, "product", product._id);
+                        }
+                        catch (error) {
+                            console.error(`Error uploading image: ${image}`, error);
+                            return null;
+                        }
+                    }));
+                    const uploadedImages = (yield Promise.all(uploadPromises)).filter((url) => url !== null);
+                    // Cập nhật sản phẩm với danh sách ảnh đã upload
+                    const updatedProduct = yield product_service_1.default.updateProduct(product._id, Object.assign(Object.assign({}, productData), { images: uploadedImages }));
+                    res.status(201).json(updatedProduct);
+                }
+                else {
+                    res.status(201).json(product);
+                }
                 // //Upload image to cloudinary
                 // const images: any = await Promise.all(
                 //   products.images.map(async (image: string) => {
@@ -119,7 +190,14 @@ class ProductController {
                 // res.status(204).send();
             }
             catch (error) {
-                next(error);
+                if (error.status === 409) {
+                    res.status(409).json({
+                        message: "Product is used in an order item and cannot be deleted.",
+                    });
+                }
+                else {
+                    next(error);
+                }
             }
         });
     }
@@ -161,10 +239,18 @@ class ProductController {
     uploadImage(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const image = req.file;
+                // const image: any = req.file;
+                const files = req.files;
                 const { id } = req.params;
-                const result = yield product_service_1.default.uploadImage(image, "product", id);
-                res.status(200).json({ imageUrl: result });
+                // const result = await ProductService.uploadImage(image, "product", id);
+                const uploadPromises = files.map((file) => product_service_1.default.uploadImage(file, "product", id));
+                const results = yield Promise.all(uploadPromises);
+                const imageUrls = results.map((result) => result);
+                // Cập nhật sản phẩm với ảnh mới
+                yield product_model_1.default.findByIdAndUpdate(id, {
+                    $push: { images: { $each: imageUrls } },
+                });
+                res.status(200).json({ imageUrls: imageUrls });
             }
             catch (error) {
                 next(error.message);
