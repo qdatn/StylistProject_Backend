@@ -8,6 +8,7 @@ export const orderItemSchema = new Schema(
     order: { type: Schema.Types.ObjectId, required: true, ref: "Order" },
     product: { type: Schema.Types.ObjectId, required: true, ref: "Product" },
     quantity: { type: Number, required: true },
+    price: { type: Number, required: true },
     attributes: [
       {
         key: { type: String },
