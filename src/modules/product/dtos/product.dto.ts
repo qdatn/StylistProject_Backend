@@ -10,6 +10,38 @@ import {
 import "reflect-metadata";
 import { Type } from "class-transformer";
 
+class AttributeDTO {
+  @IsString()
+  key!: string;
+
+  @IsString()
+  value!: string;
+}
+
+export class ProductVariantDTO {
+  @IsArray()
+  @Type(() => AttributeDTO)
+  attributes!: AttributeDTO[];
+
+  @IsNumber()
+  price!: number;
+
+  @IsNumber()
+  stock_quantity!: number;
+
+  @IsNumber()
+  min_quantity!: number;
+
+  @IsOptional()
+  @IsNumber()
+  sold_quantity?: number;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  stock_update_date?: Date;
+}
+
 export default class ProductDto {
   @IsMongoId()
   _id?: Object;
@@ -56,7 +88,7 @@ export default class ProductDto {
 
   @IsArray()
   // attributes?: Object[];
-  variants?: Object[]
+  variants?: ProductVariantDTO[];
 
   @IsDate()
   createdAt?: Date;
@@ -76,7 +108,7 @@ export default class ProductDto {
     stock_update_date?: Date,
     status?: boolean,
     images?: string[],
-    variants?: Object[],
+    variants?: ProductVariantDTO[],
     createdAt?: Date,
     updatedAt?: Date
   ) {
