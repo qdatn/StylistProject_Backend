@@ -8,14 +8,9 @@ const increaseProductStock = async function (
   // next: NextFunction
 ) {
   try {
-    // Duyệt qua từng order item trong order_items
-    // if (Array.isArray(order.order_items)) {
-    // if (order.status === "On Cancel") {
-    // await Promise.all(
-    // orderitem.order_items.map(async (order_item: any) => {
     const product = await ProductService.getProductById(order_item.product);
     if (!product) {
-      throw new Error("Sản phẩm không tồn tại");
+      throw new Error("Product not found");
     }
 
     // Tìm đúng biến thể dựa trên attributes
@@ -32,7 +27,7 @@ const increaseProductStock = async function (
     });
 
     if (!matchedVariant) {
-      throw new Error("Không tìm thấy biến thể sản phẩm phù hợp");
+      throw new Error("Cannot find matching variant for the order item");
     }
 
     // Cập nhật số lượng tồn kho và số lượng đã bán
@@ -43,14 +38,6 @@ const increaseProductStock = async function (
 
     await product.save(); // Lưu thay đổi
 
-    // Tăng số lượng sản phẩm
-    // product.stock_quantity += order_item.quantity;
-    // await product.save();
-    // })
-    // );
-    // }
-    // }
-    // next();
   } catch (error: any) {
     // Ném lỗi để xử lý bên ngoài nếu cần thiết
     throw new Error(error.message);
