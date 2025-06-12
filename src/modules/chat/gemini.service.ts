@@ -75,7 +75,7 @@ Product list:
 ${JSON.stringify(products, null, 2)}
 
 Respond only in English. Recommend a maximum of 3 suitable products and briefly explain the reasons for your choices.
-Format the response as a JSON array with each product containing these fields: name, description, productId.
+Format the response as a JSON array with each product containing these fields: name, description, productId, images.
 `;
 
     const response = await axios.post<GeminiResponse>(

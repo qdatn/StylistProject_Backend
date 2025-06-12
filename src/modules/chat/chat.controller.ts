@@ -12,6 +12,7 @@ interface RecommendedProduct {
   description: string;
   productId: string;
   link: string;
+  image?: string;
 }
 
 class ChatController {
