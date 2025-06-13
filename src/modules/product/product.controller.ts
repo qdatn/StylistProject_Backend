@@ -25,6 +25,42 @@ class ProductController {
     }
   }
 
+  async getAllProductsByField(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      // Lấy các tham số từ query string
+      const { field, value } = req.query;
+
+      const query: Record<string, any> = {};
+      if (field && value) {
+        const fieldStr = String(field);
+        const valueStr = String(value);
+
+        // Tạo query object động
+        // query[fieldStr] = { $regex: valueStr.toString(), $options: "i" }; // Tìm kiếm không phân biệt hoa thường
+        if (["true", "false"].includes(valueStr.toLowerCase())) {
+          query[fieldStr] = valueStr.toLowerCase() === "true";
+        } else if (!isNaN(Number(valueStr))) {
+          query[fieldStr] = Number(valueStr);
+        } else {
+          query[fieldStr] = { $regex: valueStr, $options: "i" };
+        }
+      }
+      // Lấy sản phẩm từ service
+      const products = await ProductService.getProductsByField(query);
+
+      // Phân trang và trả kết quả
+      await pagination(req, res, products, next);
+      res.status(200).json(res.locals.pagination);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  // Fetch product by product id list
   async fetchAllProducts(
     req: Request,
     res: Response,
