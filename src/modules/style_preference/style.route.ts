@@ -13,6 +13,10 @@ class StylePreferenceRoute implements IRoute {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/`, StylePreferenceController.getAll);
+    this.router.get(
+      `${this.path}/analytics`,
+      StylePreferenceController.getAnalytics
+    );
     this.router.get(`${this.path}/:id`, StylePreferenceController.getById);
     this.router.post(`${this.path}/`, StylePreferenceController.create);
     this.router.put(`${this.path}/:id`, StylePreferenceController.update);
