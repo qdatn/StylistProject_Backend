@@ -7,6 +7,10 @@ class ProductRepository {
     return await Product.find().populate("categories").sort({ createdAt: -1 });
   }
 
+  async findAllByFilter(query: any) {
+    return await Product.find(query).populate("categories").sort({ createdAt: -1 });
+  }
+
   async findAllProductActive() {
     return await Product.find({ status: true })
       .populate("categories")

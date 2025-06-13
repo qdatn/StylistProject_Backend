@@ -14,6 +14,10 @@ class ProductService {
     return await ProductRepository.findAll();
   }
 
+  async getProductsByField(query: Record<string, any>) {
+    return await ProductRepository.findByFilter(query);
+  }
+
   async getAllProductActive() {
     return await ProductRepository.findAllProductActive();
   }
@@ -130,7 +134,7 @@ class ProductService {
     return await deleteImage(imageUrl, folder, product_folder_name);
   }
 
-  async getRecommendedProductsForUser (userId: string) {
+  async getRecommendedProductsForUser(userId: string) {
     // 1. Get UserInfo & StylePreference
     const userInfo = await UserInfo.findOne({ user: userId }).populate(
       "style_preferences"
@@ -138,12 +142,12 @@ class ProductService {
     if (!userInfo || !userInfo.style_preferences) {
       throw new Error("User info or style preferences not found");
     }
-  
+
     const stylePreferences = userInfo.style_preferences;
-  
+
     // 2. Get all products
     const products = await Product.find({ status: true }).lean();
-  
+
     // 3. Generate prompt for Gemini
     const prompt = `
   Based on the following fashion style preferences of the user:
@@ -164,26 +168,26 @@ class ProductService {
   Here is the list of products:
   ${JSON.stringify(products, null, 2)}
   `;
-  
+
     // 4. Gửi đến Gemini API để đánh giá độ phù hợp
     const recommended = await getGeminiRecommendation(prompt);
-  
+
     // 5. Parse kết quả và sắp xếp sản phẩm theo điểm
     const scoresMap = new Map();
     recommended.forEach((item: any) => {
       scoresMap.set(item.product_id, item.score);
     });
-  
+
     const sortedProducts = products.sort((a: any, b: any) => {
       const scoreA = scoresMap.get(String(a._id)) || 0;
       const scoreB = scoresMap.get(String(b._id)) || 0;
       return scoreB - scoreA;
     });
-  
+
     const sortedProductIds = sortedProducts.map((item) => item._id);
-  
+
     return sortedProductIds;
-  };
+  }
 }
 
 export default new ProductService();
