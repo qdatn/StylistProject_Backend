@@ -4,7 +4,11 @@ import mongoose from "mongoose";
 
 class ProductRepository {
   async findAll() {
-    return await Product.find()
+    return await Product.find().populate("categories").sort({ createdAt: -1 });
+  }
+
+  async findAllByFilter(query: any) {
+    return await Product.find(query)
       .populate("categories")
       .sort({ createdAt: -1 });
   }
@@ -31,6 +35,17 @@ class ProductRepository {
 
   async update(id: string, productData: ProductDto) {
     const _id = new mongoose.Types.ObjectId(id);
+    if (productData.variants) {
+      const totalQuantity = productData.variants!.reduce(
+        (sum, v) => sum + v.stock_quantity,
+        0
+      );
+
+      if (totalQuantity <= 0) {
+        productData.status = false;
+      }
+    }
+
     return await Product.findOneAndUpdate({ _id: _id }, productData, {
       new: true,
     });

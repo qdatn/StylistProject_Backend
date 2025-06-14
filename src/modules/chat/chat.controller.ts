@@ -12,6 +12,7 @@ interface RecommendedProduct {
   description: string;
   productId: string;
   link: string;
+  image?: string;
 }
 
 class ChatController {
@@ -40,13 +41,16 @@ class ChatController {
     }
   }
 
+
+  /*------------- CHAT BOT HERE --------------- */
+
   async getProductAnswer(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const { productId, question } = req.body;
+      const { productId, userId, question } = req.body;
 
       // if (!productId || !question) {
       //   res.status(400).json({ message: "Missing productId or question" });
@@ -55,6 +59,7 @@ class ChatController {
 
       const answer = await ChatService.generateProductAnswer(
         productId,
+        userId,
         question
       );
       res.status(200).json({ answer });
@@ -65,6 +70,8 @@ class ChatController {
     }
   }
 
+
+  // Recommend products based on user bodyshape
   async getRecommendedProducts(
     req: Request,
     res: Response,
@@ -76,7 +83,7 @@ class ChatController {
       // Lấy thông tin người dùng
       const userInfo = await userInfoService.getUserInfoById(userId);
       if (!userInfo) {
-        next({ message: "Không tìm thấy thông tin người dùng." });
+        next({ message: "User not found" });
       }
 
       // Lấy danh sách sản phẩm
@@ -92,7 +99,7 @@ class ChatController {
         const jsonString = content.match(/```json\s*([\s\S]*?)\s*```/)?.[1];
 
         if (!jsonString) {
-          throw new Error("Không tìm thấy nội dung JSON trong phản hồi.");
+          throw new Error("JSON content not found in Gemini response.");
         }
 
         // Bước 2: Parse JSON

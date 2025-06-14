@@ -5,7 +5,7 @@ const reduceProductStock = async function (this: OrderItemDTO, next: Function) {
   try {
     const product = await ProductService.getProductById(this.product);
     if (!product) {
-      throw new Error("Sản phẩm không tồn tại");
+      throw new Error("Product not found");
     }
 
     // Tìm biến thể đúng dựa trên attributes từ OrderItem
@@ -23,7 +23,7 @@ const reduceProductStock = async function (this: OrderItemDTO, next: Function) {
 
     // Kiểm tra tồn kho
     if (matchedVariant.stock_quantity < this.quantity) {
-      throw new Error("Số lượng đặt hàng vượt quá tồn kho");
+      throw new Error("Out of stock for the selected variant");
     }
 
     // Cập nhật tồn kho và số lượng đã bán
@@ -33,21 +33,6 @@ const reduceProductStock = async function (this: OrderItemDTO, next: Function) {
 
     await product.save();
 
-    // if (!matchedVariant) {
-    //   throw new Error("Không tìm thấy biến thể sản phẩm phù hợp");
-    // }
-
-    // // Kiểm tra nếu số lượng đặt hàng lớn hơn số lượng tồn kho
-    // if (product.stock_quantity < this.quantity) {
-    //   throw new Error("Số lượng đặt hàng vượt quá tồn kho");
-    // }
-
-    // // Giảm số lượng sản phẩm trong kho
-    // product.stock_quantity -= this.quantity;
-    // await product.save(); // Lưu thay đổi số lượng vào cơ sở dữ liệu
-    // // })
-    // // );
-    // // }
     next();
   } catch (error: any) {
     next(error);
