@@ -120,15 +120,15 @@ class DiscountController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { code, productIds, totalPrice } = req.body;
+      const { code, cartItems, totalPrice } = req.body;
 
-      if (!code || !productIds || !totalPrice) {
+      if (!code || !cartItems || !totalPrice) {
         res.status(400).json({ message: "Missing required fields." });
       }
 
       const result = await DiscountService.applyDiscount(
         code,
-        productIds,
+        cartItems,
         totalPrice
       );
 
