@@ -14,6 +14,7 @@ class StylePreferenceRoute {
     }
     initializeRoutes() {
         this.router.get(`${this.path}/`, style_controller_1.default.getAll);
+        this.router.get(`${this.path}/analytics`, style_controller_1.default.getAnalytics);
         this.router.get(`${this.path}/:id`, style_controller_1.default.getById);
         this.router.post(`${this.path}/`, style_controller_1.default.create);
         this.router.put(`${this.path}/:id`, style_controller_1.default.update);

@@ -16,6 +16,7 @@ class ProductRoute {
     initializeRoutes() {
         this.router.get(`${this.path}/search/query`, product_controller_1.default.getFilteredProducts);
         this.router.get(`${this.path}/`, product_controller_1.default.getAllProducts);
+        this.router.get(`${this.path}/by-field`, product_controller_1.default.getAllProductsByField);
         this.router.get(`${this.path}/user/:userId`, product_controller_1.default.getAllProductsByStyle);
         this.router.post(`${this.path}/by-style`, product_controller_1.default.fetchAllProducts);
         // this.router.get(

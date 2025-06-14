@@ -15,14 +15,9 @@ const increaseProductStock = function (order_item
 ) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // Duyệt qua từng order item trong order_items
-            // if (Array.isArray(order.order_items)) {
-            // if (order.status === "On Cancel") {
-            // await Promise.all(
-            // orderitem.order_items.map(async (order_item: any) => {
             const product = yield product_1.ProductService.getProductById(order_item.product);
             if (!product) {
-                throw new Error("Sản phẩm không tồn tại");
+                throw new Error("Product not found");
             }
             // Tìm đúng biến thể dựa trên attributes
             const matchedVariant = product.variants.find((variant) => {
@@ -30,7 +25,7 @@ const increaseProductStock = function (order_item
                     variant.attributes.every((attr) => order_item.attributes.some((orderAttr) => orderAttr.key === attr.key && orderAttr.value === attr.value)));
             });
             if (!matchedVariant) {
-                throw new Error("Không tìm thấy biến thể sản phẩm phù hợp");
+                throw new Error("Cannot find matching variant for the order item");
             }
             // Cập nhật số lượng tồn kho và số lượng đã bán
             matchedVariant.stock_quantity += order_item.quantity;
@@ -39,14 +34,6 @@ const increaseProductStock = function (order_item
                 matchedVariant.sold_quantity = 0;
             matchedVariant.stock_update_date = new Date();
             yield product.save(); // Lưu thay đổi
-            // Tăng số lượng sản phẩm
-            // product.stock_quantity += order_item.quantity;
-            // await product.save();
-            // })
-            // );
-            // }
-            // }
-            // next();
         }
         catch (error) {
             // Ném lỗi để xử lý bên ngoài nếu cần thiết

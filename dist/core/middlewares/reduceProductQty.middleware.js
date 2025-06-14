@@ -15,7 +15,7 @@ const reduceProductStock = function (next) {
         try {
             const product = yield product_1.ProductService.getProductById(this.product);
             if (!product) {
-                throw new Error("Sản phẩm không tồn tại");
+                throw new Error("Product not found");
             }
             // Tìm biến thể đúng dựa trên attributes từ OrderItem
             const matchedVariant = product.variants.find((variant) => {
@@ -24,26 +24,13 @@ const reduceProductStock = function (next) {
             });
             // Kiểm tra tồn kho
             if (matchedVariant.stock_quantity < this.quantity) {
-                throw new Error("Số lượng đặt hàng vượt quá tồn kho");
+                throw new Error("Out of stock for the selected variant");
             }
             // Cập nhật tồn kho và số lượng đã bán
             matchedVariant.stock_quantity -= this.quantity;
             matchedVariant.sold_quantity += this.quantity;
             matchedVariant.stock_update_date = new Date();
             yield product.save();
-            // if (!matchedVariant) {
-            //   throw new Error("Không tìm thấy biến thể sản phẩm phù hợp");
-            // }
-            // // Kiểm tra nếu số lượng đặt hàng lớn hơn số lượng tồn kho
-            // if (product.stock_quantity < this.quantity) {
-            //   throw new Error("Số lượng đặt hàng vượt quá tồn kho");
-            // }
-            // // Giảm số lượng sản phẩm trong kho
-            // product.stock_quantity -= this.quantity;
-            // await product.save(); // Lưu thay đổi số lượng vào cơ sở dữ liệu
-            // // })
-            // // );
-            // // }
             next();
         }
         catch (error) {

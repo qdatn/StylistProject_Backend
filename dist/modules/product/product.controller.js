@@ -32,6 +32,39 @@ class ProductController {
             }
         });
     }
+    getAllProductsByField(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // Lấy các tham số từ query string
+                const { field, value } = req.query;
+                const query = {};
+                if (field && value) {
+                    const fieldStr = String(field);
+                    const valueStr = String(value);
+                    // Tạo query object động
+                    // query[fieldStr] = { $regex: valueStr.toString(), $options: "i" }; // Tìm kiếm không phân biệt hoa thường
+                    if (["true", "false"].includes(valueStr.toLowerCase())) {
+                        query[fieldStr] = valueStr.toLowerCase() === "true";
+                    }
+                    else if (!isNaN(Number(valueStr))) {
+                        query[fieldStr] = Number(valueStr);
+                    }
+                    else {
+                        query[fieldStr] = { $regex: valueStr, $options: "i" };
+                    }
+                }
+                // Lấy sản phẩm từ service
+                const products = yield product_service_1.default.getProductsByField(query);
+                // Phân trang và trả kết quả
+                yield (0, middlewares_1.pagination)(req, res, products, next);
+                res.status(200).json(res.locals.pagination);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    // Fetch product by product id list
     fetchAllProducts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const productIds = req.body.productIds;

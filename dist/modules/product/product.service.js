@@ -24,6 +24,11 @@ class ProductService {
             return yield product_repository_1.default.findAll();
         });
     }
+    getProductsByField(query) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield product_repository_1.default.findByFilter(query);
+        });
+    }
     getAllProductActive() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield product_repository_1.default.findAllProductActive();
@@ -172,7 +177,6 @@ class ProductService {
             return sortedProductIds;
         });
     }
-    ;
 }
 exports.default = new ProductService();
 //# sourceMappingURL=product.service.js.map

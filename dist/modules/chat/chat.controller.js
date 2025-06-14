@@ -35,15 +35,16 @@ class ChatController {
             }
         });
     }
+    /*------------- CHAT BOT HERE --------------- */
     getProductAnswer(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { productId, question } = req.body;
+                const { productId, userId, question } = req.body;
                 // if (!productId || !question) {
                 //   res.status(400).json({ message: "Missing productId or question" });
                 //   return;
                 // }
-                const answer = yield chat_service_1.default.generateProductAnswer(productId, question);
+                const answer = yield chat_service_1.default.generateProductAnswer(productId, userId, question);
                 res.status(200).json({ answer });
             }
             catch (err) {
@@ -54,6 +55,7 @@ class ChatController {
             }
         });
     }
+    // Recommend products based on user bodyshape
     getRecommendedProducts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
@@ -62,7 +64,7 @@ class ChatController {
                 // Lấy thông tin người dùng
                 const userInfo = yield userInfo_service_1.default.getUserInfoById(userId);
                 if (!userInfo) {
-                    next({ message: "Không tìm thấy thông tin người dùng." });
+                    next({ message: "User not found" });
                 }
                 // Lấy danh sách sản phẩm
                 const products = yield product_service_1.default.getAllProductActive();
@@ -74,7 +76,7 @@ class ChatController {
                     // Bước 1: Tách phần JSON thực sự từ chuỗi có định dạng ```json ... ```
                     const jsonString = (_a = content.match(/```json\s*([\s\S]*?)\s*```/)) === null || _a === void 0 ? void 0 : _a[1];
                     if (!jsonString) {
-                        throw new Error("Không tìm thấy nội dung JSON trong phản hồi.");
+                        throw new Error("JSON content not found in Gemini response.");
                     }
                     // Bước 2: Parse JSON
                     recommendedProducts = JSON.parse(jsonString);

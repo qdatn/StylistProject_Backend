@@ -17,7 +17,12 @@ const mongoose_1 = __importDefault(require("mongoose"));
 class ProductRepository {
     findAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield product_model_1.default.find()
+            return yield product_model_1.default.find().populate("categories").sort({ createdAt: -1 });
+        });
+    }
+    findAllByFilter(query) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield product_model_1.default.find(query)
                 .populate("categories")
                 .sort({ createdAt: -1 });
         });
@@ -49,6 +54,12 @@ class ProductRepository {
     update(id, productData) {
         return __awaiter(this, void 0, void 0, function* () {
             const _id = new mongoose_1.default.Types.ObjectId(id);
+            if (productData.variants) {
+                const totalQuantity = productData.variants.reduce((sum, v) => sum + v.stock_quantity, 0);
+                if (totalQuantity <= 0) {
+                    productData.status = false;
+                }
+            }
             return yield product_model_1.default.findOneAndUpdate({ _id: _id }, productData, {
                 new: true,
             });

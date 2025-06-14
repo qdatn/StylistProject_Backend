@@ -41,6 +41,7 @@ exports.orderItemSchema = new mongoose_1.Schema({
     order: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: "Order" },
     product: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: "Product" },
     quantity: { type: Number, required: true },
+    price: { type: Number, required: true },
     attributes: [
         {
             key: { type: String },

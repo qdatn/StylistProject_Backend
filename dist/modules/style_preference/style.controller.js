@@ -84,6 +84,18 @@ class StylePreferenceController {
             }
         });
     }
+    getAnalytics(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const analyticsData = yield style_service_1.default.getAnalytics();
+                res.status(200).json({ data: analyticsData });
+            }
+            catch (error) {
+                console.error("Analytics error:", error);
+                res.status(500).json({ error: "Internal server error" });
+            }
+        });
+    }
 }
 exports.default = new StylePreferenceController();
 //# sourceMappingURL=style.controller.js.map

@@ -6,22 +6,50 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductVariantDTO = void 0;
 const class_validator_1 = require("class-validator");
 require("reflect-metadata");
 const class_transformer_1 = require("class-transformer");
+class AttributeDTO {
+}
+__decorate([
+    (0, class_validator_1.IsString)()
+], AttributeDTO.prototype, "key", void 0);
+__decorate([
+    (0, class_validator_1.IsString)()
+], AttributeDTO.prototype, "value", void 0);
+class ProductVariantDTO {
+}
+exports.ProductVariantDTO = ProductVariantDTO;
+__decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => AttributeDTO)
+], ProductVariantDTO.prototype, "attributes", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)()
+], ProductVariantDTO.prototype, "price", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)()
+], ProductVariantDTO.prototype, "stock_quantity", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)()
+], ProductVariantDTO.prototype, "min_quantity", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)()
+], ProductVariantDTO.prototype, "sold_quantity", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDate)(),
+    (0, class_transformer_1.Type)(() => Date)
+], ProductVariantDTO.prototype, "stock_update_date", void 0);
 class ProductDto {
-    constructor(_id, product_name, price, stock_quantity, min_quantity, description, brand, sold_quantity, categories, stock_update_date, status, images, variants, createdAt, updatedAt) {
-        this.sold_quantity = 0;
+    constructor(_id, product_name, description, brand, categories, status, images, variants, createdAt, updatedAt) {
         this._id = _id;
         this.product_name = product_name;
-        this.price = price;
         this.description = description;
         this.brand = brand;
-        this.stock_quantity = stock_quantity;
-        this.min_quantity = min_quantity;
-        this.sold_quantity = sold_quantity;
         this.categories = categories;
-        this.stock_update_date = stock_update_date;
         this.status = status;
         this.images = images;
         this.variants = variants;
@@ -37,9 +65,6 @@ __decorate([
     (0, class_validator_1.IsString)()
 ], ProductDto.prototype, "product_name", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)()
-], ProductDto.prototype, "price", void 0);
-__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)()
 ], ProductDto.prototype, "description", void 0);
@@ -48,23 +73,8 @@ __decorate([
     (0, class_validator_1.IsOptional)()
 ], ProductDto.prototype, "brand", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)()
-], ProductDto.prototype, "stock_quantity", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)()
-], ProductDto.prototype, "min_quantity", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsOptional)()
-], ProductDto.prototype, "sold_quantity", void 0);
-__decorate([
     (0, class_validator_1.IsMongoId)()
 ], ProductDto.prototype, "categories", void 0);
-__decorate([
-    (0, class_validator_1.IsDate)(),
-    (0, class_transformer_1.Type)(() => Date),
-    (0, class_validator_1.IsOptional)()
-], ProductDto.prototype, "stock_update_date", void 0);
 __decorate([
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsOptional)()
