@@ -7,7 +7,7 @@ import { AttributeDTO } from "@modules/product/dtos/product.dto";
 
 interface CartItem {
   productId: string;
-  variantAttributes: AttributeDTO[];
+  attribute: AttributeDTO[];
   quantity: number;
 }
 
@@ -107,7 +107,7 @@ class DiscountService {
 
       // Find matching variant by attributes
       const matchedVariant = product.variants.find((variant) =>
-        item.variantAttributes.every((attr) =>
+        item.attribute.every((attr) =>
           variant.attributes.some(
             (vAttr) => vAttr.key === attr.key && vAttr.value === attr.value
           )
