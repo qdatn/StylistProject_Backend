@@ -112,11 +112,11 @@ class DiscountController {
     applyDiscount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { code, productIds, totalPrice } = req.body;
-                if (!code || !productIds || !totalPrice) {
+                const { code, cartItems, totalPrice } = req.body;
+                if (!code || !cartItems || !totalPrice) {
                     res.status(400).json({ message: "Missing required fields." });
                 }
-                const result = yield discount_service_1.default.applyDiscount(code, productIds, totalPrice);
+                const result = yield discount_service_1.default.applyDiscount(code, cartItems, totalPrice);
                 res.status(200).json({
                     message: "Discount applied successfully.",
                     data: result,

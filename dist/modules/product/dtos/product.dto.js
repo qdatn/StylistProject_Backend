@@ -6,12 +6,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductVariantDTO = void 0;
+exports.ProductVariantDTO = exports.AttributeDTO = void 0;
 const class_validator_1 = require("class-validator");
 require("reflect-metadata");
 const class_transformer_1 = require("class-transformer");
 class AttributeDTO {
 }
+exports.AttributeDTO = AttributeDTO;
 __decorate([
     (0, class_validator_1.IsString)()
 ], AttributeDTO.prototype, "key", void 0);

@@ -79,46 +79,61 @@ class DiscountService {
             return [...new Set(categoryIds.map((id) => id.toString()))]; // Remove duplicates
         });
     }
-    applyDiscount(code, productIds, totalPrice) {
+    applyDiscount(code, cartItems, totalPrice) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const discount = yield discount_model_1.default.findOne({ code, status: true });
             if (!discount) {
                 throw new Error("Invalid or inactive discount code.");
             }
-            // Check if discount is still valid
             const now = new Date();
             if (now < discount.start_date || now > discount.end_date) {
                 throw new Error("This discount code is not valid at this time.");
             }
-            // Check conditions
             if (discount.minimum_value && totalPrice < discount.minimum_value) {
-                throw new Error(`Minimum order value for this discount is ${discount.minimum_value}.`);
+                throw new Error(`Minimum order value is ${discount.minimum_value}.`);
             }
             if (discount.usage_limit && discount.used_count >= discount.usage_limit) {
                 throw new Error("This discount has reached its usage limit.");
             }
-            // Check product/category applicability
-            if (discount.type === "product") {
-                const isApplicable = productIds.some((productId) => discount.apply_items.includes(new mongoose_1.Types.ObjectId(productId)));
-                if (!isApplicable) {
-                    throw new Error("This discount is not applicable to the selected products.");
+            // Load product data
+            const productIds = cartItems.map((item) => new mongoose_1.Types.ObjectId(item.productId));
+            const products = yield product_1.Product.find({ _id: { $in: productIds } });
+            let applicableAmount = 0;
+            for (const item of cartItems) {
+                const product = products.find((p) => p._id.toString() === item.productId);
+                if (!product || !product.variants)
+                    continue;
+                // Find matching variant by attributes
+                const matchedVariant = product.variants.find((variant) => item.attribute.every((attr) => variant.attributes.some((vAttr) => vAttr.key === attr.key && vAttr.value === attr.value)));
+                if (!matchedVariant)
+                    continue;
+                const itemTotal = matchedVariant.price * item.quantity;
+                if (discount.type === "all") {
+                    applicableAmount += itemTotal;
+                }
+                else if (discount.type === "product" &&
+                    discount.apply_items.some((id) => id.toString() === product._id.toString())) {
+                    applicableAmount += itemTotal;
+                }
+                else if (discount.type === "category" &&
+                    ((_a = product.categories) === null || _a === void 0 ? void 0 : _a.some((catId) => discount.apply_items.some((id) => id.toString() === catId.toString())))) {
+                    applicableAmount += itemTotal;
                 }
             }
-            else if (discount.type === "category") {
-                const categoryIds = yield this.getCategoryIdsFromProductIds(productIds);
-                const isApplicable = categoryIds.some((categoryId) => discount.apply_items.includes(new mongoose_1.Types.ObjectId(categoryId)));
-                if (!isApplicable) {
-                    throw new Error("This discount is not applicable to the selected categories.");
-                }
+            if (applicableAmount === 0) {
+                throw new Error("No items in the cart are eligible for this discount.");
             }
-            // Calculate discount
-            const discountAmount = Math.min(discount.value, discount.max_discount || Infinity);
-            // Mark discount as used
+            // Calculate discount amount (percentage)
+            const rawDiscountAmount = (discount.value / 100) * applicableAmount;
+            const discountAmount = Math.min(rawDiscountAmount, discount.max_discount || Infinity);
+            // Update used count
             discount.used_count += 1;
             yield discount.save();
             return {
                 discountAmount,
                 finalPrice: totalPrice - discountAmount,
+                // appliedOnAmount: applicableAmount,
             };
         });
     }
