@@ -1,0 +1,1 @@
+{"version":3,"file":"generateGroupIdForChat.js","sourceRoot":"","sources":["../../../src/core/utils/generateGroupIdForChat.ts"],"names":[],"mappings":";;AAAA,SAAS,eAAe,CAAC,GAAW,EAAE,GAAW;IAC/C,mFAAmF;IACnF,MAAM,SAAS,GAAG,CAAC,GAAG,EAAE,GAAG,CAAC,CAAC,IAAI,EAAE,CAAC;IACpC,OAAO,SAAS,CAAC,IAAI,CAAC,GAAG,CAAC,CAAC;AAC7B,CAAC;AACD,kBAAe,eAAe,CAAC"}
