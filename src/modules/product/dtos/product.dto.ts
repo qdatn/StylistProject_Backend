@@ -10,7 +10,7 @@ import {
 import "reflect-metadata";
 import { Type } from "class-transformer";
 
-class AttributeDTO {
+export class AttributeDTO {
   @IsString()
   key!: string;
 
