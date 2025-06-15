@@ -141,6 +141,23 @@ class DiscountController {
       next({ message: error.message });
     }
   }
+
+  async increaseUsedCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const discount = await DiscountService.increaseUsedCount(req.params.id);
+      if (!discount) {
+        res.status(404).json({ message: "Discount not found" });
+      } else {
+        res.status(200).json(discount);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new DiscountController(); // Xuất một thể hiện duy nhất của lớp
