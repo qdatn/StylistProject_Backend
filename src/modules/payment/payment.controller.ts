@@ -2,7 +2,8 @@ import axios from "axios";
 import crypto from "crypto";
 import { Request, Response } from "express";
 import qs from "qs";
-import moment from "moment";
+// import moment from "moment";
+import moment from "moment-timezone";
 
 const frontendUrl = process.env.BASE_URL;
 
@@ -95,53 +96,57 @@ class PaymentController {
 
   async createVnpayPayment(req: Request, res: Response): Promise<void> {
     try {
-      const buildQueryString = (
-        params: Record<string, any>
-        // encode = true
-      ): string => {
-        const searchParams = new URLSearchParams();
-
-        Object.entries(params)
-          .sort(([key1], [key2]) => key1.localeCompare(key2)) // sort by key
-          .forEach(([key, value]) => {
-            if (
-              value !== null &&
-              value !== undefined &&
-              value !== "" &&
-              typeof value !== "object"
-            ) {
-              searchParams.append(key, value.toString());
-            }
-          });
-
-        return searchParams.toString();
+      const buildSignData = (params: Record<string, any>): string => {
+        return Object.entries(params)
+          .filter(
+            ([_, value]) =>
+              value !== null && value !== undefined && value !== ""
+          )
+          .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+          .map(([key, value]) => `${key}=${value}`)
+          .join("&");
       };
-      // const { order_id, amount, orderInfo, requestType } = req.query;
+
+      const buildUrlQuery = (params: Record<string, any>): string => {
+        return Object.entries(params)
+          .map(
+            ([key, value]) =>
+              `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+          )
+          .join("&");
+      };
+
       const { order_id, amount, bankCode } = req.body;
 
+      // Debug input values
+      console.log("Input values:", { order_id, amount, bankCode });
+
       const date = new Date();
-      const createDate = moment(date).format("YYYYMMDDHHmmss");
+      const createDate = moment(date)
+        .tz("Asia/Ho_Chi_Minh")
+        .format("YYYYMMDDHHmmss");
 
       const expireDate = moment(date)
         .add(15, "minutes")
-        .format("YYYYMMDDHHmmss"); // 15 phút sau
-      // const vnp_ExpireDate = expireDate
-      //   .toLocaleString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" })
-      //   .replace(/[-T:\s]/g, "")
-      //   .slice(0, 14);
+        .tz("Asia/Ho_Chi_Minh")
+        .format("YYYYMMDDHHmmss");
 
-      const ipAddr = (
-        (Array.isArray(req.headers["x-forwarded-for"])
-          ? req.headers["x-forwarded-for"][0]
-          : req.headers["x-forwarded-for"]) ||
+      // Get IP address and handle IPv6 loopback
+      let ipAddr =
+        req.headers["x-forwarded-for"] ||
         req.socket?.remoteAddress ||
-        "127.0.0.1"
-      )
-        ?.toString()
-        .split(",")[0]
-        .trim();
+        "127.0.0.1";
+      if (Array.isArray(ipAddr)) {
+        ipAddr = ipAddr[0];
+      }
+      ipAddr = ipAddr.toString().split(",")[0].trim();
+      // Convert IPv6 loopback to IPv4 loopback
+      ipAddr = ipAddr === "::1" ? "127.0.0.1" : ipAddr;
 
       const orderId = order_id + moment(date).format("DDHHmmss");
+
+      // Ensure amount is a number and multiply by 100
+      const vnpAmount = Math.round(Number(amount) * 100);
 
       let vnp_Params: Record<any, any> = {
         vnp_Version: "2.1.0",
@@ -150,45 +155,82 @@ class PaymentController {
         vnp_Locale: "vn",
         vnp_CurrCode: "VND",
         vnp_TxnRef: orderId,
-        vnp_OrderInfo: "Payment for order:" + orderId,
+        vnp_OrderInfo: "Payment for order " + orderId,
         vnp_OrderType: "200000",
-        vnp_Amount: amount * 100,
+        vnp_Amount: vnpAmount,
         vnp_ReturnUrl: vnp_ReturnUrl,
         vnp_IpAddr: ipAddr,
         vnp_CreateDate: createDate,
         vnp_ExpireDate: expireDate,
-        // vnp_SecureHashType: "SHA512",
       };
 
-      if (bankCode !== null && bankCode !== "") {
+      if (bankCode && bankCode !== "") {
         vnp_Params["vnp_BankCode"] = bankCode;
       }
 
       // Remove empty params
-      // Object.keys(vnp_Params).forEach((key) => {
-      //   if (vnp_Params[key] === undefined || vnp_Params[key] === "")
-      //     delete vnp_Params[key];
-      // });
+      Object.keys(vnp_Params).forEach((key) => {
+        if (vnp_Params[key] === undefined || vnp_Params[key] === "") {
+          delete vnp_Params[key];
+        }
+      });
 
-      vnp_Params = sortObject(vnp_Params);
-      // Sort and sign with URL encoding
-      // vnp_Params = Object.fromEntries(
-      //   Object.entries(vnp_Params).sort(([a], [b]) => a.localeCompare(b))
-      // );
-      // const signData = qs.stringify(vnp_Params, { encode: false }); // Encode values here
-      const signData = buildQueryString(vnp_Params);
+      // Debug environment variables
+      console.log("Debug values:", {
+        vnp_TmnCode,
+        vnp_HashSecret,
+        vnp_Url,
+        vnp_ReturnUrl,
+      });
 
-      const hmac = crypto.createHmac("sha256", vnp_HashSecret);
-      const secureHash = hmac
-        .update(Buffer.from(signData, "utf-8"))
+      // Debug params before sorting
+      console.log("Params before sorting:", vnp_Params);
+
+      // Create signData: sort keys, join string, NO encode
+      const signData = Object.keys(vnp_Params)
+        .sort()
+        .map((key) => `${key}=${vnp_Params[key]}`)
+        .join("&");
+
+      // Debug sign data
+      console.log("Debug signData:", signData);
+      console.log("Debug signData length:", signData.length);
+      console.log("Debug HashSecret length:", vnp_HashSecret.length);
+
+      // Create secureHash
+      const secureHash = crypto
+        .createHmac("sha512", vnp_HashSecret)
+        .update(signData, "utf-8")
         .digest("hex");
 
+      // Debug secure hash
+      console.log("Secure hash:", secureHash);
+
+      // Add secureHash to params
       vnp_Params["vnp_SecureHash"] = secureHash;
 
-      const paymentUrl = `${vnp_Url}?${buildQueryString(vnp_Params)}`;
-      console.log("signdata", signData);
-      console.log(vnp_TmnCode + "\n" + vnp_HashSecret + "\n" + vnp_Url);
-      res.status(200).json({ payUrl: paymentUrl });
+      // Create final URL (lúc này mới encode)
+      const payUrl =
+        vnp_Url +
+        "?" +
+        Object.entries(vnp_Params)
+          .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+          .join("&");
+
+      // Debug final URL
+      console.log("Payment URL:", payUrl);
+      console.log("URL query string:", buildUrlQuery(vnp_Params));
+      console.log("Final params with signature:", vnp_Params);
+
+      console.log("Debug params:", {
+        amount: amount * 100,
+        orderId,
+        createDate,
+        expireDate,
+        ipAddr,
+      });
+
+      res.status(200).json({ payUrl: payUrl });
     } catch (error: any) {
       console.error("VNPay error:", error.message);
       res.status(500).json({ error: error.message });
