@@ -236,6 +236,158 @@ class PaymentController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async refundPayment(req: Request, res: Response): Promise<void> {
+    try {
+      const { orderId, transId, amount, description, requestId }: any =
+        req.body;
+
+      if (!orderId || !transId || !amount) {
+        res.status(400).json({
+          error: "Missing required fields: orderId, transId, amount",
+        });
+        return;
+      }
+
+      const accessKey = "F8BBA842ECF85";
+      const secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
+      const partnerCode = "MOMO";
+      const lang = "vi";
+
+      const finalRequestId = requestId || `refund_${orderId}_${Date.now()}`;
+      const finalDescription = description || "";
+
+      const rawSignature = `accessKey=${accessKey}&amount=${amount.toString()}&description=${finalDescription}&orderId=${orderId}&partnerCode=${partnerCode}&requestId=${finalRequestId}&transId=${transId}`;
+
+      const signature = crypto
+        .createHmac("sha256", secretKey)
+        .update(rawSignature)
+        .digest("hex");
+
+      const requestBody = {
+        partnerCode,
+        requestId: finalRequestId,
+        orderId,
+        amount: amount.toString(),
+        transId,
+        lang,
+        description: finalDescription,
+        signature,
+      };
+
+      console.log("Refund request body:", requestBody);
+      console.log("Raw signature:", rawSignature);
+      console.log("Signature:", signature);
+
+      const result = await axios.post(
+        "https://test-payment.momo.vn/v2/gateway/api/refund",
+        requestBody,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      res.status(200).json({
+        success: true,
+        data: result.data,
+        message: "Refund request processed successfully",
+      });
+    } catch (error: any) {
+      console.error("MoMo refund error:", error.message);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        res.status(error.response.status).json({
+          error: error.response.data,
+          message: "Refund request failed",
+        });
+      } else {
+        res.status(500).json({
+          error: error.message,
+          message: "Internal server error during refund",
+        });
+      }
+    }
+  }
+
+  async queryRefundStatus(req: Request, res: Response): Promise<void> {
+    try {
+      const { orderId, requestId }: any = req.body;
+
+      // Validate required fields
+      if (!orderId || !requestId) {
+        res.status(400).json({
+          error: "Missing required fields: orderId, requestId",
+        });
+        return;
+      }
+
+      // Các tham số cố định cho MoMo
+      const accessKey = "F8BBA842ECF85";
+      const secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
+      const partnerCode = "MOMO";
+      const lang = "vi";
+
+      // Tạo chữ ký (HMAC SHA256) cho query
+      // Format: accessKey=$accessKey&orderId=$orderId&partnerCode=$partnerCode&requestId=$requestId
+      const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=${partnerCode}&requestId=${requestId}`;
+
+      const signature = crypto
+        .createHmac("sha256", secretKey)
+        .update(rawSignature)
+        .digest("hex");
+
+      // JSON object gửi đến MoMo để query status - chỉ sử dụng các field bắt buộc
+      const requestBody = JSON.stringify({
+        partnerCode,
+        orderId,
+        requestId,
+        lang,
+        signature,
+      });
+
+      // Cấu hình HTTPS request
+      const options = {
+        method: "POST",
+        url: "https://test-payment.momo.vn/v2/gateway/api/refund/status",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(requestBody),
+        },
+        data: requestBody,
+      };
+
+      console.log("Query refund status request body:", requestBody);
+      console.log("Query signature:", signature);
+      console.log("Raw signature string:", rawSignature);
+
+      // Gửi request tới MoMo
+      const result = await axios.request(options);
+
+      console.log("MoMo query refund status response:", result.data);
+
+      res.status(200).json({
+        success: true,
+        data: result.data,
+        message: "Refund status queried successfully",
+      });
+    } catch (error: any) {
+      console.error("MoMo query refund status error:", error.message);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        res.status(error.response.status).json({
+          error: error.response.data,
+          message: "Query refund status failed",
+        });
+      } else {
+        res.status(500).json({
+          error: error.message,
+          message: "Internal server error during query",
+        });
+      }
+    }
+  }
 }
 
 export default new PaymentController();
