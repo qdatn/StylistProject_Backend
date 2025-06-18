@@ -167,6 +167,10 @@ class DiscountService {
       { new: true }
     );
   }
+
+  async getAllProductIdsFromProductDiscounts(): Promise<string[]> {
+    return await DiscountRepository.getAllProductIdsFromProductDiscounts();
+  }
 }
 
 export default new DiscountService();

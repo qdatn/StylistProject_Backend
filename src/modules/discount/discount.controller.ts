@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import DiscountService from "./discount.service";
 import { pagination } from "@core/middlewares";
+import { Product } from "@modules/product";
 
 class DiscountController {
   async createDiscount(
