@@ -22,10 +22,10 @@ const askGeminiAboutProduct = (question, product, user) => __awaiter(void 0, voi
     const prompt = `
   You are a helpful assistant and a fashion expert assistant. Consider the following information:
   
-  Product: "${product ? JSON.stringify(product) : null}"
-  User Information: ${user ? JSON.stringify(user) : null}
+  Product: "${product ? JSON.stringify(product) : "No product"}"
+  User Information: ${user ? JSON.stringify(user) : "No info"}
 
-  Answer the following question in a helpful, brief, correct, personalized manner in English:
+  Answer the following question in a helpful, brief, correct, personalized manner, short, clear, and personalized answer in English and the answer for the question alway place at the end of answer:
   Question: "${question}"
   `;
     try {
