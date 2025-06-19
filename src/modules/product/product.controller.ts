@@ -390,12 +390,16 @@ class ProductController {
     }
   }
 
-  async importFromExcel(req: Request, res: Response, next: NextFunction) {
+  async importFromExcel(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const file = req.file;
+      const file: any = req.file;
 
       if (!file) {
-        return res.status(400).json({ message: "No file uploaded" });
+        res.status(400).json({ message: "No file uploaded" });
       }
 
       const result = await ProductService.importFromExcel(file.path);

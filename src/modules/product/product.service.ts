@@ -5,9 +5,12 @@ import IProduct from "./product.interface";
 import mongoose from "mongoose";
 import getFolderFromUrl from "@core/utils/getFolderFromUrl";
 import Product from "./product.model";
-import { Category } from "@modules/category";
+import { Category, CategoryService } from "@modules/category";
 import { UserInfo } from "@modules/userInfo";
 import { getGeminiRecommendation } from "@core/utils/geminiApi";
+import * as XLSX from "xlsx";
+import fs from "fs";
+import { AttributeService } from "@modules/attribute";
 
 class ProductService {
   async getAllProducts() {
@@ -187,6 +190,151 @@ class ProductService {
     const sortedProductIds = sortedProducts.map((item) => item._id);
 
     return sortedProductIds;
+  }
+
+  async importFromExcel(filePath: string): Promise<{
+    insertedCount: number;
+    failedRows: any[];
+  }> {
+    const workbook = XLSX.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+    const attributeDocs = await AttributeService.getAllAttributes();
+    const attributeMap = new Map<string, string[]>();
+    attributeDocs.forEach((attr) => attributeMap.set(attr.key, attr.value));
+
+    const allCategories = await CategoryService.getAllCategories();
+    const categoryNameToId = new Map<string, string>();
+    allCategories.forEach((cat) =>
+      categoryNameToId.set(cat.category_name, cat._id.toString())
+    );
+
+    const groupedProducts = new Map<
+      string,
+      {
+        baseInfo: any;
+        variants: any[];
+      }
+    >();
+    const failedRows: any[] = [];
+
+    for (const raw of data) {
+      const row = raw as Record<string, any>;
+      const {
+        product_name,
+        description,
+        brand,
+        status,
+        price,
+        stock_quantity,
+        min_quantity,
+        sold_quantity,
+        stock_update_date,
+        attributes,
+        images,
+        categories,
+      } = row;
+
+      if (!product_name || price == null || stock_quantity == null) {
+        failedRows.push({ ...row, error: "Missing required fields" });
+        continue;
+      }
+
+      // Parse image list
+      const imageList =
+        typeof images === "string"
+          ? images.split(",").map((img: string) => img.trim())
+          : [];
+
+      // Parse categories
+      const categoryNames =
+        typeof categories === "string"
+          ? categories.split(",").map((c: string) => c.trim())
+          : [];
+
+      const categoryList: string[] = [];
+      let hasInvalidCategory = false;
+      for (const name of categoryNames) {
+        const id = categoryNameToId.get(name);
+        if (id) categoryList.push(id);
+        else {
+          failedRows.push({
+            ...row,
+            error: `Invalid category name: ${name}`,
+          });
+          hasInvalidCategory = true;
+          break;
+        }
+      }
+      if (hasInvalidCategory) continue;
+
+      // Parse attributes
+      let attributeList: { key: string; value: string }[] = [];
+      if (attributes) {
+        const pairs = attributes.split(";");
+        for (const pair of pairs) {
+          const [key, value] = pair.split("=");
+          if (
+            key &&
+            value &&
+            attributeMap.has(key) &&
+            attributeMap.get(key)!.includes(value)
+          ) {
+            attributeList.push({ key, value });
+          } else {
+            failedRows.push({
+              ...row,
+              error: `Invalid attribute: ${key}=${value}`,
+            });
+            attributeList = [];
+            break;
+          }
+        }
+      }
+
+      if (attributeList.length === 0) continue;
+
+      const variant = {
+        attributes: attributeList,
+        price: Number(price),
+        stock_quantity: Number(stock_quantity),
+        min_quantity: Number(min_quantity ?? 0),
+        sold_quantity: Number(sold_quantity ?? 0),
+        stock_update_date: stock_update_date
+          ? new Date(stock_update_date)
+          : new Date(),
+      };
+
+      if (groupedProducts.has(product_name)) {
+        groupedProducts.get(product_name)!.variants.push(variant);
+      } else {
+        groupedProducts.set(product_name, {
+          baseInfo: {
+            product_name,
+            description: description ?? "No description provided",
+            brand: brand ?? "No brand provided",
+            status: status === "true" || status === true,
+            images: imageList,
+            categories: categoryList,
+          },
+          variants: [variant],
+        });
+      }
+    }
+
+    const validProducts = Array.from(groupedProducts.values()).map((p) => ({
+      ...p.baseInfo,
+      variants: p.variants,
+    }));
+
+    const inserted = await ProductRepository.createMany(validProducts);
+    fs.unlinkSync(filePath);
+
+    return {
+      insertedCount: inserted.length,
+      failedRows,
+    };
   }
 }
 

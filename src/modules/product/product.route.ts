@@ -31,6 +31,11 @@ class ProductRoute implements RouteInterface {
       ProductController.getAllProductsByStyle
     );
     this.router.post(
+      `${this.path}/import-excel`,
+      upload.single("file"),
+      ProductController.importFromExcel
+    );
+    this.router.post(
       `${this.path}/by-style`,
       ProductController.fetchAllProducts
     );
