@@ -128,13 +128,23 @@ class DiscountService {
             const rawDiscountAmount = (discount.value / 100) * applicableAmount;
             const discountAmount = Math.min(rawDiscountAmount, discount.max_discount || Infinity);
             // Update used count
-            discount.used_count += 1;
-            yield discount.save();
+            // discount.used_count += 1;
+            // await discount.save();
             return {
                 discountAmount,
                 finalPrice: totalPrice - discountAmount,
                 // appliedOnAmount: applicableAmount,
             };
+        });
+    }
+    increaseUsedCount(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield discount_model_1.default.findByIdAndUpdate(id, { $inc: { used_count: 1 } }, { new: true });
+        });
+    }
+    getAllProductIdsFromProductDiscounts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield discount_repository_1.default.getAllProductIdsFromProductDiscounts();
         });
     }
 }

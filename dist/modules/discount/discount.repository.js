@@ -55,6 +55,19 @@ class DiscountRepository {
                 .sort({ createdAt: -1 });
         });
     }
+    getAllProductIdsFromProductDiscounts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const discounts = yield discount_model_1.default.find({ type: "product" }).select("apply_items");
+            // Flatten all apply_items arrays và loại bỏ trùng
+            const productIdSet = new Set();
+            discounts.forEach(discount => {
+                discount.apply_items.forEach((id) => {
+                    productIdSet.add(id.toString());
+                });
+            });
+            return Array.from(productIdSet);
+        });
+    }
 }
 exports.default = new DiscountRepository();
 //# sourceMappingURL=discount.repository.js.map

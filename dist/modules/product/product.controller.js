@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const middlewares_1 = require("../../core/middlewares");
 const product_service_1 = __importDefault(require("../product/product.service"));
 const product_model_1 = __importDefault(require("./product.model"));
+const discount_1 = require("../discount");
 class ProductController {
     getAllProducts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -306,6 +307,23 @@ class ProductController {
             }
             catch (error) {
                 next(error.message);
+            }
+        });
+    }
+    getAllProductIdsFromProductDiscounts(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const productIds = yield discount_1.DiscountService.getAllProductIdsFromProductDiscounts();
+                const products = yield product_model_1.default.find({ _id: { $in: productIds } }).lean();
+                res.status(200).json({
+                    data: products,
+                });
+            }
+            catch (error) {
+                next({
+                    message: "Failed to get product IDs from product discounts.",
+                    error: error.message,
+                });
             }
         });
     }

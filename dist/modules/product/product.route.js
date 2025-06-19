@@ -14,6 +14,7 @@ class ProductRoute {
         this.initializeRoutes();
     }
     initializeRoutes() {
+        this.router.get(`${this.path}/sale-off`, product_controller_1.default.getAllProductIdsFromProductDiscounts);
         this.router.get(`${this.path}/search/query`, product_controller_1.default.getFilteredProducts);
         this.router.get(`${this.path}/`, product_controller_1.default.getAllProducts);
         this.router.get(`${this.path}/by-field`, product_controller_1.default.getAllProductsByField);

@@ -19,6 +19,7 @@ class DiscountRoute {
         this.router.get(`${this.path}/:id`, discount_controller_1.default.getDiscountById);
         this.router.post(`${this.path}/`, discount_controller_1.default.createDiscount);
         this.router.put(`${this.path}/:id`, discount_controller_1.default.updateDiscount);
+        this.router.put(`${this.path}/:id/increase-used`, discount_controller_1.default.increaseUsedCount);
         this.router.delete(`${this.path}/:id`, discount_controller_1.default.deleteDiscount);
     }
 }

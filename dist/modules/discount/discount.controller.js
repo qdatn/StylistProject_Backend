@@ -128,6 +128,22 @@ class DiscountController {
             }
         });
     }
+    increaseUsedCount(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const discount = yield discount_service_1.default.increaseUsedCount(req.params.id);
+                if (!discount) {
+                    res.status(404).json({ message: "Discount not found" });
+                }
+                else {
+                    res.status(200).json(discount);
+                }
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
 }
 exports.default = new DiscountController(); // Xuất một thể hiện duy nhất của lớp
 //# sourceMappingURL=discount.controller.js.map

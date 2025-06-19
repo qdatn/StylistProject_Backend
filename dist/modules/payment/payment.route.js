@@ -13,7 +13,10 @@ class PaymentRoute {
         this.initializeRoutes();
     }
     initializeRoutes() {
+        this.router.post(`${this.path}/momo/refund`, payment_controller_1.default.refundPayment);
+        this.router.post(`${this.path}/momo/refund/status`, payment_controller_1.default.queryRefundStatus);
         this.router.post(`${this.path}/momo`, payment_controller_1.default.createPayment);
+        this.router.post(`${this.path}/vnpay`, payment_controller_1.default.createVnpayPayment);
     }
 }
 exports.default = new PaymentRoute();
