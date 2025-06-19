@@ -37,13 +37,8 @@ const mongoose_1 = __importStar(require("mongoose"));
 // Define the Product schema
 const productSchema = new mongoose_1.Schema({
     product_name: { type: String, required: true },
-    // price: { type: Number, required: true },
-    // discounted_price: { type: Number },
     description: { type: String, default: "No description provided" },
     brand: { type: String, default: "No brand provided" },
-    // stock_quantity: { type: Number, required: true, default: 0 },
-    // min_quantity: { type: Number, required: true, default: 0 },
-    // sold_quantity: { type: Number, default: 0 },
     categories: [
         {
             type: mongoose_1.Schema.Types.ObjectId,
@@ -53,12 +48,6 @@ const productSchema = new mongoose_1.Schema({
     ],
     status: { type: Boolean, default: true },
     images: { type: [String], default: [] },
-    // attributes: [
-    //   {
-    //     key: { type: String },
-    //     value: [{ type: String }],
-    //   },
-    // ],
     variants: [
         {
             attributes: [
@@ -68,7 +57,6 @@ const productSchema = new mongoose_1.Schema({
                 },
             ],
             price: { type: Number, required: true },
-            // discounted_price: { type: Number },
             stock_quantity: { type: Number, required: true, default: 0 },
             min_quantity: { type: Number, required: true, default: 0 },
             sold_quantity: { type: Number, default: 0 },

@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,6 +51,9 @@ const product_model_1 = __importDefault(require("./product.model"));
 const category_1 = require("../category");
 const userInfo_1 = require("../userInfo");
 const geminiApi_1 = require("../../core/utils/geminiApi");
+const XLSX = __importStar(require("xlsx"));
+const fs_1 = __importDefault(require("fs"));
+const attribute_1 = require("../attribute");
 class ProductService {
     getAllProducts() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -175,6 +211,116 @@ class ProductService {
             });
             const sortedProductIds = sortedProducts.map((item) => item._id);
             return sortedProductIds;
+        });
+    }
+    importFromExcel(filePath) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const workbook = XLSX.readFile(filePath);
+            const sheetName = workbook.SheetNames[0];
+            const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+            // Lấy tất cả attribute hiện có
+            const attributeDocs = yield attribute_1.AttributeService.getAllAttributes();
+            const attributeMap = new Map();
+            attributeDocs.forEach((attr) => attributeMap.set(attr.key, attr.value));
+            // Lấy tất cả category hiện có
+            const allCategories = yield category_1.CategoryService.getAllCategories();
+            const categoryNameToId = new Map();
+            allCategories.forEach((cat) => categoryNameToId.set(cat.category_name, cat._id.toString()));
+            const groupedProducts = new Map();
+            const failedRows = [];
+            for (const raw of data) {
+                const row = raw;
+                const { product_name, description, brand, status, price, stock_quantity, min_quantity, sold_quantity, stock_update_date, attributes, images, categories, } = row;
+                if (!product_name || price == null || stock_quantity == null) {
+                    failedRows.push(Object.assign(Object.assign({}, row), { error: "Missing required fields" }));
+                    continue;
+                }
+                const imageList = typeof images === "string"
+                    ? images.split(",").map((img) => img.trim())
+                    : [];
+                // Parse categories (và thêm nếu chưa có)
+                const categoryNames = typeof categories === "string"
+                    ? categories.split(",").map((c) => c.trim())
+                    : [];
+                const categoryList = [];
+                for (const name of categoryNames) {
+                    let id = categoryNameToId.get(name);
+                    if (!id) {
+                        // Tạo category mới
+                        const newCategory = yield category_1.CategoryService.createCategory({
+                            category_name: name,
+                            description: "",
+                        });
+                        id = newCategory._id.toString();
+                        categoryNameToId.set(name, id);
+                    }
+                    categoryList.push(id);
+                }
+                // Parse attributes (và thêm nếu chưa có)
+                let attributeList = [];
+                if (attributes) {
+                    const pairs = attributes.split(";");
+                    for (const pair of pairs) {
+                        const [keyRaw, valueRaw] = pair.split("=");
+                        const key = keyRaw === null || keyRaw === void 0 ? void 0 : keyRaw.trim();
+                        const value = valueRaw === null || valueRaw === void 0 ? void 0 : valueRaw.trim();
+                        if (!key || !value)
+                            continue;
+                        if (!attributeMap.has(key)) {
+                            // Tạo mới attribute
+                            yield attribute_1.AttributeService.createAttribute({ key, value: [value] });
+                            attributeMap.set(key, [value]);
+                        }
+                        else {
+                            const values = attributeMap.get(key);
+                            if (!values.includes(value)) {
+                                // Thêm value mới vào DB
+                                yield attribute_1.AttributeService.addNewValue(key, value);
+                                values.push(value);
+                                attributeMap.set(key, values);
+                            }
+                        }
+                        attributeList.push({ key, value });
+                    }
+                }
+                if (attributeList.length === 0) {
+                    failedRows.push(Object.assign(Object.assign({}, row), { error: "Invalid or empty attributes" }));
+                    continue;
+                }
+                const variant = {
+                    attributes: attributeList,
+                    price: Number(price),
+                    stock_quantity: Number(stock_quantity),
+                    min_quantity: Number(min_quantity !== null && min_quantity !== void 0 ? min_quantity : 0),
+                    sold_quantity: Number(sold_quantity !== null && sold_quantity !== void 0 ? sold_quantity : 0),
+                    stock_update_date: stock_update_date
+                        ? new Date(stock_update_date)
+                        : new Date(),
+                };
+                if (groupedProducts.has(product_name)) {
+                    groupedProducts.get(product_name).variants.push(variant);
+                }
+                else {
+                    groupedProducts.set(product_name, {
+                        baseInfo: {
+                            product_name,
+                            description: description !== null && description !== void 0 ? description : "No description provided",
+                            brand: brand !== null && brand !== void 0 ? brand : "No brand provided",
+                            status: status === "true" || status === true,
+                            images: imageList,
+                            categories: categoryList,
+                        },
+                        variants: [variant],
+                    });
+                }
+            }
+            const validProducts = Array.from(groupedProducts.values()).map((p) => (Object.assign(Object.assign({}, p.baseInfo), { variants: p.variants })));
+            const inserted = yield product_repository_1.default.createMany(validProducts);
+            fs_1.default.unlinkSync(filePath);
+            return {
+                insertedCount: inserted.length,
+                failedRows,
+            };
         });
     }
 }

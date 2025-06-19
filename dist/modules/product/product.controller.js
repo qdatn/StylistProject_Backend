@@ -16,6 +16,7 @@ const middlewares_1 = require("../../core/middlewares");
 const product_service_1 = __importDefault(require("../product/product.service"));
 const product_model_1 = __importDefault(require("./product.model"));
 const discount_1 = require("../discount");
+const mongoose_1 = __importDefault(require("mongoose"));
 class ProductController {
     getAllProducts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -49,6 +50,11 @@ class ProductController {
                     }
                     else if (!isNaN(Number(valueStr))) {
                         query[fieldStr] = Number(valueStr);
+                    }
+                    else if (fieldStr === "categories" &&
+                        mongoose_1.default.Types.ObjectId.isValid(valueStr)) {
+                        // Tìm document mà categories chứa ObjectId này
+                        query[fieldStr] = new mongoose_1.default.Types.ObjectId(valueStr);
                     }
                     else {
                         query[fieldStr] = { $regex: valueStr, $options: "i" };
@@ -322,6 +328,28 @@ class ProductController {
             catch (error) {
                 next({
                     message: "Failed to get product IDs from product discounts.",
+                    error: error.message,
+                });
+            }
+        });
+    }
+    importFromExcel(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const file = req.file;
+                if (!file) {
+                    res.status(400).json({ message: "No file uploaded" });
+                }
+                const result = yield product_service_1.default.importFromExcel(file.path);
+                res.status(200).json({
+                    message: "Import successful",
+                    inserted: result.insertedCount,
+                    failed: result.failedRows,
+                });
+            }
+            catch (error) {
+                next({
+                    message: "Failed to import products from Excel.",
                     error: error.message,
                 });
             }
