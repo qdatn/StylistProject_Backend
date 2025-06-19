@@ -35,6 +35,20 @@ class DiscountRepository {
       .populate("apply_items")
       .sort({ createdAt: -1 });
   }
+
+  async getAllProductIdsFromProductDiscounts() {
+    const discounts = await Discount.find({ type: "product" }).select("apply_items");
+
+    // Flatten all apply_items arrays và loại bỏ trùng
+    const productIdSet = new Set<string>();
+    discounts.forEach(discount => {
+      discount.apply_items.forEach((id: any) => {
+        productIdSet.add(id.toString());
+      });
+    });
+
+    return Array.from(productIdSet);
+  }
 }
 
 export default new DiscountRepository();

@@ -14,6 +14,10 @@ class ProductRoute implements RouteInterface {
 
   private initializeRoutes() {
     this.router.get(
+      `${this.path}/sale-off`,
+      ProductController.getAllProductIdsFromProductDiscounts
+    );
+    this.router.get(
       `${this.path}/search/query`,
       ProductController.getFilteredProducts
     );

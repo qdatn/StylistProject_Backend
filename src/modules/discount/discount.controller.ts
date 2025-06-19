@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import DiscountService from "./discount.service";
 import { pagination } from "@core/middlewares";
+import { Product } from "@modules/product";
 
 class DiscountController {
   async createDiscount(
@@ -139,6 +140,23 @@ class DiscountController {
     } catch (error: any) {
       console.error("Error in applyDiscount controller:", error);
       next({ message: error.message });
+    }
+  }
+
+  async increaseUsedCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const discount = await DiscountService.increaseUsedCount(req.params.id);
+      if (!discount) {
+        res.status(404).json({ message: "Discount not found" });
+      } else {
+        res.status(200).json(discount);
+      }
+    } catch (error) {
+      next(error);
     }
   }
 }

@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import ProductDto from "./dtos/product.dto";
 import IProduct from "./product.interface";
 import Product from "./product.model";
+import { DiscountService } from "@modules/discount";
 
 class ProductController {
   async getAllProducts(
@@ -358,6 +359,27 @@ class ProductController {
       // ({ imageUrl: result });
     } catch (error: any) {
       next(error.message);
+    }
+  }
+
+  async getAllProductIdsFromProductDiscounts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const productIds =
+        await DiscountService.getAllProductIdsFromProductDiscounts();
+
+      const products = await Product.find({ _id: { $in: productIds } }).lean();
+      res.status(200).json({
+        data: products,
+      });
+    } catch (error: any) {
+      next({
+        message: "Failed to get product IDs from product discounts.",
+        error: error.message,
+      });
     }
   }
 }

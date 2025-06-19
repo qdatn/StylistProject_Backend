@@ -4,6 +4,7 @@ import DiscountRepository from "./discount.repository";
 import DiscountDto from "./dtos/discount.dto";
 import { Types } from "mongoose";
 import { AttributeDTO } from "@modules/product/dtos/product.dto";
+import discountRepository from "./discount.repository";
 
 interface CartItem {
   productId: string;
@@ -149,14 +150,26 @@ class DiscountService {
     );
 
     // Update used count
-    discount.used_count += 1;
-    await discount.save();
+    // discount.used_count += 1;
+    // await discount.save();
 
     return {
       discountAmount,
       finalPrice: totalPrice - discountAmount,
       // appliedOnAmount: applicableAmount,
     };
+  }
+
+  async increaseUsedCount(id: string) {
+    return await Discount.findByIdAndUpdate(
+      id,
+      { $inc: { used_count: 1 } },
+      { new: true }
+    );
+  }
+
+  async getAllProductIdsFromProductDiscounts(): Promise<string[]> {
+    return await DiscountRepository.getAllProductIdsFromProductDiscounts();
   }
 }
 

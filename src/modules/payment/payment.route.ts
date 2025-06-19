@@ -12,7 +12,19 @@ class PaymentRoute implements RouteInterface {
   }
 
   private initializeRoutes() {
+    this.router.post(
+      `${this.path}/momo/refund`,
+      PaymentController.refundPayment
+    );
+    this.router.post(
+      `${this.path}/momo/refund/status`,
+      PaymentController.queryRefundStatus
+    );
     this.router.post(`${this.path}/momo`, PaymentController.createPayment);
+    this.router.post(
+      `${this.path}/vnpay`,
+      PaymentController.createVnpayPayment
+    );
   }
 }
 
