@@ -20,7 +20,7 @@ class ChatService {
     user2Id: string
   ): Promise<IMessage[]> {
     const groupId = [user1Id, user2Id].sort().join("_");
-    const messages = await Message.find({ groupId }).sort({ timestamp: 1 });
+    const messages = await Message.find({ groupId }).sort({ createdAt: 1 });
     return messages;
   }
 
