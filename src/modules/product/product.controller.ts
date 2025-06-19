@@ -6,6 +6,7 @@ import ProductDto from "./dtos/product.dto";
 import IProduct from "./product.interface";
 import Product from "./product.model";
 import { DiscountService } from "@modules/discount";
+import mongoose from "mongoose";
 
 class ProductController {
   async getAllProducts(
@@ -46,6 +47,12 @@ class ProductController {
           query[fieldStr] = valueStr.toLowerCase() === "true";
         } else if (!isNaN(Number(valueStr))) {
           query[fieldStr] = Number(valueStr);
+        } else if (
+          fieldStr === "categories" &&
+          mongoose.Types.ObjectId.isValid(valueStr)
+        ) {
+          // Tìm document mà categories chứa ObjectId này
+          query[fieldStr] = new mongoose.Types.ObjectId(valueStr);
         } else {
           query[fieldStr] = { $regex: valueStr, $options: "i" };
         }
@@ -378,6 +385,29 @@ class ProductController {
     } catch (error: any) {
       next({
         message: "Failed to get product IDs from product discounts.",
+        error: error.message,
+      });
+    }
+  }
+
+  async importFromExcel(req: Request, res: Response, next: NextFunction) {
+    try {
+      const file = req.file;
+
+      if (!file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const result = await ProductService.importFromExcel(file.path);
+
+      res.status(200).json({
+        message: "Import successful",
+        inserted: result.insertedCount,
+        failed: result.failedRows,
+      });
+    } catch (error: any) {
+      next({
+        message: "Failed to import products from Excel.",
         error: error.message,
       });
     }
