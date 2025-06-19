@@ -200,10 +200,12 @@ class ProductService {
     const sheetName = workbook.SheetNames[0];
     const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
+    // Lấy tất cả attribute hiện có
     const attributeDocs = await AttributeService.getAllAttributes();
     const attributeMap = new Map<string, string[]>();
     attributeDocs.forEach((attr) => attributeMap.set(attr.key, attr.value));
 
+    // Lấy tất cả category hiện có
     const allCategories = await CategoryService.getAllCategories();
     const categoryNameToId = new Map<string, string>();
     allCategories.forEach((cat) =>
@@ -241,59 +243,64 @@ class ProductService {
         continue;
       }
 
-      // Parse image list
       const imageList =
         typeof images === "string"
           ? images.split(",").map((img: string) => img.trim())
           : [];
 
-      // Parse categories
+      // Parse categories (và thêm nếu chưa có)
       const categoryNames =
         typeof categories === "string"
           ? categories.split(",").map((c: string) => c.trim())
           : [];
 
       const categoryList: string[] = [];
-      let hasInvalidCategory = false;
       for (const name of categoryNames) {
-        const id = categoryNameToId.get(name);
-        if (id) categoryList.push(id);
-        else {
-          failedRows.push({
-            ...row,
-            error: `Invalid category name: ${name}`,
+        let id = categoryNameToId.get(name);
+        if (!id) {
+          // Tạo category mới
+          const newCategory = await CategoryService.createCategory({
+            category_name: name,
+            description: "",
           });
-          hasInvalidCategory = true;
-          break;
+          id = newCategory._id.toString();
+          categoryNameToId.set(name, id);
         }
+        categoryList.push(id);
       }
-      if (hasInvalidCategory) continue;
 
-      // Parse attributes
+      // Parse attributes (và thêm nếu chưa có)
       let attributeList: { key: string; value: string }[] = [];
       if (attributes) {
         const pairs = attributes.split(";");
         for (const pair of pairs) {
-          const [key, value] = pair.split("=");
-          if (
-            key &&
-            value &&
-            attributeMap.has(key) &&
-            attributeMap.get(key)!.includes(value)
-          ) {
-            attributeList.push({ key, value });
+          const [keyRaw, valueRaw] = pair.split("=");
+          const key = keyRaw?.trim();
+          const value = valueRaw?.trim();
+          if (!key || !value) continue;
+
+          if (!attributeMap.has(key)) {
+            // Tạo mới attribute
+            await AttributeService.createAttribute({ key, value: [value] });
+            attributeMap.set(key, [value]);
           } else {
-            failedRows.push({
-              ...row,
-              error: `Invalid attribute: ${key}=${value}`,
-            });
-            attributeList = [];
-            break;
+            const values = attributeMap.get(key)!;
+            if (!values.includes(value)) {
+              // Thêm value mới vào DB
+              await AttributeService.addNewValue(key, value);
+              values.push(value);
+              attributeMap.set(key, values);
+            }
           }
+
+          attributeList.push({ key, value });
         }
       }
 
-      if (attributeList.length === 0) continue;
+      if (attributeList.length === 0) {
+        failedRows.push({ ...row, error: "Invalid or empty attributes" });
+        continue;
+      }
 
       const variant = {
         attributes: attributeList,
